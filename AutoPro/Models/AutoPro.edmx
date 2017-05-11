@@ -1,0 +1,1358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="sgcaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="banco">
+          <Key>
+            <PropertyRef Name="id_banco" />
+          </Key>
+          <Property Name="id_banco" Type="tinyint" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="40" Nullable="false" />
+        </EntityType>
+        <EntityType Name="banco_financia_modelo">
+          <Key>
+            <PropertyRef Name="fk_modelo" />
+            <PropertyRef Name="fk_banco" />
+          </Key>
+          <Property Name="fk_modelo" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="fk_banco" Type="tinyint" Nullable="false" />
+          <Property Name="valor_limite" Type="money" Nullable="false" />
+          <Property Name="nivel_preferencia" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cliente">
+          <Key>
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="id_cliente" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="apellido" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="direccion" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="telefono" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="correo_electronico" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="comision">
+          <Key>
+            <PropertyRef Name="id_comision" />
+          </Key>
+          <Property Name="id_comision" Type="int" Nullable="false" />
+          <Property Name="porcentaje" Type="tinyint" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="compra_tiene_vehiculo">
+          <Key>
+            <PropertyRef Name="fk_compra" />
+            <PropertyRef Name="fk_vehiculo" />
+          </Key>
+          <Property Name="fk_compra" Type="int" Nullable="false" />
+          <Property Name="fk_vehiculo" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="costo">
+          <Key>
+            <PropertyRef Name="id_costo" />
+          </Key>
+          <Property Name="id_costo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="monto" Type="money" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="fk_tipo_costo" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estado_transaccion">
+          <Key>
+            <PropertyRef Name="id_estado_transaccion" />
+          </Key>
+          <Property Name="id_estado_transaccion" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="marca">
+          <Key>
+            <PropertyRef Name="id_marca" />
+          </Key>
+          <Property Name="id_marca" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="descrpcion" Type="varchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="mensaje">
+          <Key>
+            <PropertyRef Name="id_mensaje" />
+          </Key>
+          <Property Name="id_mensaje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="titulo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="texto" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="modelo">
+          <Key>
+            <PropertyRef Name="id_modelo" />
+          </Key>
+          <Property Name="id_modelo" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="300" />
+          <Property Name="valor" Type="money" Nullable="false" />
+          <Property Name="fk_marca" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tipo_costo">
+          <Key>
+            <PropertyRef Name="id_tipo_costo" />
+          </Key>
+          <Property Name="id_tipo_costo" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="concepto" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tipo_transaccion_venta">
+          <Key>
+            <PropertyRef Name="id_tipo_venta" />
+          </Key>
+          <Property Name="id_tipo_venta" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tipo_usuario">
+          <Key>
+            <PropertyRef Name="id_tipo_usuario" />
+          </Key>
+          <Property Name="id_tipo_usuario" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="transaccion_compra">
+          <Key>
+            <PropertyRef Name="id_compra" />
+          </Key>
+          <Property Name="id_compra" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="nota" Type="varchar" MaxLength="300" />
+          <Property Name="fk_estado_transaccion" Type="tinyint" Nullable="false" />
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="transaccion_venta">
+          <Key>
+            <PropertyRef Name="id_venta" />
+          </Key>
+          <Property Name="id_venta" Type="int" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="nota" Type="varchar" MaxLength="300" />
+          <Property Name="fk_estado_transaccion" Type="tinyint" Nullable="false" />
+          <Property Name="fk_tipo_venta" Type="tinyint" Nullable="false" />
+          <Property Name="fk_cliente" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+          </Key>
+          <Property Name="id_usuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="apellido" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="direccion" Type="varchar" MaxLength="300" Nullable="false" />
+          <Property Name="telefono" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="foto" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="fk_usuario_estado" Type="tinyint" Nullable="false" />
+          <Property Name="fk_tipo_usuario" Type="tinyint" Nullable="false" />
+          <Property Name="fk_seguridad" Type="int" />
+        </EntityType>
+        <EntityType Name="usuario_estado">
+          <Key>
+            <PropertyRef Name="id_usuario_estado" />
+          </Key>
+          <Property Name="id_usuario_estado" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuario_tiene_mensaje">
+          <Key>
+            <PropertyRef Name="fk_usuario" />
+            <PropertyRef Name="fk_mensaje" />
+          </Key>
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+          <Property Name="fk_mensaje" Type="int" Nullable="false" />
+          <Property Name="chequeado" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vehiculo">
+          <Key>
+            <PropertyRef Name="id_vehiculo" />
+          </Key>
+          <Property Name="id_vehiculo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="año" Type="smallint" Nullable="false" />
+          <Property Name="kilometraje" Type="int" Nullable="false" />
+          <Property Name="imagen" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="fecha_ingreso" Type="datetime" Nullable="false" />
+          <Property Name="fecha_salida" Type="datetime" />
+          <Property Name="valor_compra" Type="money" Nullable="false" />
+          <Property Name="valor_venta" Type="money" />
+          <Property Name="fk_vehiculo_estado" Type="tinyint" Nullable="false" />
+          <Property Name="fk_modelo" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vehiculo_estado">
+          <Key>
+            <PropertyRef Name="id_vehiculo_estado" />
+          </Key>
+          <Property Name="id_vehiculo_estado" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="factor" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="venta_tiene_vehiculo">
+          <Key>
+            <PropertyRef Name="fk_venta" />
+            <PropertyRef Name="fk_vehiculo" />
+          </Key>
+          <Property Name="fk_venta" Type="int" Nullable="false" />
+          <Property Name="fk_vehiculo" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_banco_financia_modelo_banco">
+          <End Role="banco" Type="Self.banco" Multiplicity="1" />
+          <End Role="banco_financia_modelo" Type="Self.banco_financia_modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="banco">
+              <PropertyRef Name="id_banco" />
+            </Principal>
+            <Dependent Role="banco_financia_modelo">
+              <PropertyRef Name="fk_banco" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_banco_financia_modelo_modelo">
+          <End Role="modelo" Type="Self.modelo" Multiplicity="1" />
+          <End Role="banco_financia_modelo" Type="Self.banco_financia_modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo">
+              <PropertyRef Name="id_modelo" />
+            </Principal>
+            <Dependent Role="banco_financia_modelo">
+              <PropertyRef Name="fk_modelo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_comision_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="comision" Type="Self.comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="comision">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_compra_tiene_vehiculo_compra_tiene_vehiculo">
+          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="1" />
+          <End Role="compra_tiene_vehiculo" Type="Self.compra_tiene_vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaccion_compra">
+              <PropertyRef Name="id_compra" />
+            </Principal>
+            <Dependent Role="compra_tiene_vehiculo">
+              <PropertyRef Name="fk_compra" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_compra_tiene_vehiculo_vehiculo">
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="1" />
+          <End Role="compra_tiene_vehiculo" Type="Self.compra_tiene_vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo">
+              <PropertyRef Name="id_vehiculo" />
+            </Principal>
+            <Dependent Role="compra_tiene_vehiculo">
+              <PropertyRef Name="fk_vehiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_costo_tipo_costo">
+          <End Role="tipo_costo" Type="Self.tipo_costo" Multiplicity="1" />
+          <End Role="costo" Type="Self.costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_costo">
+              <PropertyRef Name="id_tipo_costo" />
+            </Principal>
+            <Dependent Role="costo">
+              <PropertyRef Name="fk_tipo_costo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_modelo_marca">
+          <End Role="marca" Type="Self.marca" Multiplicity="1" />
+          <End Role="modelo" Type="Self.modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="marca">
+              <PropertyRef Name="id_marca" />
+            </Principal>
+            <Dependent Role="modelo">
+              <PropertyRef Name="fk_marca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_compra_estado_transaccion">
+          <End Role="estado_transaccion" Type="Self.estado_transaccion" Multiplicity="1" />
+          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado_transaccion">
+              <PropertyRef Name="id_estado_transaccion" />
+            </Principal>
+            <Dependent Role="transaccion_compra">
+              <PropertyRef Name="fk_estado_transaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_compra_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="transaccion_compra">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_cliente">
+          <End Role="cliente" Type="Self.cliente" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cliente">
+              <PropertyRef Name="id_cliente" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_estado_transaccion">
+          <End Role="estado_transaccion" Type="Self.estado_transaccion" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado_transaccion">
+              <PropertyRef Name="id_estado_transaccion" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_estado_transaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_tipo_transaccion_venta">
+          <End Role="tipo_transaccion_venta" Type="Self.tipo_transaccion_venta" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_transaccion_venta">
+              <PropertyRef Name="id_tipo_venta" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_tipo_venta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tiene_mensaje_mensaje">
+          <End Role="mensaje" Type="Self.mensaje" Multiplicity="1" />
+          <End Role="usuario_tiene_mensaje" Type="Self.usuario_tiene_mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mensaje">
+              <PropertyRef Name="id_mensaje" />
+            </Principal>
+            <Dependent Role="usuario_tiene_mensaje">
+              <PropertyRef Name="fk_mensaje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tiene_mensaje_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="usuario_tiene_mensaje" Type="Self.usuario_tiene_mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="usuario_tiene_mensaje">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tipo_usuario">
+          <End Role="tipo_usuario" Type="Self.tipo_usuario" Multiplicity="1" />
+          <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_usuario">
+              <PropertyRef Name="id_tipo_usuario" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_tipo_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_usuario_estado">
+          <End Role="usuario_estado" Type="Self.usuario_estado" Multiplicity="1" />
+          <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario_estado">
+              <PropertyRef Name="id_usuario_estado" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_usuario_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_modelo">
+          <End Role="modelo" Type="Self.modelo" Multiplicity="1" />
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo">
+              <PropertyRef Name="id_modelo" />
+            </Principal>
+            <Dependent Role="vehiculo">
+              <PropertyRef Name="fk_modelo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_vehiculo_estado">
+          <End Role="vehiculo_estado" Type="Self.vehiculo_estado" Multiplicity="1" />
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo_estado">
+              <PropertyRef Name="id_vehiculo_estado" />
+            </Principal>
+            <Dependent Role="vehiculo">
+              <PropertyRef Name="fk_vehiculo_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_venta_tiene_vehiculo_transaccion_venta">
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="1" />
+          <End Role="venta_tiene_vehiculo" Type="Self.venta_tiene_vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaccion_venta">
+              <PropertyRef Name="id_venta" />
+            </Principal>
+            <Dependent Role="venta_tiene_vehiculo">
+              <PropertyRef Name="fk_venta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_venta_tiene_vehiculo_vehiculo">
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="1" />
+          <End Role="venta_tiene_vehiculo" Type="Self.venta_tiene_vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo">
+              <PropertyRef Name="id_vehiculo" />
+            </Principal>
+            <Dependent Role="venta_tiene_vehiculo">
+              <PropertyRef Name="fk_vehiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="sgcaModelStoreContainer">
+          <EntitySet Name="banco" EntityType="Self.banco" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="banco_financia_modelo" EntityType="Self.banco_financia_modelo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="cliente" EntityType="Self.cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="comision" EntityType="Self.comision" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="compra_tiene_vehiculo" EntityType="Self.compra_tiene_vehiculo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="costo" EntityType="Self.costo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estado_transaccion" EntityType="Self.estado_transaccion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="marca" EntityType="Self.marca" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="mensaje" EntityType="Self.mensaje" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="modelo" EntityType="Self.modelo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_costo" EntityType="Self.tipo_costo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_transaccion_venta" EntityType="Self.tipo_transaccion_venta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_usuario" EntityType="Self.tipo_usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transaccion_compra" EntityType="Self.transaccion_compra" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="transaccion_venta" EntityType="Self.transaccion_venta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario_estado" EntityType="Self.usuario_estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario_tiene_mensaje" EntityType="Self.usuario_tiene_mensaje" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vehiculo" EntityType="Self.vehiculo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vehiculo_estado" EntityType="Self.vehiculo_estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="venta_tiene_vehiculo" EntityType="Self.venta_tiene_vehiculo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_banco_financia_modelo_banco" Association="Self.FK_banco_financia_modelo_banco">
+            <End Role="banco" EntitySet="banco" />
+            <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_banco_financia_modelo_modelo" Association="Self.FK_banco_financia_modelo_modelo">
+            <End Role="modelo" EntitySet="modelo" />
+            <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_comision_usuario" Association="Self.FK_comision_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="comision" EntitySet="comision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_compra_tiene_vehiculo_compra_tiene_vehiculo" Association="Self.FK_compra_tiene_vehiculo_compra_tiene_vehiculo">
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+            <End Role="compra_tiene_vehiculo" EntitySet="compra_tiene_vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_compra_tiene_vehiculo_vehiculo" Association="Self.FK_compra_tiene_vehiculo_vehiculo">
+            <End Role="vehiculo" EntitySet="vehiculo" />
+            <End Role="compra_tiene_vehiculo" EntitySet="compra_tiene_vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_costo_tipo_costo" Association="Self.FK_costo_tipo_costo">
+            <End Role="tipo_costo" EntitySet="tipo_costo" />
+            <End Role="costo" EntitySet="costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_modelo_marca" Association="Self.FK_modelo_marca">
+            <End Role="marca" EntitySet="marca" />
+            <End Role="modelo" EntitySet="modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_compra_estado_transaccion" Association="Self.FK_transaccion_compra_estado_transaccion">
+            <End Role="estado_transaccion" EntitySet="estado_transaccion" />
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_compra_usuario" Association="Self.FK_transaccion_compra_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_cliente" Association="Self.FK_transaccion_venta_cliente">
+            <End Role="cliente" EntitySet="cliente" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_estado_transaccion" Association="Self.FK_transaccion_venta_estado_transaccion">
+            <End Role="estado_transaccion" EntitySet="estado_transaccion" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_tipo_transaccion_venta" Association="Self.FK_transaccion_venta_tipo_transaccion_venta">
+            <End Role="tipo_transaccion_venta" EntitySet="tipo_transaccion_venta" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_usuario" Association="Self.FK_transaccion_venta_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_tiene_mensaje_mensaje" Association="Self.FK_usuario_tiene_mensaje_mensaje">
+            <End Role="mensaje" EntitySet="mensaje" />
+            <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_tiene_mensaje_usuario" Association="Self.FK_usuario_tiene_mensaje_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_tipo_usuario" Association="Self.FK_usuario_tipo_usuario">
+            <End Role="tipo_usuario" EntitySet="tipo_usuario" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_usuario_estado" Association="Self.FK_usuario_usuario_estado">
+            <End Role="usuario_estado" EntitySet="usuario_estado" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_modelo" Association="Self.FK_vehiculo_modelo">
+            <End Role="modelo" EntitySet="modelo" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="Self.FK_vehiculo_vehiculo_estado">
+            <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_venta_tiene_vehiculo_transaccion_venta" Association="Self.FK_venta_tiene_vehiculo_transaccion_venta">
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+            <End Role="venta_tiene_vehiculo" EntitySet="venta_tiene_vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_venta_tiene_vehiculo_vehiculo" Association="Self.FK_venta_tiene_vehiculo_vehiculo">
+            <End Role="vehiculo" EntitySet="vehiculo" />
+            <End Role="venta_tiene_vehiculo" EntitySet="venta_tiene_vehiculo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="sgcaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="banco">
+          <Key>
+            <PropertyRef Name="id_banco" />
+          </Key>
+          <Property Name="id_banco" Type="Byte" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="banco_financia_modelo" Relationship="Self.FK_banco_financia_modelo_banco" FromRole="banco" ToRole="banco_financia_modelo" />
+        </EntityType>
+        <EntityType Name="banco_financia_modelo">
+          <Key>
+            <PropertyRef Name="fk_modelo" />
+            <PropertyRef Name="fk_banco" />
+          </Key>
+          <Property Name="fk_modelo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fk_banco" Type="Byte" Nullable="false" />
+          <Property Name="valor_limite" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="nivel_preferencia" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="banco" Relationship="Self.FK_banco_financia_modelo_banco" FromRole="banco_financia_modelo" ToRole="banco" />
+          <NavigationProperty Name="modelo" Relationship="Self.FK_banco_financia_modelo_modelo" FromRole="banco_financia_modelo" ToRole="modelo" />
+        </EntityType>
+        <EntityType Name="cliente">
+          <Key>
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="id_cliente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="direccion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefono" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="correo_electronico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_cliente" FromRole="cliente" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="comision">
+          <Key>
+            <PropertyRef Name="id_comision" />
+          </Key>
+          <Property Name="id_comision" Type="Int32" Nullable="false" />
+          <Property Name="porcentaje" Type="Byte" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK_comision_usuario" FromRole="comision" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="costo">
+          <Key>
+            <PropertyRef Name="id_costo" />
+          </Key>
+          <Property Name="id_costo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="monto" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fk_tipo_costo" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="tipo_costo" Relationship="Self.FK_costo_tipo_costo" FromRole="costo" ToRole="tipo_costo" />
+        </EntityType>
+        <EntityType Name="estado_transaccion">
+          <Key>
+            <PropertyRef Name="id_estado_transaccion" />
+          </Key>
+          <Property Name="id_estado_transaccion" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="transaccion_compra" Relationship="Self.FK_transaccion_compra_estado_transaccion" FromRole="estado_transaccion" ToRole="transaccion_compra" />
+          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_estado_transaccion" FromRole="estado_transaccion" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="marca">
+          <Key>
+            <PropertyRef Name="id_marca" />
+          </Key>
+          <Property Name="id_marca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descrpcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="modelo" Relationship="Self.FK_modelo_marca" FromRole="marca" ToRole="modelo" />
+        </EntityType>
+        <EntityType Name="mensaje">
+          <Key>
+            <PropertyRef Name="id_mensaje" />
+          </Key>
+          <Property Name="id_mensaje" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="titulo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="texto" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="usuario_tiene_mensaje" Relationship="Self.FK_usuario_tiene_mensaje_mensaje" FromRole="mensaje" ToRole="usuario_tiene_mensaje" />
+        </EntityType>
+        <EntityType Name="modelo">
+          <Key>
+            <PropertyRef Name="id_modelo" />
+          </Key>
+          <Property Name="id_modelo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descripcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="valor" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="fk_marca" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="banco_financia_modelo" Relationship="Self.FK_banco_financia_modelo_modelo" FromRole="modelo" ToRole="banco_financia_modelo" />
+          <NavigationProperty Name="marca" Relationship="Self.FK_modelo_marca" FromRole="modelo" ToRole="marca" />
+          <NavigationProperty Name="vehiculo" Relationship="Self.FK_vehiculo_modelo" FromRole="modelo" ToRole="vehiculo" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tipo_costo">
+          <Key>
+            <PropertyRef Name="id_tipo_costo" />
+          </Key>
+          <Property Name="id_tipo_costo" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="concepto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="costo" Relationship="Self.FK_costo_tipo_costo" FromRole="tipo_costo" ToRole="costo" />
+        </EntityType>
+        <EntityType Name="tipo_transaccion_venta">
+          <Key>
+            <PropertyRef Name="id_tipo_venta" />
+          </Key>
+          <Property Name="id_tipo_venta" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_tipo_transaccion_venta" FromRole="tipo_transaccion_venta" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="tipo_usuario">
+          <Key>
+            <PropertyRef Name="id_tipo_usuario" />
+          </Key>
+          <Property Name="id_tipo_usuario" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK_usuario_tipo_usuario" FromRole="tipo_usuario" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="transaccion_compra">
+          <Key>
+            <PropertyRef Name="id_compra" />
+          </Key>
+          <Property Name="id_compra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="estado_transaccion" Relationship="Self.FK_transaccion_compra_estado_transaccion" FromRole="transaccion_compra" ToRole="estado_transaccion" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK_transaccion_compra_usuario" FromRole="transaccion_compra" ToRole="usuario" />
+          <NavigationProperty Name="vehiculo" Relationship="Self.compra_tiene_vehiculo" FromRole="transaccion_compra" ToRole="vehiculo" />
+        </EntityType>
+        <EntityType Name="transaccion_venta">
+          <Key>
+            <PropertyRef Name="id_venta" />
+          </Key>
+          <Property Name="id_venta" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />
+          <Property Name="fk_tipo_venta" Type="Byte" Nullable="false" />
+          <Property Name="fk_cliente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cliente" Relationship="Self.FK_transaccion_venta_cliente" FromRole="transaccion_venta" ToRole="cliente" />
+          <NavigationProperty Name="estado_transaccion" Relationship="Self.FK_transaccion_venta_estado_transaccion" FromRole="transaccion_venta" ToRole="estado_transaccion" />
+          <NavigationProperty Name="tipo_transaccion_venta" Relationship="Self.FK_transaccion_venta_tipo_transaccion_venta" FromRole="transaccion_venta" ToRole="tipo_transaccion_venta" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK_transaccion_venta_usuario" FromRole="transaccion_venta" ToRole="usuario" />
+          <NavigationProperty Name="vehiculo" Relationship="Self.venta_tiene_vehiculo" FromRole="transaccion_venta" ToRole="vehiculo" />
+        </EntityType>
+        <EntityType Name="usuario">
+          <Key>
+            <PropertyRef Name="id_usuario" />
+          </Key>
+          <Property Name="id_usuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="direccion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefono" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="foto" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fk_usuario_estado" Type="Byte" Nullable="false" />
+          <Property Name="fk_tipo_usuario" Type="Byte" Nullable="false" />
+          <Property Name="fk_seguridad" Type="Int32" />
+          <NavigationProperty Name="comision" Relationship="Self.FK_comision_usuario" FromRole="usuario" ToRole="comision" />
+          <NavigationProperty Name="tipo_usuario" Relationship="Self.FK_usuario_tipo_usuario" FromRole="usuario" ToRole="tipo_usuario" />
+          <NavigationProperty Name="transaccion_compra" Relationship="Self.FK_transaccion_compra_usuario" FromRole="usuario" ToRole="transaccion_compra" />
+          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_usuario" FromRole="usuario" ToRole="transaccion_venta" />
+          <NavigationProperty Name="usuario_tiene_mensaje" Relationship="Self.FK_usuario_tiene_mensaje_usuario" FromRole="usuario" ToRole="usuario_tiene_mensaje" />
+          <NavigationProperty Name="usuario_estado" Relationship="Self.FK_usuario_usuario_estado" FromRole="usuario" ToRole="usuario_estado" />
+        </EntityType>
+        <EntityType Name="usuario_estado">
+          <Key>
+            <PropertyRef Name="id_usuario_estado" />
+          </Key>
+          <Property Name="id_usuario_estado" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK_usuario_usuario_estado" FromRole="usuario_estado" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="usuario_tiene_mensaje">
+          <Key>
+            <PropertyRef Name="fk_usuario" />
+            <PropertyRef Name="fk_mensaje" />
+          </Key>
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <Property Name="fk_mensaje" Type="Int32" Nullable="false" />
+          <Property Name="chequeado" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="mensaje" Relationship="Self.FK_usuario_tiene_mensaje_mensaje" FromRole="usuario_tiene_mensaje" ToRole="mensaje" />
+          <NavigationProperty Name="usuario" Relationship="Self.FK_usuario_tiene_mensaje_usuario" FromRole="usuario_tiene_mensaje" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="vehiculo">
+          <Key>
+            <PropertyRef Name="id_vehiculo" />
+          </Key>
+          <Property Name="id_vehiculo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="año" Type="Int16" Nullable="false" />
+          <Property Name="kilometraje" Type="Int32" Nullable="false" />
+          <Property Name="imagen" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="fecha_ingreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fecha_salida" Type="DateTime" Precision="3" />
+          <Property Name="valor_compra" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="valor_venta" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="fk_vehiculo_estado" Type="Byte" Nullable="false" />
+          <Property Name="fk_modelo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="modelo" Relationship="Self.FK_vehiculo_modelo" FromRole="vehiculo" ToRole="modelo" />
+          <NavigationProperty Name="vehiculo_estado" Relationship="Self.FK_vehiculo_vehiculo_estado" FromRole="vehiculo" ToRole="vehiculo_estado" />
+          <NavigationProperty Name="transaccion_compra" Relationship="Self.compra_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_compra" />
+          <NavigationProperty Name="transaccion_venta" Relationship="Self.venta_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="vehiculo_estado">
+          <Key>
+            <PropertyRef Name="id_vehiculo_estado" />
+          </Key>
+          <Property Name="id_vehiculo_estado" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="factor" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="vehiculo" Relationship="Self.FK_vehiculo_vehiculo_estado" FromRole="vehiculo_estado" ToRole="vehiculo" />
+        </EntityType>
+        <Association Name="FK_banco_financia_modelo_banco">
+          <End Role="banco" Type="Self.banco" Multiplicity="1" />
+          <End Role="banco_financia_modelo" Type="Self.banco_financia_modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="banco">
+              <PropertyRef Name="id_banco" />
+            </Principal>
+            <Dependent Role="banco_financia_modelo">
+              <PropertyRef Name="fk_banco" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_banco_financia_modelo_modelo">
+          <End Role="modelo" Type="Self.modelo" Multiplicity="1" />
+          <End Role="banco_financia_modelo" Type="Self.banco_financia_modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo">
+              <PropertyRef Name="id_modelo" />
+            </Principal>
+            <Dependent Role="banco_financia_modelo">
+              <PropertyRef Name="fk_modelo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_cliente">
+          <End Role="cliente" Type="Self.cliente" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cliente">
+              <PropertyRef Name="id_cliente" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_comision_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="comision" Type="Self.comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="comision">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_costo_tipo_costo">
+          <End Role="tipo_costo" Type="Self.tipo_costo" Multiplicity="1" />
+          <End Role="costo" Type="Self.costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_costo">
+              <PropertyRef Name="id_tipo_costo" />
+            </Principal>
+            <Dependent Role="costo">
+              <PropertyRef Name="fk_tipo_costo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_compra_estado_transaccion">
+          <End Role="estado_transaccion" Type="Self.estado_transaccion" Multiplicity="1" />
+          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado_transaccion">
+              <PropertyRef Name="id_estado_transaccion" />
+            </Principal>
+            <Dependent Role="transaccion_compra">
+              <PropertyRef Name="fk_estado_transaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_estado_transaccion">
+          <End Role="estado_transaccion" Type="Self.estado_transaccion" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado_transaccion">
+              <PropertyRef Name="id_estado_transaccion" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_estado_transaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_modelo_marca">
+          <End Role="marca" Type="Self.marca" Multiplicity="1" />
+          <End Role="modelo" Type="Self.modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="marca">
+              <PropertyRef Name="id_marca" />
+            </Principal>
+            <Dependent Role="modelo">
+              <PropertyRef Name="fk_marca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tiene_mensaje_mensaje">
+          <End Role="mensaje" Type="Self.mensaje" Multiplicity="1" />
+          <End Role="usuario_tiene_mensaje" Type="Self.usuario_tiene_mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mensaje">
+              <PropertyRef Name="id_mensaje" />
+            </Principal>
+            <Dependent Role="usuario_tiene_mensaje">
+              <PropertyRef Name="fk_mensaje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_modelo">
+          <End Role="modelo" Type="Self.modelo" Multiplicity="1" />
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo">
+              <PropertyRef Name="id_modelo" />
+            </Principal>
+            <Dependent Role="vehiculo">
+              <PropertyRef Name="fk_modelo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_tipo_transaccion_venta">
+          <End Role="tipo_transaccion_venta" Type="Self.tipo_transaccion_venta" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_transaccion_venta">
+              <PropertyRef Name="id_tipo_venta" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_tipo_venta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tipo_usuario">
+          <End Role="tipo_usuario" Type="Self.tipo_usuario" Multiplicity="1" />
+          <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_usuario">
+              <PropertyRef Name="id_tipo_usuario" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_tipo_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_compra_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="transaccion_compra">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tiene_mensaje_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="usuario_tiene_mensaje" Type="Self.usuario_tiene_mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="usuario_tiene_mensaje">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_usuario_estado">
+          <End Role="usuario_estado" Type="Self.usuario_estado" Multiplicity="1" />
+          <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario_estado">
+              <PropertyRef Name="id_usuario_estado" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_usuario_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_vehiculo_estado">
+          <End Role="vehiculo_estado" Type="Self.vehiculo_estado" Multiplicity="1" />
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo_estado">
+              <PropertyRef Name="id_vehiculo_estado" />
+            </Principal>
+            <Dependent Role="vehiculo">
+              <PropertyRef Name="fk_vehiculo_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="compra_tiene_vehiculo">
+          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
+        </Association>
+        <Association Name="venta_tiene_vehiculo">
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="sgcaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="banco" EntityType="Self.banco" />
+          <EntitySet Name="banco_financia_modelo" EntityType="Self.banco_financia_modelo" />
+          <EntitySet Name="cliente" EntityType="Self.cliente" />
+          <EntitySet Name="comision" EntityType="Self.comision" />
+          <EntitySet Name="costo" EntityType="Self.costo" />
+          <EntitySet Name="estado_transaccion" EntityType="Self.estado_transaccion" />
+          <EntitySet Name="marca" EntityType="Self.marca" />
+          <EntitySet Name="mensaje" EntityType="Self.mensaje" />
+          <EntitySet Name="modelo" EntityType="Self.modelo" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="tipo_costo" EntityType="Self.tipo_costo" />
+          <EntitySet Name="tipo_transaccion_venta" EntityType="Self.tipo_transaccion_venta" />
+          <EntitySet Name="tipo_usuario" EntityType="Self.tipo_usuario" />
+          <EntitySet Name="transaccion_compra" EntityType="Self.transaccion_compra" />
+          <EntitySet Name="transaccion_venta" EntityType="Self.transaccion_venta" />
+          <EntitySet Name="usuario" EntityType="Self.usuario" />
+          <EntitySet Name="usuario_estado" EntityType="Self.usuario_estado" />
+          <EntitySet Name="usuario_tiene_mensaje" EntityType="Self.usuario_tiene_mensaje" />
+          <EntitySet Name="vehiculo" EntityType="Self.vehiculo" />
+          <EntitySet Name="vehiculo_estado" EntityType="Self.vehiculo_estado" />
+          <AssociationSet Name="FK_banco_financia_modelo_banco" Association="Self.FK_banco_financia_modelo_banco">
+            <End Role="banco" EntitySet="banco" />
+            <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_banco_financia_modelo_modelo" Association="Self.FK_banco_financia_modelo_modelo">
+            <End Role="modelo" EntitySet="modelo" />
+            <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_cliente" Association="Self.FK_transaccion_venta_cliente">
+            <End Role="cliente" EntitySet="cliente" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_comision_usuario" Association="Self.FK_comision_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="comision" EntitySet="comision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_costo_tipo_costo" Association="Self.FK_costo_tipo_costo">
+            <End Role="tipo_costo" EntitySet="tipo_costo" />
+            <End Role="costo" EntitySet="costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_compra_estado_transaccion" Association="Self.FK_transaccion_compra_estado_transaccion">
+            <End Role="estado_transaccion" EntitySet="estado_transaccion" />
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_estado_transaccion" Association="Self.FK_transaccion_venta_estado_transaccion">
+            <End Role="estado_transaccion" EntitySet="estado_transaccion" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_modelo_marca" Association="Self.FK_modelo_marca">
+            <End Role="marca" EntitySet="marca" />
+            <End Role="modelo" EntitySet="modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_tiene_mensaje_mensaje" Association="Self.FK_usuario_tiene_mensaje_mensaje">
+            <End Role="mensaje" EntitySet="mensaje" />
+            <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_modelo" Association="Self.FK_vehiculo_modelo">
+            <End Role="modelo" EntitySet="modelo" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_tipo_transaccion_venta" Association="Self.FK_transaccion_venta_tipo_transaccion_venta">
+            <End Role="tipo_transaccion_venta" EntitySet="tipo_transaccion_venta" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_tipo_usuario" Association="Self.FK_usuario_tipo_usuario">
+            <End Role="tipo_usuario" EntitySet="tipo_usuario" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_compra_usuario" Association="Self.FK_transaccion_compra_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_usuario" Association="Self.FK_transaccion_venta_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_tiene_mensaje_usuario" Association="Self.FK_usuario_tiene_mensaje_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_usuario_estado" Association="Self.FK_usuario_usuario_estado">
+            <End Role="usuario_estado" EntitySet="usuario_estado" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="Self.FK_vehiculo_vehiculo_estado">
+            <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="compra_tiene_vehiculo" Association="Self.compra_tiene_vehiculo">
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="venta_tiene_vehiculo" Association="Self.venta_tiene_vehiculo">
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="sgcaModelStoreContainer" CdmEntityContainer="sgcaEntities">
+          <EntitySetMapping Name="banco">
+            <EntityTypeMapping TypeName="sgcaModel.banco">
+              <MappingFragment StoreEntitySet="banco">
+                <ScalarProperty Name="id_banco" ColumnName="id_banco" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="banco_financia_modelo">
+            <EntityTypeMapping TypeName="sgcaModel.banco_financia_modelo">
+              <MappingFragment StoreEntitySet="banco_financia_modelo">
+                <ScalarProperty Name="fk_modelo" ColumnName="fk_modelo" />
+                <ScalarProperty Name="fk_banco" ColumnName="fk_banco" />
+                <ScalarProperty Name="valor_limite" ColumnName="valor_limite" />
+                <ScalarProperty Name="nivel_preferencia" ColumnName="nivel_preferencia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cliente">
+            <EntityTypeMapping TypeName="sgcaModel.cliente">
+              <MappingFragment StoreEntitySet="cliente">
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="apellido" ColumnName="apellido" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="correo_electronico" ColumnName="correo_electronico" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="comision">
+            <EntityTypeMapping TypeName="sgcaModel.comision">
+              <MappingFragment StoreEntitySet="comision">
+                <ScalarProperty Name="id_comision" ColumnName="id_comision" />
+                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="costo">
+            <EntityTypeMapping TypeName="sgcaModel.costo">
+              <MappingFragment StoreEntitySet="costo">
+                <ScalarProperty Name="id_costo" ColumnName="id_costo" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="fk_tipo_costo" ColumnName="fk_tipo_costo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estado_transaccion">
+            <EntityTypeMapping TypeName="sgcaModel.estado_transaccion">
+              <MappingFragment StoreEntitySet="estado_transaccion">
+                <ScalarProperty Name="id_estado_transaccion" ColumnName="id_estado_transaccion" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="marca">
+            <EntityTypeMapping TypeName="sgcaModel.marca">
+              <MappingFragment StoreEntitySet="marca">
+                <ScalarProperty Name="id_marca" ColumnName="id_marca" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="descrpcion" ColumnName="descrpcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="mensaje">
+            <EntityTypeMapping TypeName="sgcaModel.mensaje">
+              <MappingFragment StoreEntitySet="mensaje">
+                <ScalarProperty Name="id_mensaje" ColumnName="id_mensaje" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="texto" ColumnName="texto" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="modelo">
+            <EntityTypeMapping TypeName="sgcaModel.modelo">
+              <MappingFragment StoreEntitySet="modelo">
+                <ScalarProperty Name="id_modelo" ColumnName="id_modelo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="valor" ColumnName="valor" />
+                <ScalarProperty Name="fk_marca" ColumnName="fk_marca" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="sgcaModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipo_costo">
+            <EntityTypeMapping TypeName="sgcaModel.tipo_costo">
+              <MappingFragment StoreEntitySet="tipo_costo">
+                <ScalarProperty Name="id_tipo_costo" ColumnName="id_tipo_costo" />
+                <ScalarProperty Name="concepto" ColumnName="concepto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipo_transaccion_venta">
+            <EntityTypeMapping TypeName="sgcaModel.tipo_transaccion_venta">
+              <MappingFragment StoreEntitySet="tipo_transaccion_venta">
+                <ScalarProperty Name="id_tipo_venta" ColumnName="id_tipo_venta" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipo_usuario">
+            <EntityTypeMapping TypeName="sgcaModel.tipo_usuario">
+              <MappingFragment StoreEntitySet="tipo_usuario">
+                <ScalarProperty Name="id_tipo_usuario" ColumnName="id_tipo_usuario" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaccion_compra">
+            <EntityTypeMapping TypeName="sgcaModel.transaccion_compra">
+              <MappingFragment StoreEntitySet="transaccion_compra">
+                <ScalarProperty Name="id_compra" ColumnName="id_compra" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="nota" ColumnName="nota" />
+                <ScalarProperty Name="fk_estado_transaccion" ColumnName="fk_estado_transaccion" />
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="transaccion_venta">
+            <EntityTypeMapping TypeName="sgcaModel.transaccion_venta">
+              <MappingFragment StoreEntitySet="transaccion_venta">
+                <ScalarProperty Name="id_venta" ColumnName="id_venta" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="nota" ColumnName="nota" />
+                <ScalarProperty Name="fk_estado_transaccion" ColumnName="fk_estado_transaccion" />
+                <ScalarProperty Name="fk_tipo_venta" ColumnName="fk_tipo_venta" />
+                <ScalarProperty Name="fk_cliente" ColumnName="fk_cliente" />
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario">
+            <EntityTypeMapping TypeName="sgcaModel.usuario">
+              <MappingFragment StoreEntitySet="usuario">
+                <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="apellido" ColumnName="apellido" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="foto" ColumnName="foto" />
+                <ScalarProperty Name="fk_usuario_estado" ColumnName="fk_usuario_estado" />
+                <ScalarProperty Name="fk_tipo_usuario" ColumnName="fk_tipo_usuario" />
+                <ScalarProperty Name="fk_seguridad" ColumnName="fk_seguridad" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario_estado">
+            <EntityTypeMapping TypeName="sgcaModel.usuario_estado">
+              <MappingFragment StoreEntitySet="usuario_estado">
+                <ScalarProperty Name="id_usuario_estado" ColumnName="id_usuario_estado" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario_tiene_mensaje">
+            <EntityTypeMapping TypeName="sgcaModel.usuario_tiene_mensaje">
+              <MappingFragment StoreEntitySet="usuario_tiene_mensaje">
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+                <ScalarProperty Name="fk_mensaje" ColumnName="fk_mensaje" />
+                <ScalarProperty Name="chequeado" ColumnName="chequeado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vehiculo">
+            <EntityTypeMapping TypeName="sgcaModel.vehiculo">
+              <MappingFragment StoreEntitySet="vehiculo">
+                <ScalarProperty Name="id_vehiculo" ColumnName="id_vehiculo" />
+                <ScalarProperty Name="año" ColumnName="año" />
+                <ScalarProperty Name="kilometraje" ColumnName="kilometraje" />
+                <ScalarProperty Name="imagen" ColumnName="imagen" />
+                <ScalarProperty Name="fecha_ingreso" ColumnName="fecha_ingreso" />
+                <ScalarProperty Name="fecha_salida" ColumnName="fecha_salida" />
+                <ScalarProperty Name="valor_compra" ColumnName="valor_compra" />
+                <ScalarProperty Name="valor_venta" ColumnName="valor_venta" />
+                <ScalarProperty Name="fk_vehiculo_estado" ColumnName="fk_vehiculo_estado" />
+                <ScalarProperty Name="fk_modelo" ColumnName="fk_modelo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vehiculo_estado">
+            <EntityTypeMapping TypeName="sgcaModel.vehiculo_estado">
+              <MappingFragment StoreEntitySet="vehiculo_estado">
+                <ScalarProperty Name="id_vehiculo_estado" ColumnName="id_vehiculo_estado" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="factor" ColumnName="factor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="compra_tiene_vehiculo" TypeName="sgcaModel.compra_tiene_vehiculo" StoreEntitySet="compra_tiene_vehiculo">
+            <EndProperty Name="transaccion_compra">
+              <ScalarProperty Name="id_compra" ColumnName="fk_compra" />
+            </EndProperty>
+            <EndProperty Name="vehiculo">
+              <ScalarProperty Name="id_vehiculo" ColumnName="fk_vehiculo" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="venta_tiene_vehiculo" TypeName="sgcaModel.venta_tiene_vehiculo" StoreEntitySet="venta_tiene_vehiculo">
+            <EndProperty Name="transaccion_venta">
+              <ScalarProperty Name="id_venta" ColumnName="fk_venta" />
+            </EndProperty>
+            <EndProperty Name="vehiculo">
+              <ScalarProperty Name="id_vehiculo" ColumnName="fk_vehiculo" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

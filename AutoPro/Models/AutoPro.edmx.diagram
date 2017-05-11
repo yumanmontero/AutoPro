@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="ca41b7c0799d4c9d97186f2ad504e92b" Name="Diagram1">
+        <EntityTypeShape EntityType="sgcaModel.banco" Width="1.5" PointX="8.25" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.banco_financia_modelo" Width="1.5" PointX="10.5" PointY="16.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.cliente" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.comision" Width="1.5" PointX="5.25" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.costo" Width="1.5" PointX="11" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.estado_transaccion" Width="1.5" PointX="3" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.marca" Width="1.5" PointX="6" PointY="16.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.mensaje" Width="1.5" PointX="3" PointY="12.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.modelo" Width="1.5" PointX="8.25" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.sysdiagrams" Width="1.5" PointX="10.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.tipo_costo" Width="1.5" PointX="8.75" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.tipo_transaccion_venta" Width="1.5" PointX="6" PointY="13.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.tipo_usuario" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.transaccion_compra" Width="1.5" PointX="5.25" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.transaccion_venta" Width="1.5" PointX="8.25" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.usuario" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.usuario_estado" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.usuario_tiene_mensaje" Width="1.5" PointX="5.25" PointY="11.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.vehiculo" Width="1.5" PointX="10.5" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="sgcaModel.vehiculo_estado" Width="1.5" PointX="8.25" PointY="4.875" IsExpanded="true" />
+        <AssociationConnector Association="sgcaModel.FK_banco_financia_modelo_banco" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_banco_financia_modelo_modelo" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_transaccion_venta_cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_comision_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_costo_tipo_costo" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_transaccion_compra_estado_transaccion" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_transaccion_venta_estado_transaccion" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_modelo_marca" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_usuario_tiene_mensaje_mensaje" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_vehiculo_modelo" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_transaccion_venta_tipo_transaccion_venta" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_usuario_tipo_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_transaccion_compra_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_transaccion_venta_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_usuario_tiene_mensaje_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_usuario_usuario_estado" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.FK_vehiculo_vehiculo_estado" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.compra_tiene_vehiculo" ManuallyRouted="false" />
+        <AssociationConnector Association="sgcaModel.venta_tiene_vehiculo" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
