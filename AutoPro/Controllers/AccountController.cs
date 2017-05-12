@@ -17,6 +17,7 @@ namespace AutoPro.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private sgcaEntities autodb = new sgcaEntities();
 
         public AccountController()
         {
@@ -76,9 +77,25 @@ namespace AutoPro.Controllers
             // No cuenta los errores de inicio de sesión para el bloqueo de la cuenta
             // Para permitir que los errores de contraseña desencadenen el bloqueo de la cuenta, cambie a shouldLockout: true
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
+            
             switch (result)
             {
                 case SignInStatus.Success:
+
+                    string iduser_security = SignInManager.UserManager.FindByEmail(model.Email).Id;
+                    var getuser = (from lp in autodb.usuario where lp.fk_seguridad == iduser_security select lp).First();
+
+                    UsuarioViewModel usuario = new UsuarioViewModel{
+                        Nombre = getuser.nombre,
+                        Apellido = getuser.apellido,
+                        Correo_Electronico = model.Email,
+                        id_Usuario = getuser.id_usuario,
+                        Nivel_Usuario = getuser.fk_tipo_usuario,
+                        Tipo_Usuario = getuser.tipo_usuario.descripcion
+                    };
+
+
+                    this.Session["User"] = usuario;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -392,6 +409,18 @@ namespace AutoPro.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
+            this.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
+        [AllowAnonymous]
+        public ActionResult LogOffEvent()
+        {
+            AuthenticationManager.SignOut();
+            this.Session.Clear();
+            UsuarioViewModel user = new UsuarioViewModel();
+            user.id_Usuario = 0;
+            this.Session["User"] = user;
             return RedirectToAction("Index", "Home");
         }
 

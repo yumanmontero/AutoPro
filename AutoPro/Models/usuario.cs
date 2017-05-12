@@ -31,7 +31,7 @@ namespace AutoPro.Models
         public string foto { get; set; }
         public byte fk_usuario_estado { get; set; }
         public byte fk_tipo_usuario { get; set; }
-        public Nullable<int> fk_seguridad { get; set; }
+        public string fk_seguridad { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<comision> comision { get; set; }

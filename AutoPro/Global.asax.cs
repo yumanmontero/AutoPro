@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using AutoPro.Models;
 
 namespace AutoPro
 {
@@ -16,6 +17,17 @@ namespace AutoPro
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+
+        protected void Session_Start(Object sender, EventArgs e)
+        {
+            HttpContext.Current.Session.Add("idUser", null);
+            HttpContext.Current.Session.Add("Mensaje", null);
+            HttpContext.Current.Session.Add("NombreUser", null);
+            HttpContext.Current.Session.Add("Cargo", null);
+            HttpContext.Current.Session.Add("User", null);
+
+
         }
     }
 }

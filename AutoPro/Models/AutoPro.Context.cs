@@ -40,10 +40,10 @@ namespace AutoPro.Models
         public virtual DbSet<tipo_usuario> tipo_usuario { get; set; }
         public virtual DbSet<transaccion_compra> transaccion_compra { get; set; }
         public virtual DbSet<transaccion_venta> transaccion_venta { get; set; }
-        public virtual DbSet<usuario> usuario { get; set; }
         public virtual DbSet<usuario_estado> usuario_estado { get; set; }
         public virtual DbSet<usuario_tiene_mensaje> usuario_tiene_mensaje { get; set; }
         public virtual DbSet<vehiculo> vehiculo { get; set; }
         public virtual DbSet<vehiculo_estado> vehiculo_estado { get; set; }
+        public virtual DbSet<usuario> usuario { get; set; }
     }
 }

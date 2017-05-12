@@ -31,8 +31,8 @@ namespace AutoPro.Models
         public virtual cliente cliente { get; set; }
         public virtual estado_transaccion estado_transaccion { get; set; }
         public virtual tipo_transaccion_venta tipo_transaccion_venta { get; set; }
-        public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<vehiculo> vehiculo { get; set; }
+        public virtual usuario usuario { get; set; }
     }
 }

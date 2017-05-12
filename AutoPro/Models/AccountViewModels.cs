@@ -109,4 +109,24 @@ namespace AutoPro.Models
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
     }
+
+    public class UsuarioViewModel
+    {
+
+
+        public string Nombre { get; set; }
+
+        public string Apellido { get; set; }
+
+        public string Tipo_Usuario { get; set; }
+
+        public string Correo_Electronico { get; set; }
+
+        public int Nivel_Usuario { get; set; }
+
+        public int id_Usuario { get; set; }
+
+
+
+    }
 }
