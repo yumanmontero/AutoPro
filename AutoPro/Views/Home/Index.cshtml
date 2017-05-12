@@ -1,7 +1,27 @@
 ﻿@{
     ViewBag.Title = "Inicio";
 }
-@if (Request.IsAuthenticated)
+@using AutoPro.Models
+@{
+
+
+    UsuarioViewModel user = new UsuarioViewModel();
+    if (HttpContext.Current.Session["User"] == null)
+    {
+
+        Response.Redirect(Url.Action("LogOffEvent", "Account"));
+
+    }
+    else
+    {
+
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+
+    }
+
+}
+
+@if ((Request.IsAuthenticated) && (user.id_Usuario != 0))
 {
     
   <!-- Content Header (Page header) -->
