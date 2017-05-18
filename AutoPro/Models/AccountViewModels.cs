@@ -65,6 +65,16 @@ namespace AutoPro.Models
     public class RegisterViewModel
     {
         [Required]
+        
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required]
+        
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+        
+        [Required]
         [EmailAddress]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
@@ -74,6 +84,7 @@ namespace AutoPro.Models
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
+
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
