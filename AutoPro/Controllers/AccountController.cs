@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using AutoPro.Models;
+using System.Data;
+using System.Data.Entity;
+using System.Collections.Generic;
 
 namespace AutoPro.Controllers
 {
@@ -17,7 +20,7 @@ namespace AutoPro.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
-        private sgcaEntities autodb = new sgcaEntities();
+        private sgcaEntities autodb = new sgcaEntities(); //conexcion con bd
 
         public AccountController()
         {
@@ -151,12 +154,31 @@ namespace AutoPro.Controllers
             }
         }
 
+
+        public SelectList ObtenerListaTipoUsuario()
+        {
+            // crear una lista de tipos de usuarios
+            var consultaDeTipos = (from lp in autodb.tipo_usuario where lp.id_tipo_usuario != 0 select lp).ToList(); //lista
+            List<SelectListItem> ListaDeTipo = new List<SelectListItem>();
+            foreach (var item in consultaDeTipos)
+            {
+                ListaDeTipo.Add(new SelectListItem() { Value = item.id_tipo_usuario.ToString(), Text = item.descripcion });
+            }
+            SelectList lista = new SelectList(ListaDeTipo, "Value", "Text", "1");
+
+            return lista;
+        }
+
         //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            
+            RegisterViewModel modelo = new RegisterViewModel();
+       
+            modelo.Tipo_usuario = ObtenerListaTipoUsuario();
+            return View(modelo);
         }
 
         //
@@ -172,8 +194,24 @@ namespace AutoPro.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                    //crear usuario en tabla usuario
+                    var idSeg = user.Id;
+                    usuario user1 = new usuario
+                    {
+                        apellido = model.Apellido,
+                        nombre = model.Nombre,
+                        telefono = model.Telefono,
+                        direccion = model.Direccion,
+                        foto = "foto",
+                        fk_tipo_usuario = Convert.ToByte (model.Tipo_usuario),
+                        fk_seguridad = idSeg
+                    };
+
+                    autodb.usuario.Add(user1);
+                    autodb.SaveChanges();   
+
+
                     // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
                     // Enviar correo electrónico con este vínculo
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -186,6 +224,7 @@ namespace AutoPro.Controllers
             }
 
             // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
+            model.Tipo_usuario = ObtenerListaTipoUsuario();
             return View(model);
         }
 
