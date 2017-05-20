@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+using System.Web;
 
 namespace AutoPro.Models
 {
@@ -65,6 +67,7 @@ namespace AutoPro.Models
     public class RegisterViewModel
     {
         [Required]
+<<<<<<< HEAD
         
         [Display(Name = "Nombre")]
         public string Nombre { get; set; }
@@ -73,11 +76,35 @@ namespace AutoPro.Models
         
         [Display(Name = "Apellido")]
         public string Apellido { get; set; }
+=======
+        [StringLength(25, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 3)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+        
+        [Required]
+        [StringLength(50, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 3)]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+
+        [Required]
+        [StringLength(300, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 10)]
+        [Display(Name = "Direccion")]
+        public string Direccion { get; set; }
+
+        [Required]
+        [StringLength(13, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 10)]
+        [Display(Name = "Telefono")]
+        public string Telefono { get; set; }
+>>>>>>> origin/master
         
         [Required]
         [EmailAddress]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
+
+        
+        [Display(Name = "Tipo")]
+        public SelectList Tipo_usuario { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
@@ -88,7 +115,7 @@ namespace AutoPro.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
+        [System.ComponentModel.DataAnnotations.Compare ("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -107,7 +134,7 @@ namespace AutoPro.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
+        [System.ComponentModel.DataAnnotations.Compare ("Password", ErrorMessage = "La contraseña y la contraseña de confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
