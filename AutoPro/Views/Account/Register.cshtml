@@ -1,53 +1,160 @@
 ﻿@model AutoPro.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Registrarse";
+    ViewBag.Title = "Registro";
 }
 
-<h2>@ViewBag.Title.</h2>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <h4>Cree una cuenta nueva.</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Nombre, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Apellido, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Apellido, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Registrarse" />
-        </div>
-    </div>
-}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+        <small>Auto Pro</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i>Inicio</a></li>
+        <li><a href="#">Gestion de Usuarios</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}
+
+
+<!-- Main content -->
+<section class="content">
+    
+    <div class="row">
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { role = "form", id= "registroform", enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        
+        <div class="col-md-6">
+            <div class="box box-default">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Datos de la Cuenta</h3>
+
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Email)
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Escriba ..." })
+                                    </div>
+                                    <!-- /.form-group -->
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.Password)
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Escriba ..." })
+                                    </div>
+                                    <!-- /.form-group -->
+                                    <div class="form-group">
+                                        @Html.LabelFor(m => m.ConfirmPassword)
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Escriba ..." })
+                                    </div>
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+               </div>
+
+         </div>
+        
+        <div class="col-md-6">
+            <div class="box box-default">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">Datos Personales</h3>
+
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Nombre)
+                                            @Html.TextBoxFor(m => m.Nombre, new { @class = "form-control", placeholder = "Escriba ..." })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Apellido)
+                                            @Html.TextBoxFor(m => m.Apellido, new { @class = "form-control", placeholder = "Escriba ..." })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Telefono)
+
+                                            <div class="input-group">
+                                              <div class="input-group-addon">
+                                                <i class="fa fa-phone"></i>
+                                              </div>
+                                                <input type="text" id="Telefono" name="Telefono" class="form-control" data-inputmask='"mask": "(+99) 999 999-9999"' data-mask>                  
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => m.Tipo_usuario)
+                                            @Html.DropDownListFor(x => x.id_Tipo_Usuario, Model.Tipo_usuario, new { @class = "form-control select2", style = "width: 100%;" })
+                                        </div>
+
+                                    <!-- /.col -->
+                                    </div>
+                                <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+
+              </div>
+         </div>
+
+
+
+
+    }
+     </div>
+    
+    
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-default">
+                <div class="box-body">
+                    <a class="btn btn-app bg-red" href="javascript:{}" onclick="goBack()">
+                        <i class="fa fa-times-circle-o"></i> Cancelar
+                    </a>
+                    <a class="btn btn-app bg-aqua pull-right" href="javascript:{}" onclick="document.getElementById('registroform').submit();">
+                        <i class="fa fa-check-circle-o"></i> Crear
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="~/Content/Template/bootstrap/js/bootstrap.min.js"></script>
+<!-- InputMask -->
+<script src="~/Content/Template/plugins/input-mask/jquery.inputmask.js"></script>
+<script src="~/Content/Template/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
+<script src="~/Content/Template/plugins/input-mask/jquery.inputmask.extensions.js"></script>
+
+
+<script>
+    jQuery(window).load(function () {
+
+        $("#id_Tipo_Usuario").select2({
+            placeholder: "Seleccione el Tipo de Usuario"
+        });
+        
+        $("#Telefono").inputmask();
+
+
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>

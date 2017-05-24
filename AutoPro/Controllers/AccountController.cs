@@ -158,13 +158,13 @@ namespace AutoPro.Controllers
         public SelectList ObtenerListaTipoUsuario()
         {
             // crear una lista de tipos de usuarios
-            var consultaDeTipos = (from lp in autodb.tipo_usuario where lp.id_tipo_usuario != 0 select lp).ToList(); //lista
+            var consultaDeTipos = (from lp in autodb.tipo_usuario where lp.id_tipo_usuario != 1 select lp).ToList(); //lista
             List<SelectListItem> ListaDeTipo = new List<SelectListItem>();
             foreach (var item in consultaDeTipos)
             {
                 ListaDeTipo.Add(new SelectListItem() { Value = item.id_tipo_usuario.ToString(), Text = item.descripcion });
             }
-            SelectList lista = new SelectList(ListaDeTipo, "Value", "Text", "1");
+            SelectList lista = new SelectList(ListaDeTipo, "Value", "Text", "2");
 
             return lista;
         }
@@ -202,10 +202,11 @@ namespace AutoPro.Controllers
                         apellido = model.Apellido,
                         nombre = model.Nombre,
                         telefono = model.Telefono,
-                        direccion = model.Direccion,
+                        direccion = "None",
                         foto = "foto",
-                        fk_tipo_usuario = Convert.ToByte(model.Tipo_usuario),
-                        fk_seguridad = idSeg
+                        fk_tipo_usuario = Convert.ToByte(model.id_Tipo_Usuario),
+                        fk_seguridad = idSeg,
+                        fk_usuario_estado = 1
                     };
 
                     autodb.usuario.Add(user1);
