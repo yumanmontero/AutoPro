@@ -26,10 +26,12 @@ namespace AutoPro.Models
         public string descripcion { get; set; }
         public decimal valor { get; set; }
         public int fk_marca { get; set; }
+        public byte fk_clasificacion { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<banco_financia_modelo> banco_financia_modelo { get; set; }
         public virtual marca marca { get; set; }
+        public virtual modelo_clasificacion modelo_clasificacion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<vehiculo> vehiculo { get; set; }
     }

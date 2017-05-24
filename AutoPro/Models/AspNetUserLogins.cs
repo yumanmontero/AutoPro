@@ -12,13 +12,12 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class comision
+    public partial class AspNetUserLogins
     {
-        public int id_comision { get; set; }
-        public byte porcentaje { get; set; }
-        public System.DateTime fecha { get; set; }
-        public int fk_usuario { get; set; }
+        public string LoginProvider { get; set; }
+        public string ProviderKey { get; set; }
+        public string UserId { get; set; }
     
-        public virtual usuario usuario { get; set; }
+        public virtual AspNetUsers AspNetUsers { get; set; }
     }
 }

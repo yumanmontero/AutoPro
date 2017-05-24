@@ -12,18 +12,21 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tipo_costo
+    public partial class estructura_costo
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tipo_costo()
+        public estructura_costo()
         {
-            this.estructura_costo = new HashSet<estructura_costo>();
+            this.vehiculo_tiene_costo = new HashSet<vehiculo_tiene_costo>();
         }
     
-        public byte id_tipo_costo { get; set; }
-        public string concepto { get; set; }
+        public int id_costo { get; set; }
+        public decimal monto { get; set; }
+        public System.DateTime fecha { get; set; }
+        public byte fk_tipo_costo { get; set; }
     
+        public virtual tipo_costo tipo_costo { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<estructura_costo> estructura_costo { get; set; }
+        public virtual ICollection<vehiculo_tiene_costo> vehiculo_tiene_costo { get; set; }
     }
 }

@@ -5,6 +5,57 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="sgcaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ClaimType" Type="nvarchar(max)" />
+          <Property Name="ClaimValue" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="ProviderKey" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUserRoles">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+        </EntityType>
         <EntityType Name="banco">
           <Key>
             <PropertyRef Name="id_banco" />
@@ -22,6 +73,15 @@
           <Property Name="valor_limite" Type="money" Nullable="false" />
           <Property Name="nivel_preferencia" Type="tinyint" Nullable="false" />
         </EntityType>
+        <EntityType Name="ciudad">
+          <Key>
+            <PropertyRef Name="id_ciudad" />
+          </Key>
+          <Property Name="id_ciudad" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="coordenadas" Type="geography" Nullable="false" />
+          <Property Name="fk_estado" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="cliente">
           <Key>
             <PropertyRef Name="id_cliente" />
@@ -29,18 +89,9 @@
           <Property Name="id_cliente" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="apellido" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="direccion" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="telefono" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="correo_electronico" Type="varchar" MaxLength="100" Nullable="false" />
-        </EntityType>
-        <EntityType Name="comision">
-          <Key>
-            <PropertyRef Name="id_comision" />
-          </Key>
-          <Property Name="id_comision" Type="int" Nullable="false" />
-          <Property Name="porcentaje" Type="tinyint" Nullable="false" />
-          <Property Name="fecha" Type="datetime" Nullable="false" />
-          <Property Name="fk_usuario" Type="int" Nullable="false" />
+          <Property Name="fk_direccion" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="compra_tiene_vehiculo">
           <Key>
@@ -50,14 +101,33 @@
           <Property Name="fk_compra" Type="int" Nullable="false" />
           <Property Name="fk_vehiculo" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="costo">
+        <EntityType Name="concesionario">
           <Key>
-            <PropertyRef Name="id_costo" />
+            <PropertyRef Name="id_concesionario" />
           </Key>
-          <Property Name="id_costo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="monto" Type="money" Nullable="false" />
-          <Property Name="fecha" Type="datetime" Nullable="false" />
-          <Property Name="fk_tipo_costo" Type="tinyint" Nullable="false" />
+          <Property Name="id_concesionario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="telefono" Type="varchar" MaxLength="13" Nullable="false" />
+          <Property Name="logo" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="fk_direccion" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="direccion">
+          <Key>
+            <PropertyRef Name="id_direccion" />
+          </Key>
+          <Property Name="id_direccion" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="coordenadas" Type="geography" Nullable="false" />
+          <Property Name="fk_ciudad" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estado">
+          <Key>
+            <PropertyRef Name="id_estado" />
+          </Key>
+          <Property Name="id_estado" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="coordenadas" Type="geography" Nullable="false" />
+          <Property Name="fk_pais" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="estado_transaccion">
           <Key>
@@ -65,6 +135,24 @@
           </Key>
           <Property Name="id_estado_transaccion" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estructura_comision">
+          <Key>
+            <PropertyRef Name="id_comision" />
+          </Key>
+          <Property Name="id_comision" Type="int" Nullable="false" />
+          <Property Name="porcentaje" Type="tinyint" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estructura_costo">
+          <Key>
+            <PropertyRef Name="id_costo" />
+          </Key>
+          <Property Name="id_costo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="monto" Type="money" Nullable="false" />
+          <Property Name="fecha" Type="datetime" Nullable="false" />
+          <Property Name="fk_tipo_costo" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="marca">
           <Key>
@@ -92,16 +180,29 @@
           <Property Name="descripcion" Type="varchar" MaxLength="300" />
           <Property Name="valor" Type="money" Nullable="false" />
           <Property Name="fk_marca" Type="int" Nullable="false" />
+          <Property Name="fk_clasificacion" Type="tinyint" Nullable="false" />
         </EntityType>
-        <EntityType Name="sysdiagrams">
+        <EntityType Name="modelo_clasificacion">
           <Key>
-            <PropertyRef Name="diagram_id" />
+            <PropertyRef Name="id_clasificacion" />
           </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
+          <Property Name="id_clasificacion" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="modulos_sistema">
+          <Key>
+            <PropertyRef Name="id_modulo" />
+          </Key>
+          <Property Name="id_modulo" Type="tinyint" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pais">
+          <Key>
+            <PropertyRef Name="id_pais" />
+          </Key>
+          <Property Name="id_pais" Type="int" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="coordenadas" Type="geography" Nullable="false" />
         </EntityType>
         <EntityType Name="tipo_costo">
           <Key>
@@ -158,7 +259,16 @@
           <Property Name="foto" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="fk_usuario_estado" Type="tinyint" Nullable="false" />
           <Property Name="fk_tipo_usuario" Type="tinyint" Nullable="false" />
-          <Property Name="fk_seguridad" Type="nvarchar" MaxLength="128" />
+          <Property Name="fk_seguridad" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="fk_concesionario" Type="int" />
+        </EntityType>
+        <EntityType Name="usuario_acede_modulo">
+          <Key>
+            <PropertyRef Name="fk_usuario" />
+            <PropertyRef Name="fk_modulo" />
+          </Key>
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+          <Property Name="fk_modulo" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="usuario_estado">
           <Key>
@@ -166,6 +276,15 @@
           </Key>
           <Property Name="id_usuario_estado" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuario_gana_comision">
+          <Key>
+            <PropertyRef Name="fk_usuario" />
+            <PropertyRef Name="fk_transaccion_venta" />
+          </Key>
+          <Property Name="fk_usuario" Type="int" Nullable="false" />
+          <Property Name="fk_transaccion_venta" Type="int" Nullable="false" />
+          <Property Name="monto" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="usuario_tiene_mensaje">
           <Key>
@@ -199,6 +318,15 @@
           <Property Name="descripcion" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="factor" Type="tinyint" Nullable="false" />
         </EntityType>
+        <EntityType Name="vehiculo_tiene_costo">
+          <Key>
+            <PropertyRef Name="fk_vehiculo" />
+            <PropertyRef Name="fk_costo" />
+          </Key>
+          <Property Name="fk_vehiculo" Type="int" Nullable="false" />
+          <Property Name="fk_costo" Type="int" Nullable="false" />
+          <Property Name="gasto" Type="money" Nullable="false" />
+        </EntityType>
         <EntityType Name="venta_tiene_vehiculo">
           <Key>
             <PropertyRef Name="fk_venta" />
@@ -231,14 +359,38 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ciudad_estado">
+          <End Role="estado" Type="Self.estado" Multiplicity="1" />
+          <End Role="ciudad" Type="Self.ciudad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado">
+              <PropertyRef Name="id_estado" />
+            </Principal>
+            <Dependent Role="ciudad">
+              <PropertyRef Name="fk_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cliente_direccion">
+          <End Role="direccion" Type="Self.direccion" Multiplicity="1" />
+          <End Role="cliente" Type="Self.cliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="direccion">
+              <PropertyRef Name="id_direccion" />
+            </Principal>
+            <Dependent Role="cliente">
+              <PropertyRef Name="fk_direccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_comision_usuario">
           <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
-          <End Role="comision" Type="Self.comision" Multiplicity="*" />
+          <End Role="estructura_comision" Type="Self.estructura_comision" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="usuario">
               <PropertyRef Name="id_usuario" />
             </Principal>
-            <Dependent Role="comision">
+            <Dependent Role="estructura_comision">
               <PropertyRef Name="fk_usuario" />
             </Dependent>
           </ReferentialConstraint>
@@ -267,15 +419,107 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_concesionario_direccion">
+          <End Role="direccion" Type="Self.direccion" Multiplicity="1" />
+          <End Role="concesionario" Type="Self.concesionario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="direccion">
+              <PropertyRef Name="id_direccion" />
+            </Principal>
+            <Dependent Role="concesionario">
+              <PropertyRef Name="fk_direccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_costo_tipo_costo">
           <End Role="tipo_costo" Type="Self.tipo_costo" Multiplicity="1" />
-          <End Role="costo" Type="Self.costo" Multiplicity="*" />
+          <End Role="estructura_costo" Type="Self.estructura_costo" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tipo_costo">
               <PropertyRef Name="id_tipo_costo" />
             </Principal>
-            <Dependent Role="costo">
+            <Dependent Role="estructura_costo">
               <PropertyRef Name="fk_tipo_costo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_direccion_ciudad">
+          <End Role="ciudad" Type="Self.ciudad" Multiplicity="1" />
+          <End Role="direccion" Type="Self.direccion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ciudad">
+              <PropertyRef Name="id_ciudad" />
+            </Principal>
+            <Dependent Role="direccion">
+              <PropertyRef Name="fk_ciudad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estado_pais">
+          <End Role="pais" Type="Self.pais" Multiplicity="1" />
+          <End Role="estado" Type="Self.estado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pais">
+              <PropertyRef Name="id_pais" />
+            </Principal>
+            <Dependent Role="estado">
+              <PropertyRef Name="fk_pais" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -288,6 +532,18 @@
             </Principal>
             <Dependent Role="modelo">
               <PropertyRef Name="fk_marca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_modelo_modelo_clasificacion">
+          <End Role="modelo_clasificacion" Type="Self.modelo_clasificacion" Multiplicity="1" />
+          <End Role="modelo" Type="Self.modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo_clasificacion">
+              <PropertyRef Name="id_clasificacion" />
+            </Principal>
+            <Dependent Role="modelo">
+              <PropertyRef Name="fk_clasificacion" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -359,6 +615,78 @@
               <PropertyRef Name="id_usuario" />
             </Principal>
             <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_acede_modulo_modulos_sistema">
+          <End Role="modulos_sistema" Type="Self.modulos_sistema" Multiplicity="1" />
+          <End Role="usuario_acede_modulo" Type="Self.usuario_acede_modulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modulos_sistema">
+              <PropertyRef Name="id_modulo" />
+            </Principal>
+            <Dependent Role="usuario_acede_modulo">
+              <PropertyRef Name="fk_modulo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_acede_modulo_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="usuario_acede_modulo" Type="Self.usuario_acede_modulo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="usuario_acede_modulo">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_seguridad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_concesionario">
+          <End Role="concesionario" Type="Self.concesionario" Multiplicity="0..1" />
+          <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="concesionario">
+              <PropertyRef Name="id_concesionario" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_concesionario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_gana_comision_transaccion_venta">
+          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="1" />
+          <End Role="usuario_gana_comision" Type="Self.usuario_gana_comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaccion_venta">
+              <PropertyRef Name="id_venta" />
+            </Principal>
+            <Dependent Role="usuario_gana_comision">
+              <PropertyRef Name="fk_transaccion_venta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_gana_comision_usuario">
+          <End Role="usuario" Type="Self.usuario" Multiplicity="1" />
+          <End Role="usuario_gana_comision" Type="Self.usuario_gana_comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="usuario_gana_comision">
               <PropertyRef Name="fk_usuario" />
             </Dependent>
           </ReferentialConstraint>
@@ -423,6 +751,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_vehiculo_tiene_costo_estructura_costo">
+          <End Role="estructura_costo" Type="Self.estructura_costo" Multiplicity="1" />
+          <End Role="vehiculo_tiene_costo" Type="Self.vehiculo_tiene_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estructura_costo">
+              <PropertyRef Name="id_costo" />
+            </Principal>
+            <Dependent Role="vehiculo_tiene_costo">
+              <PropertyRef Name="fk_costo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_tiene_costo_vehiculo">
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="1" />
+          <End Role="vehiculo_tiene_costo" Type="Self.vehiculo_tiene_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo">
+              <PropertyRef Name="id_vehiculo" />
+            </Principal>
+            <Dependent Role="vehiculo_tiene_costo">
+              <PropertyRef Name="fk_vehiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_vehiculo_vehiculo_estado">
           <End Role="vehiculo_estado" Type="Self.vehiculo_estado" Multiplicity="1" />
           <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
@@ -460,27 +812,41 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="sgcaModelStoreContainer">
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="banco" EntityType="Self.banco" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="banco_financia_modelo" EntityType="Self.banco_financia_modelo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ciudad" EntityType="Self.ciudad" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="cliente" EntityType="Self.cliente" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="comision" EntityType="Self.comision" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="compra_tiene_vehiculo" EntityType="Self.compra_tiene_vehiculo" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="costo" EntityType="Self.costo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="concesionario" EntityType="Self.concesionario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="direccion" EntityType="Self.direccion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estado" EntityType="Self.estado" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="estado_transaccion" EntityType="Self.estado_transaccion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estructura_comision" EntityType="Self.estructura_comision" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="estructura_costo" EntityType="Self.estructura_costo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="marca" EntityType="Self.marca" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="mensaje" EntityType="Self.mensaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="modelo" EntityType="Self.modelo" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="modelo_clasificacion" EntityType="Self.modelo_clasificacion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="modulos_sistema" EntityType="Self.modulos_sistema" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pais" EntityType="Self.pais" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_costo" EntityType="Self.tipo_costo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_transaccion_venta" EntityType="Self.tipo_transaccion_venta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_usuario" EntityType="Self.tipo_usuario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="transaccion_compra" EntityType="Self.transaccion_compra" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="transaccion_venta" EntityType="Self.transaccion_venta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuario" EntityType="Self.usuario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario_acede_modulo" EntityType="Self.usuario_acede_modulo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuario_estado" EntityType="Self.usuario_estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="usuario_gana_comision" EntityType="Self.usuario_gana_comision" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="usuario_tiene_mensaje" EntityType="Self.usuario_tiene_mensaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vehiculo" EntityType="Self.vehiculo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vehiculo_estado" EntityType="Self.vehiculo_estado" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="vehiculo_tiene_costo" EntityType="Self.vehiculo_tiene_costo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="venta_tiene_vehiculo" EntityType="Self.venta_tiene_vehiculo" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_banco_financia_modelo_banco" Association="Self.FK_banco_financia_modelo_banco">
             <End Role="banco" EntitySet="banco" />
@@ -490,9 +856,17 @@
             <End Role="modelo" EntitySet="modelo" />
             <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
           </AssociationSet>
+          <AssociationSet Name="FK_ciudad_estado" Association="Self.FK_ciudad_estado">
+            <End Role="estado" EntitySet="estado" />
+            <End Role="ciudad" EntitySet="ciudad" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cliente_direccion" Association="Self.FK_cliente_direccion">
+            <End Role="direccion" EntitySet="direccion" />
+            <End Role="cliente" EntitySet="cliente" />
+          </AssociationSet>
           <AssociationSet Name="FK_comision_usuario" Association="Self.FK_comision_usuario">
             <End Role="usuario" EntitySet="usuario" />
-            <End Role="comision" EntitySet="comision" />
+            <End Role="estructura_comision" EntitySet="estructura_comision" />
           </AssociationSet>
           <AssociationSet Name="FK_compra_tiene_vehiculo_compra_tiene_vehiculo" Association="Self.FK_compra_tiene_vehiculo_compra_tiene_vehiculo">
             <End Role="transaccion_compra" EntitySet="transaccion_compra" />
@@ -502,12 +876,44 @@
             <End Role="vehiculo" EntitySet="vehiculo" />
             <End Role="compra_tiene_vehiculo" EntitySet="compra_tiene_vehiculo" />
           </AssociationSet>
+          <AssociationSet Name="FK_concesionario_direccion" Association="Self.FK_concesionario_direccion">
+            <End Role="direccion" EntitySet="direccion" />
+            <End Role="concesionario" EntitySet="concesionario" />
+          </AssociationSet>
           <AssociationSet Name="FK_costo_tipo_costo" Association="Self.FK_costo_tipo_costo">
             <End Role="tipo_costo" EntitySet="tipo_costo" />
-            <End Role="costo" EntitySet="costo" />
+            <End Role="estructura_costo" EntitySet="estructura_costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetRoles_RoleId">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId" Association="Self.FK_dbo_AspNetUserRoles_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_direccion_ciudad" Association="Self.FK_direccion_ciudad">
+            <End Role="ciudad" EntitySet="ciudad" />
+            <End Role="direccion" EntitySet="direccion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estado_pais" Association="Self.FK_estado_pais">
+            <End Role="pais" EntitySet="pais" />
+            <End Role="estado" EntitySet="estado" />
           </AssociationSet>
           <AssociationSet Name="FK_modelo_marca" Association="Self.FK_modelo_marca">
             <End Role="marca" EntitySet="marca" />
+            <End Role="modelo" EntitySet="modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_modelo_modelo_clasificacion" Association="Self.FK_modelo_modelo_clasificacion">
+            <End Role="modelo_clasificacion" EntitySet="modelo_clasificacion" />
             <End Role="modelo" EntitySet="modelo" />
           </AssociationSet>
           <AssociationSet Name="FK_transaccion_compra_estado_transaccion" Association="Self.FK_transaccion_compra_estado_transaccion">
@@ -534,6 +940,30 @@
             <End Role="usuario" EntitySet="usuario" />
             <End Role="transaccion_venta" EntitySet="transaccion_venta" />
           </AssociationSet>
+          <AssociationSet Name="FK_usuario_acede_modulo_modulos_sistema" Association="Self.FK_usuario_acede_modulo_modulos_sistema">
+            <End Role="modulos_sistema" EntitySet="modulos_sistema" />
+            <End Role="usuario_acede_modulo" EntitySet="usuario_acede_modulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_acede_modulo_usuario" Association="Self.FK_usuario_acede_modulo_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="usuario_acede_modulo" EntitySet="usuario_acede_modulo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_AspNetUsers" Association="Self.FK_usuario_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_concesionario" Association="Self.FK_usuario_concesionario">
+            <End Role="concesionario" EntitySet="concesionario" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_gana_comision_transaccion_venta" Association="Self.FK_usuario_gana_comision_transaccion_venta">
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+            <End Role="usuario_gana_comision" EntitySet="usuario_gana_comision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_gana_comision_usuario" Association="Self.FK_usuario_gana_comision_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="usuario_gana_comision" EntitySet="usuario_gana_comision" />
+          </AssociationSet>
           <AssociationSet Name="FK_usuario_tiene_mensaje_mensaje" Association="Self.FK_usuario_tiene_mensaje_mensaje">
             <End Role="mensaje" EntitySet="mensaje" />
             <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
@@ -554,6 +984,14 @@
             <End Role="modelo" EntitySet="modelo" />
             <End Role="vehiculo" EntitySet="vehiculo" />
           </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_tiene_costo_estructura_costo" Association="Self.FK_vehiculo_tiene_costo_estructura_costo">
+            <End Role="estructura_costo" EntitySet="estructura_costo" />
+            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_tiene_costo_vehiculo" Association="Self.FK_vehiculo_tiene_costo_vehiculo">
+            <End Role="vehiculo" EntitySet="vehiculo" />
+            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
+          </AssociationSet>
           <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="Self.FK_vehiculo_vehiculo_estado">
             <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
             <End Role="vehiculo" EntitySet="vehiculo" />
@@ -571,426 +1009,126 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="sgcaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="banco">
-          <Key>
-            <PropertyRef Name="id_banco" />
-          </Key>
-          <Property Name="id_banco" Type="Byte" Nullable="false" />
-          <Property Name="nombre" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="banco_financia_modelo" Relationship="Self.FK_banco_financia_modelo_banco" FromRole="banco" ToRole="banco_financia_modelo" />
-        </EntityType>
-        <EntityType Name="banco_financia_modelo">
-          <Key>
-            <PropertyRef Name="fk_modelo" />
-            <PropertyRef Name="fk_banco" />
-          </Key>
-          <Property Name="fk_modelo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="fk_banco" Type="Byte" Nullable="false" />
-          <Property Name="valor_limite" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="nivel_preferencia" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="banco" Relationship="Self.FK_banco_financia_modelo_banco" FromRole="banco_financia_modelo" ToRole="banco" />
-          <NavigationProperty Name="modelo" Relationship="Self.FK_banco_financia_modelo_modelo" FromRole="banco_financia_modelo" ToRole="modelo" />
-        </EntityType>
-        <EntityType Name="cliente">
-          <Key>
-            <PropertyRef Name="id_cliente" />
-          </Key>
-          <Property Name="id_cliente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="nombre" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="direccion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="telefono" Type="String" MaxLength="13" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="correo_electronico" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_cliente" FromRole="cliente" ToRole="transaccion_venta" />
-        </EntityType>
-        <EntityType Name="comision">
-          <Key>
-            <PropertyRef Name="id_comision" />
-          </Key>
-          <Property Name="id_comision" Type="Int32" Nullable="false" />
-          <Property Name="porcentaje" Type="Byte" Nullable="false" />
-          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_comision_usuario" FromRole="comision" ToRole="usuario" />
-        </EntityType>
-        <EntityType Name="costo">
-          <Key>
-            <PropertyRef Name="id_costo" />
-          </Key>
-          <Property Name="id_costo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="monto" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="fk_tipo_costo" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="tipo_costo" Relationship="Self.FK_costo_tipo_costo" FromRole="costo" ToRole="tipo_costo" />
-        </EntityType>
-        <EntityType Name="estado_transaccion">
-          <Key>
-            <PropertyRef Name="id_estado_transaccion" />
-          </Key>
-          <Property Name="id_estado_transaccion" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="transaccion_compra" Relationship="Self.FK_transaccion_compra_estado_transaccion" FromRole="estado_transaccion" ToRole="transaccion_compra" />
-          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_estado_transaccion" FromRole="estado_transaccion" ToRole="transaccion_venta" />
-        </EntityType>
-        <EntityType Name="marca">
-          <Key>
-            <PropertyRef Name="id_marca" />
-          </Key>
-          <Property Name="id_marca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="descrpcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="modelo" Relationship="Self.FK_modelo_marca" FromRole="marca" ToRole="modelo" />
-        </EntityType>
-        <EntityType Name="mensaje">
-          <Key>
-            <PropertyRef Name="id_mensaje" />
-          </Key>
-          <Property Name="id_mensaje" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="titulo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="texto" Type="String" MaxLength="300" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="usuario_tiene_mensaje" Relationship="Self.FK_usuario_tiene_mensaje_mensaje" FromRole="mensaje" ToRole="usuario_tiene_mensaje" />
-        </EntityType>
-        <EntityType Name="modelo">
-          <Key>
-            <PropertyRef Name="id_modelo" />
-          </Key>
-          <Property Name="id_modelo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="descripcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="valor" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="fk_marca" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="banco_financia_modelo" Relationship="Self.FK_banco_financia_modelo_modelo" FromRole="modelo" ToRole="banco_financia_modelo" />
-          <NavigationProperty Name="marca" Relationship="Self.FK_modelo_marca" FromRole="modelo" ToRole="marca" />
-          <NavigationProperty Name="vehiculo" Relationship="Self.FK_vehiculo_modelo" FromRole="modelo" ToRole="vehiculo" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="tipo_costo">
-          <Key>
-            <PropertyRef Name="id_tipo_costo" />
-          </Key>
-          <Property Name="id_tipo_costo" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="concepto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="costo" Relationship="Self.FK_costo_tipo_costo" FromRole="tipo_costo" ToRole="costo" />
-        </EntityType>
-        <EntityType Name="tipo_transaccion_venta">
-          <Key>
-            <PropertyRef Name="id_tipo_venta" />
-          </Key>
-          <Property Name="id_tipo_venta" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="descripcion" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="transaccion_venta" Relationship="Self.FK_transaccion_venta_tipo_transaccion_venta" FromRole="tipo_transaccion_venta" ToRole="transaccion_venta" />
-        </EntityType>
-        <EntityType Name="tipo_usuario">
-          <Key>
-            <PropertyRef Name="id_tipo_usuario" />
-          </Key>
-          <Property Name="id_tipo_usuario" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_tipo_usuario" FromRole="tipo_usuario" ToRole="usuario" />
-        </EntityType>
-        <EntityType Name="transaccion_compra">
-          <Key>
-            <PropertyRef Name="id_compra" />
-          </Key>
-          <Property Name="id_compra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />
-          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="estado_transaccion" Relationship="Self.FK_transaccion_compra_estado_transaccion" FromRole="transaccion_compra" ToRole="estado_transaccion" />
-          <NavigationProperty Name="vehiculo" Relationship="Self.compra_tiene_vehiculo" FromRole="transaccion_compra" ToRole="vehiculo" />
-          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_transaccion_compra_usuario" FromRole="transaccion_compra" ToRole="usuario" />
-        </EntityType>
-        <EntityType Name="transaccion_venta">
-          <Key>
-            <PropertyRef Name="id_venta" />
-          </Key>
-          <Property Name="id_venta" Type="Int32" Nullable="false" />
-          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />
-          <Property Name="fk_tipo_venta" Type="Byte" Nullable="false" />
-          <Property Name="fk_cliente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="cliente" Relationship="Self.FK_transaccion_venta_cliente" FromRole="transaccion_venta" ToRole="cliente" />
-          <NavigationProperty Name="estado_transaccion" Relationship="Self.FK_transaccion_venta_estado_transaccion" FromRole="transaccion_venta" ToRole="estado_transaccion" />
-          <NavigationProperty Name="tipo_transaccion_venta" Relationship="Self.FK_transaccion_venta_tipo_transaccion_venta" FromRole="transaccion_venta" ToRole="tipo_transaccion_venta" />
-          <NavigationProperty Name="vehiculo" Relationship="Self.venta_tiene_vehiculo" FromRole="transaccion_venta" ToRole="vehiculo" />
-          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_transaccion_venta_usuario" FromRole="transaccion_venta" ToRole="usuario" />
-        </EntityType>
-        <EntityType Name="usuario_estado">
-          <Key>
-            <PropertyRef Name="id_usuario_estado" />
-          </Key>
-          <Property Name="id_usuario_estado" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_usuario_estado" FromRole="usuario_estado" ToRole="usuario" />
-        </EntityType>
-        <EntityType Name="usuario_tiene_mensaje">
-          <Key>
-            <PropertyRef Name="fk_usuario" />
-            <PropertyRef Name="fk_mensaje" />
-          </Key>
-          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
-          <Property Name="fk_mensaje" Type="Int32" Nullable="false" />
-          <Property Name="chequeado" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="mensaje" Relationship="Self.FK_usuario_tiene_mensaje_mensaje" FromRole="usuario_tiene_mensaje" ToRole="mensaje" />
-          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_tiene_mensaje_usuario" FromRole="usuario_tiene_mensaje" ToRole="usuario" />
-        </EntityType>
-        <EntityType Name="vehiculo">
-          <Key>
-            <PropertyRef Name="id_vehiculo" />
-          </Key>
-          <Property Name="id_vehiculo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="año" Type="Int16" Nullable="false" />
-          <Property Name="kilometraje" Type="Int32" Nullable="false" />
-          <Property Name="imagen" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="fecha_ingreso" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="fecha_salida" Type="DateTime" Precision="3" />
-          <Property Name="valor_compra" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="valor_venta" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="fk_vehiculo_estado" Type="Byte" Nullable="false" />
-          <Property Name="fk_modelo" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="modelo" Relationship="Self.FK_vehiculo_modelo" FromRole="vehiculo" ToRole="modelo" />
-          <NavigationProperty Name="vehiculo_estado" Relationship="Self.FK_vehiculo_vehiculo_estado" FromRole="vehiculo" ToRole="vehiculo_estado" />
-          <NavigationProperty Name="transaccion_compra" Relationship="Self.compra_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_compra" />
-          <NavigationProperty Name="transaccion_venta" Relationship="Self.venta_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_venta" />
-        </EntityType>
-        <EntityType Name="vehiculo_estado">
-          <Key>
-            <PropertyRef Name="id_vehiculo_estado" />
-          </Key>
-          <Property Name="id_vehiculo_estado" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="descripcion" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="factor" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="vehiculo" Relationship="Self.FK_vehiculo_vehiculo_estado" FromRole="vehiculo_estado" ToRole="vehiculo" />
-        </EntityType>
-        <Association Name="FK_banco_financia_modelo_banco">
-          <End Role="banco" Type="Self.banco" Multiplicity="1" />
-          <End Role="banco_financia_modelo" Type="Self.banco_financia_modelo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="banco">
-              <PropertyRef Name="id_banco" />
-            </Principal>
-            <Dependent Role="banco_financia_modelo">
-              <PropertyRef Name="fk_banco" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_banco_financia_modelo_modelo">
-          <End Role="modelo" Type="Self.modelo" Multiplicity="1" />
-          <End Role="banco_financia_modelo" Type="Self.banco_financia_modelo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="modelo">
-              <PropertyRef Name="id_modelo" />
-            </Principal>
-            <Dependent Role="banco_financia_modelo">
-              <PropertyRef Name="fk_modelo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_transaccion_venta_cliente">
-          <End Role="cliente" Type="Self.cliente" Multiplicity="1" />
-          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cliente">
-              <PropertyRef Name="id_cliente" />
-            </Principal>
-            <Dependent Role="transaccion_venta">
-              <PropertyRef Name="fk_cliente" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_costo_tipo_costo">
-          <End Role="tipo_costo" Type="Self.tipo_costo" Multiplicity="1" />
-          <End Role="costo" Type="Self.costo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tipo_costo">
-              <PropertyRef Name="id_tipo_costo" />
-            </Principal>
-            <Dependent Role="costo">
-              <PropertyRef Name="fk_tipo_costo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_transaccion_compra_estado_transaccion">
-          <End Role="estado_transaccion" Type="Self.estado_transaccion" Multiplicity="1" />
-          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="estado_transaccion">
-              <PropertyRef Name="id_estado_transaccion" />
-            </Principal>
-            <Dependent Role="transaccion_compra">
-              <PropertyRef Name="fk_estado_transaccion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_transaccion_venta_estado_transaccion">
-          <End Role="estado_transaccion" Type="Self.estado_transaccion" Multiplicity="1" />
-          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="estado_transaccion">
-              <PropertyRef Name="id_estado_transaccion" />
-            </Principal>
-            <Dependent Role="transaccion_venta">
-              <PropertyRef Name="fk_estado_transaccion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_modelo_marca">
-          <End Role="marca" Type="Self.marca" Multiplicity="1" />
-          <End Role="modelo" Type="Self.modelo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="marca">
-              <PropertyRef Name="id_marca" />
-            </Principal>
-            <Dependent Role="modelo">
-              <PropertyRef Name="fk_marca" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_usuario_tiene_mensaje_mensaje">
-          <End Role="mensaje" Type="Self.mensaje" Multiplicity="1" />
-          <End Role="usuario_tiene_mensaje" Type="Self.usuario_tiene_mensaje" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="mensaje">
-              <PropertyRef Name="id_mensaje" />
-            </Principal>
-            <Dependent Role="usuario_tiene_mensaje">
-              <PropertyRef Name="fk_mensaje" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_vehiculo_modelo">
-          <End Role="modelo" Type="Self.modelo" Multiplicity="1" />
-          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="modelo">
-              <PropertyRef Name="id_modelo" />
-            </Principal>
-            <Dependent Role="vehiculo">
-              <PropertyRef Name="fk_modelo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_transaccion_venta_tipo_transaccion_venta">
-          <End Role="tipo_transaccion_venta" Type="Self.tipo_transaccion_venta" Multiplicity="1" />
-          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tipo_transaccion_venta">
-              <PropertyRef Name="id_tipo_venta" />
-            </Principal>
-            <Dependent Role="transaccion_venta">
-              <PropertyRef Name="fk_tipo_venta" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_vehiculo_vehiculo_estado">
-          <End Role="vehiculo_estado" Type="Self.vehiculo_estado" Multiplicity="1" />
-          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vehiculo_estado">
-              <PropertyRef Name="id_vehiculo_estado" />
-            </Principal>
-            <Dependent Role="vehiculo">
-              <PropertyRef Name="fk_vehiculo_estado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="compra_tiene_vehiculo">
-          <End Role="transaccion_compra" Type="Self.transaccion_compra" Multiplicity="*" />
-          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
-        </Association>
-        <Association Name="venta_tiene_vehiculo">
-          <End Role="transaccion_venta" Type="Self.transaccion_venta" Multiplicity="*" />
-          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
-        </Association>
         <EntityContainer Name="sgcaEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="banco" EntityType="Self.banco" />
-          <EntitySet Name="banco_financia_modelo" EntityType="Self.banco_financia_modelo" />
-          <EntitySet Name="cliente" EntityType="Self.cliente" />
-          <EntitySet Name="comision" EntityType="Self.comision" />
-          <EntitySet Name="costo" EntityType="Self.costo" />
-          <EntitySet Name="estado_transaccion" EntityType="Self.estado_transaccion" />
-          <EntitySet Name="marca" EntityType="Self.marca" />
-          <EntitySet Name="mensaje" EntityType="Self.mensaje" />
-          <EntitySet Name="modelo" EntityType="Self.modelo" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
-          <EntitySet Name="tipo_costo" EntityType="Self.tipo_costo" />
-          <EntitySet Name="tipo_transaccion_venta" EntityType="Self.tipo_transaccion_venta" />
-          <EntitySet Name="tipo_usuario" EntityType="Self.tipo_usuario" />
-          <EntitySet Name="transaccion_compra" EntityType="Self.transaccion_compra" />
-          <EntitySet Name="transaccion_venta" EntityType="Self.transaccion_venta" />
-          <EntitySet Name="usuario_estado" EntityType="Self.usuario_estado" />
-          <EntitySet Name="usuario_tiene_mensaje" EntityType="Self.usuario_tiene_mensaje" />
-          <EntitySet Name="vehiculo" EntityType="Self.vehiculo" />
-          <EntitySet Name="vehiculo_estado" EntityType="Self.vehiculo_estado" />
-          <AssociationSet Name="FK_banco_financia_modelo_banco" Association="Self.FK_banco_financia_modelo_banco">
+          <EntitySet Name="AspNetRoles" EntityType="sgcaModel.AspNetRoles" />
+          <EntitySet Name="AspNetUserClaims" EntityType="sgcaModel.AspNetUserClaims" />
+          <EntitySet Name="AspNetUserLogins" EntityType="sgcaModel.AspNetUserLogins" />
+          <EntitySet Name="AspNetUsers" EntityType="sgcaModel.AspNetUsers" />
+          <EntitySet Name="banco" EntityType="sgcaModel.banco" />
+          <EntitySet Name="banco_financia_modelo" EntityType="sgcaModel.banco_financia_modelo" />
+          <EntitySet Name="ciudad" EntityType="sgcaModel.ciudad" />
+          <EntitySet Name="cliente" EntityType="sgcaModel.cliente" />
+          <EntitySet Name="concesionario" EntityType="sgcaModel.concesionario" />
+          <EntitySet Name="direccion" EntityType="sgcaModel.direccion" />
+          <EntitySet Name="estado" EntityType="sgcaModel.estado" />
+          <EntitySet Name="estado_transaccion" EntityType="sgcaModel.estado_transaccion" />
+          <EntitySet Name="estructura_comision" EntityType="sgcaModel.estructura_comision" />
+          <EntitySet Name="estructura_costo" EntityType="sgcaModel.estructura_costo" />
+          <EntitySet Name="marca" EntityType="sgcaModel.marca" />
+          <EntitySet Name="mensaje" EntityType="sgcaModel.mensaje" />
+          <EntitySet Name="modelo" EntityType="sgcaModel.modelo" />
+          <EntitySet Name="modelo_clasificacion" EntityType="sgcaModel.modelo_clasificacion" />
+          <EntitySet Name="modulos_sistema" EntityType="sgcaModel.modulos_sistema" />
+          <EntitySet Name="pais" EntityType="sgcaModel.pais" />
+          <EntitySet Name="tipo_costo" EntityType="sgcaModel.tipo_costo" />
+          <EntitySet Name="tipo_transaccion_venta" EntityType="sgcaModel.tipo_transaccion_venta" />
+          <EntitySet Name="tipo_usuario" EntityType="sgcaModel.tipo_usuario" />
+          <EntitySet Name="transaccion_compra" EntityType="sgcaModel.transaccion_compra" />
+          <EntitySet Name="transaccion_venta" EntityType="sgcaModel.transaccion_venta" />
+          <EntitySet Name="usuario" EntityType="sgcaModel.usuario" />
+          <EntitySet Name="usuario_estado" EntityType="sgcaModel.usuario_estado" />
+          <EntitySet Name="usuario_gana_comision" EntityType="sgcaModel.usuario_gana_comision" />
+          <EntitySet Name="usuario_tiene_mensaje" EntityType="sgcaModel.usuario_tiene_mensaje" />
+          <EntitySet Name="vehiculo" EntityType="sgcaModel.vehiculo" />
+          <EntitySet Name="vehiculo_estado" EntityType="sgcaModel.vehiculo_estado" />
+          <EntitySet Name="vehiculo_tiene_costo" EntityType="sgcaModel.vehiculo_tiene_costo" />
+          <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="sgcaModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" Association="sgcaModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_AspNetUsers" Association="sgcaModel.FK_usuario_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_banco_financia_modelo_banco" Association="sgcaModel.FK_banco_financia_modelo_banco">
             <End Role="banco" EntitySet="banco" />
             <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
           </AssociationSet>
-          <AssociationSet Name="FK_banco_financia_modelo_modelo" Association="Self.FK_banco_financia_modelo_modelo">
+          <AssociationSet Name="FK_banco_financia_modelo_modelo" Association="sgcaModel.FK_banco_financia_modelo_modelo">
             <End Role="modelo" EntitySet="modelo" />
             <End Role="banco_financia_modelo" EntitySet="banco_financia_modelo" />
           </AssociationSet>
-          <AssociationSet Name="FK_transaccion_venta_cliente" Association="Self.FK_transaccion_venta_cliente">
+          <AssociationSet Name="FK_ciudad_estado" Association="sgcaModel.FK_ciudad_estado">
+            <End Role="estado" EntitySet="estado" />
+            <End Role="ciudad" EntitySet="ciudad" />
+          </AssociationSet>
+          <AssociationSet Name="FK_direccion_ciudad" Association="sgcaModel.FK_direccion_ciudad">
+            <End Role="ciudad" EntitySet="ciudad" />
+            <End Role="direccion" EntitySet="direccion" />
+          </AssociationSet>
+          <AssociationSet Name="FK_cliente_direccion" Association="sgcaModel.FK_cliente_direccion">
+            <End Role="direccion" EntitySet="direccion" />
+            <End Role="cliente" EntitySet="cliente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_venta_cliente" Association="sgcaModel.FK_transaccion_venta_cliente">
             <End Role="cliente" EntitySet="cliente" />
             <End Role="transaccion_venta" EntitySet="transaccion_venta" />
           </AssociationSet>
-          <AssociationSet Name="FK_costo_tipo_costo" Association="Self.FK_costo_tipo_costo">
-            <End Role="tipo_costo" EntitySet="tipo_costo" />
-            <End Role="costo" EntitySet="costo" />
+          <AssociationSet Name="FK_concesionario_direccion" Association="sgcaModel.FK_concesionario_direccion">
+            <End Role="direccion" EntitySet="direccion" />
+            <End Role="concesionario" EntitySet="concesionario" />
           </AssociationSet>
-          <AssociationSet Name="FK_transaccion_compra_estado_transaccion" Association="Self.FK_transaccion_compra_estado_transaccion">
+          <AssociationSet Name="FK_usuario_concesionario" Association="sgcaModel.FK_usuario_concesionario">
+            <End Role="concesionario" EntitySet="concesionario" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estado_pais" Association="sgcaModel.FK_estado_pais">
+            <End Role="pais" EntitySet="pais" />
+            <End Role="estado" EntitySet="estado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_transaccion_compra_estado_transaccion" Association="sgcaModel.FK_transaccion_compra_estado_transaccion">
             <End Role="estado_transaccion" EntitySet="estado_transaccion" />
             <End Role="transaccion_compra" EntitySet="transaccion_compra" />
           </AssociationSet>
-          <AssociationSet Name="FK_transaccion_venta_estado_transaccion" Association="Self.FK_transaccion_venta_estado_transaccion">
+          <AssociationSet Name="FK_transaccion_venta_estado_transaccion" Association="sgcaModel.FK_transaccion_venta_estado_transaccion">
             <End Role="estado_transaccion" EntitySet="estado_transaccion" />
             <End Role="transaccion_venta" EntitySet="transaccion_venta" />
           </AssociationSet>
-          <AssociationSet Name="FK_modelo_marca" Association="Self.FK_modelo_marca">
+          <AssociationSet Name="FK_comision_usuario" Association="sgcaModel.FK_comision_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="estructura_comision" EntitySet="estructura_comision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_costo_tipo_costo" Association="sgcaModel.FK_costo_tipo_costo">
+            <End Role="tipo_costo" EntitySet="tipo_costo" />
+            <End Role="estructura_costo" EntitySet="estructura_costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_tiene_costo_estructura_costo" Association="sgcaModel.FK_vehiculo_tiene_costo_estructura_costo">
+            <End Role="estructura_costo" EntitySet="estructura_costo" />
+            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_modelo_marca" Association="sgcaModel.FK_modelo_marca">
             <End Role="marca" EntitySet="marca" />
             <End Role="modelo" EntitySet="modelo" />
           </AssociationSet>
-          <AssociationSet Name="FK_usuario_tiene_mensaje_mensaje" Association="Self.FK_usuario_tiene_mensaje_mensaje">
+          <AssociationSet Name="FK_usuario_tiene_mensaje_mensaje" Association="sgcaModel.FK_usuario_tiene_mensaje_mensaje">
             <End Role="mensaje" EntitySet="mensaje" />
             <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
           </AssociationSet>
-          <AssociationSet Name="FK_vehiculo_modelo" Association="Self.FK_vehiculo_modelo">
+          <AssociationSet Name="FK_modelo_modelo_clasificacion" Association="sgcaModel.FK_modelo_modelo_clasificacion">
+            <End Role="modelo_clasificacion" EntitySet="modelo_clasificacion" />
+            <End Role="modelo" EntitySet="modelo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_modelo" Association="sgcaModel.FK_vehiculo_modelo">
             <End Role="modelo" EntitySet="modelo" />
             <End Role="vehiculo" EntitySet="vehiculo" />
           </AssociationSet>
-          <AssociationSet Name="FK_transaccion_venta_tipo_transaccion_venta" Association="Self.FK_transaccion_venta_tipo_transaccion_venta">
+          <AssociationSet Name="FK_transaccion_venta_tipo_transaccion_venta" Association="sgcaModel.FK_transaccion_venta_tipo_transaccion_venta">
             <End Role="tipo_transaccion_venta" EntitySet="tipo_transaccion_venta" />
             <End Role="transaccion_venta" EntitySet="transaccion_venta" />
-          </AssociationSet>
-          <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="Self.FK_vehiculo_vehiculo_estado">
-            <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
-            <End Role="vehiculo" EntitySet="vehiculo" />
-          </AssociationSet>
-          <AssociationSet Name="compra_tiene_vehiculo" Association="Self.compra_tiene_vehiculo">
-            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
-            <End Role="vehiculo" EntitySet="vehiculo" />
-          </AssociationSet>
-          <AssociationSet Name="venta_tiene_vehiculo" Association="Self.venta_tiene_vehiculo">
-            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
-            <End Role="vehiculo" EntitySet="vehiculo" />
-          </AssociationSet>
-          <EntitySet Name="usuario" EntityType="sgcaModel.usuario" />
-          <AssociationSet Name="FK_comision_usuario" Association="sgcaModel.FK_comision_usuario">
-            <End Role="usuario" EntitySet="usuario" />
-            <End Role="comision" EntitySet="comision" />
           </AssociationSet>
           <AssociationSet Name="FK_usuario_tipo_usuario" Association="sgcaModel.FK_usuario_tipo_usuario">
             <End Role="tipo_usuario" EntitySet="tipo_usuario" />
@@ -1004,6 +1142,14 @@
             <End Role="usuario" EntitySet="usuario" />
             <End Role="transaccion_venta" EntitySet="transaccion_venta" />
           </AssociationSet>
+          <AssociationSet Name="FK_usuario_gana_comision_transaccion_venta" Association="sgcaModel.FK_usuario_gana_comision_transaccion_venta">
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+            <End Role="usuario_gana_comision" EntitySet="usuario_gana_comision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_usuario_gana_comision_usuario" Association="sgcaModel.FK_usuario_gana_comision_usuario">
+            <End Role="usuario" EntitySet="usuario" />
+            <End Role="usuario_gana_comision" EntitySet="usuario_gana_comision" />
+          </AssociationSet>
           <AssociationSet Name="FK_usuario_tiene_mensaje_usuario" Association="sgcaModel.FK_usuario_tiene_mensaje_usuario">
             <End Role="usuario" EntitySet="usuario" />
             <End Role="usuario_tiene_mensaje" EntitySet="usuario_tiene_mensaje" />
@@ -1012,7 +1158,304 @@
             <End Role="usuario_estado" EntitySet="usuario_estado" />
             <End Role="usuario" EntitySet="usuario" />
           </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_tiene_costo_vehiculo" Association="sgcaModel.FK_vehiculo_tiene_costo_vehiculo">
+            <End Role="vehiculo" EntitySet="vehiculo" />
+            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="sgcaModel.FK_vehiculo_vehiculo_estado">
+            <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="sgcaModel.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="compra_tiene_vehiculo" Association="sgcaModel.compra_tiene_vehiculo">
+            <End Role="transaccion_compra" EntitySet="transaccion_compra" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="usuario_acede_modulo" Association="sgcaModel.usuario_acede_modulo">
+            <End Role="modulos_sistema" EntitySet="modulos_sistema" />
+            <End Role="usuario" EntitySet="usuario" />
+          </AssociationSet>
+          <AssociationSet Name="venta_tiene_vehiculo" Association="sgcaModel.venta_tiene_vehiculo">
+            <End Role="transaccion_venta" EntitySet="transaccion_venta" />
+            <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="AspNetRoles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="sgcaModel.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserClaims">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ClaimValue" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="sgcaModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUserLogins">
+          <Key>
+            <PropertyRef Name="LoginProvider" />
+            <PropertyRef Name="ProviderKey" />
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="LoginProvider" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="ProviderKey" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="sgcaModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="sgcaModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="sgcaModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_AspNetUsers" FromRole="AspNetUsers" ToRole="usuario" />
+          <NavigationProperty Name="AspNetRoles" Relationship="sgcaModel.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
+        </EntityType>
+        <EntityType Name="banco">
+          <Key>
+            <PropertyRef Name="id_banco" />
+          </Key>
+          <Property Name="id_banco" Type="Byte" Nullable="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="banco_financia_modelo" Relationship="sgcaModel.FK_banco_financia_modelo_banco" FromRole="banco" ToRole="banco_financia_modelo" />
+        </EntityType>
+        <EntityType Name="banco_financia_modelo">
+          <Key>
+            <PropertyRef Name="fk_modelo" />
+            <PropertyRef Name="fk_banco" />
+          </Key>
+          <Property Name="fk_modelo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="fk_banco" Type="Byte" Nullable="false" />
+          <Property Name="valor_limite" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="nivel_preferencia" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="banco" Relationship="sgcaModel.FK_banco_financia_modelo_banco" FromRole="banco_financia_modelo" ToRole="banco" />
+          <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_banco_financia_modelo_modelo" FromRole="banco_financia_modelo" ToRole="modelo" />
+        </EntityType>
+        <EntityType Name="ciudad">
+          <Key>
+            <PropertyRef Name="id_ciudad" />
+          </Key>
+          <Property Name="id_ciudad" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="coordenadas" Type="Geography" Nullable="false" />
+          <Property Name="fk_estado" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="estado" Relationship="sgcaModel.FK_ciudad_estado" FromRole="ciudad" ToRole="estado" />
+          <NavigationProperty Name="direccion" Relationship="sgcaModel.FK_direccion_ciudad" FromRole="ciudad" ToRole="direccion" />
+        </EntityType>
+        <EntityType Name="cliente">
+          <Key>
+            <PropertyRef Name="id_cliente" />
+          </Key>
+          <Property Name="id_cliente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="apellido" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="telefono" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="correo_electronico" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fk_direccion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="direccion" Relationship="sgcaModel.FK_cliente_direccion" FromRole="cliente" ToRole="direccion" />
+          <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.FK_transaccion_venta_cliente" FromRole="cliente" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="concesionario">
+          <Key>
+            <PropertyRef Name="id_concesionario" />
+          </Key>
+          <Property Name="id_concesionario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="telefono" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="logo" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="fk_direccion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="direccion" Relationship="sgcaModel.FK_concesionario_direccion" FromRole="concesionario" ToRole="direccion" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_concesionario" FromRole="concesionario" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="direccion">
+          <Key>
+            <PropertyRef Name="id_direccion" />
+          </Key>
+          <Property Name="id_direccion" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="coordenadas" Type="Geography" Nullable="false" />
+          <Property Name="fk_ciudad" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ciudad" Relationship="sgcaModel.FK_direccion_ciudad" FromRole="direccion" ToRole="ciudad" />
+          <NavigationProperty Name="cliente" Relationship="sgcaModel.FK_cliente_direccion" FromRole="direccion" ToRole="cliente" />
+          <NavigationProperty Name="concesionario" Relationship="sgcaModel.FK_concesionario_direccion" FromRole="direccion" ToRole="concesionario" />
+        </EntityType>
+        <EntityType Name="estado">
+          <Key>
+            <PropertyRef Name="id_estado" />
+          </Key>
+          <Property Name="id_estado" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="coordenadas" Type="Geography" Nullable="false" />
+          <Property Name="fk_pais" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ciudad" Relationship="sgcaModel.FK_ciudad_estado" FromRole="estado" ToRole="ciudad" />
+          <NavigationProperty Name="pais" Relationship="sgcaModel.FK_estado_pais" FromRole="estado" ToRole="pais" />
+        </EntityType>
+        <EntityType Name="estado_transaccion">
+          <Key>
+            <PropertyRef Name="id_estado_transaccion" />
+          </Key>
+          <Property Name="id_estado_transaccion" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="transaccion_compra" Relationship="sgcaModel.FK_transaccion_compra_estado_transaccion" FromRole="estado_transaccion" ToRole="transaccion_compra" />
+          <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.FK_transaccion_venta_estado_transaccion" FromRole="estado_transaccion" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="estructura_comision">
+          <Key>
+            <PropertyRef Name="id_comision" />
+          </Key>
+          <Property Name="id_comision" Type="Int32" Nullable="false" />
+          <Property Name="porcentaje" Type="Byte" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_comision_usuario" FromRole="estructura_comision" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="estructura_costo">
+          <Key>
+            <PropertyRef Name="id_costo" />
+          </Key>
+          <Property Name="id_costo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="monto" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fk_tipo_costo" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="tipo_costo" Relationship="sgcaModel.FK_costo_tipo_costo" FromRole="estructura_costo" ToRole="tipo_costo" />
+          <NavigationProperty Name="vehiculo_tiene_costo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_estructura_costo" FromRole="estructura_costo" ToRole="vehiculo_tiene_costo" />
+        </EntityType>
+        <EntityType Name="marca">
+          <Key>
+            <PropertyRef Name="id_marca" />
+          </Key>
+          <Property Name="id_marca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="descrpcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_modelo_marca" FromRole="marca" ToRole="modelo" />
+        </EntityType>
+        <EntityType Name="mensaje">
+          <Key>
+            <PropertyRef Name="id_mensaje" />
+          </Key>
+          <Property Name="id_mensaje" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="titulo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="texto" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="usuario_tiene_mensaje" Relationship="sgcaModel.FK_usuario_tiene_mensaje_mensaje" FromRole="mensaje" ToRole="usuario_tiene_mensaje" />
+        </EntityType>
+        <EntityType Name="modelo">
+          <Key>
+            <PropertyRef Name="id_modelo" />
+          </Key>
+          <Property Name="id_modelo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="valor" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="fk_marca" Type="Int32" Nullable="false" />
+          <Property Name="fk_clasificacion" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="banco_financia_modelo" Relationship="sgcaModel.FK_banco_financia_modelo_modelo" FromRole="modelo" ToRole="banco_financia_modelo" />
+          <NavigationProperty Name="marca" Relationship="sgcaModel.FK_modelo_marca" FromRole="modelo" ToRole="marca" />
+          <NavigationProperty Name="modelo_clasificacion" Relationship="sgcaModel.FK_modelo_modelo_clasificacion" FromRole="modelo" ToRole="modelo_clasificacion" />
+          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.FK_vehiculo_modelo" FromRole="modelo" ToRole="vehiculo" />
+        </EntityType>
+        <EntityType Name="modelo_clasificacion">
+          <Key>
+            <PropertyRef Name="id_clasificacion" />
+          </Key>
+          <Property Name="id_clasificacion" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_modelo_modelo_clasificacion" FromRole="modelo_clasificacion" ToRole="modelo" />
+        </EntityType>
+        <EntityType Name="modulos_sistema">
+          <Key>
+            <PropertyRef Name="id_modulo" />
+          </Key>
+          <Property Name="id_modulo" Type="Byte" Nullable="false" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.usuario_acede_modulo" FromRole="modulos_sistema" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="pais">
+          <Key>
+            <PropertyRef Name="id_pais" />
+          </Key>
+          <Property Name="id_pais" Type="Int32" Nullable="false" />
+          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="coordenadas" Type="Geography" Nullable="false" />
+          <NavigationProperty Name="estado" Relationship="sgcaModel.FK_estado_pais" FromRole="pais" ToRole="estado" />
+        </EntityType>
+        <EntityType Name="tipo_costo">
+          <Key>
+            <PropertyRef Name="id_tipo_costo" />
+          </Key>
+          <Property Name="id_tipo_costo" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="concepto" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="estructura_costo" Relationship="sgcaModel.FK_costo_tipo_costo" FromRole="tipo_costo" ToRole="estructura_costo" />
+        </EntityType>
+        <EntityType Name="tipo_transaccion_venta">
+          <Key>
+            <PropertyRef Name="id_tipo_venta" />
+          </Key>
+          <Property Name="id_tipo_venta" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.FK_transaccion_venta_tipo_transaccion_venta" FromRole="tipo_transaccion_venta" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="tipo_usuario">
+          <Key>
+            <PropertyRef Name="id_tipo_usuario" />
+          </Key>
+          <Property Name="id_tipo_usuario" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_tipo_usuario" FromRole="tipo_usuario" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="transaccion_compra">
+          <Key>
+            <PropertyRef Name="id_compra" />
+          </Key>
+          <Property Name="id_compra" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="estado_transaccion" Relationship="sgcaModel.FK_transaccion_compra_estado_transaccion" FromRole="transaccion_compra" ToRole="estado_transaccion" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_transaccion_compra_usuario" FromRole="transaccion_compra" ToRole="usuario" />
+          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.compra_tiene_vehiculo" FromRole="transaccion_compra" ToRole="vehiculo" />
+        </EntityType>
+        <EntityType Name="transaccion_venta">
+          <Key>
+            <PropertyRef Name="id_venta" />
+          </Key>
+          <Property Name="id_venta" Type="Int32" Nullable="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />
+          <Property Name="fk_tipo_venta" Type="Byte" Nullable="false" />
+          <Property Name="fk_cliente" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cliente" Relationship="sgcaModel.FK_transaccion_venta_cliente" FromRole="transaccion_venta" ToRole="cliente" />
+          <NavigationProperty Name="estado_transaccion" Relationship="sgcaModel.FK_transaccion_venta_estado_transaccion" FromRole="transaccion_venta" ToRole="estado_transaccion" />
+          <NavigationProperty Name="tipo_transaccion_venta" Relationship="sgcaModel.FK_transaccion_venta_tipo_transaccion_venta" FromRole="transaccion_venta" ToRole="tipo_transaccion_venta" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_transaccion_venta_usuario" FromRole="transaccion_venta" ToRole="usuario" />
+          <NavigationProperty Name="usuario_gana_comision" Relationship="sgcaModel.FK_usuario_gana_comision_transaccion_venta" FromRole="transaccion_venta" ToRole="usuario_gana_comision" />
+          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.venta_tiene_vehiculo" FromRole="transaccion_venta" ToRole="vehiculo" />
+        </EntityType>
         <EntityType Name="usuario">
           <Key>
             <PropertyRef Name="id_usuario" />
@@ -1025,23 +1468,354 @@
           <Property Name="foto" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="fk_usuario_estado" Type="Byte" Nullable="false" />
           <Property Name="fk_tipo_usuario" Type="Byte" Nullable="false" />
-          <Property Name="fk_seguridad" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="comision" Relationship="sgcaModel.FK_comision_usuario" FromRole="usuario" ToRole="comision" />
+          <Property Name="fk_seguridad" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="fk_concesionario" Type="Int32" />
+          <NavigationProperty Name="AspNetUsers" Relationship="sgcaModel.FK_usuario_AspNetUsers" FromRole="usuario" ToRole="AspNetUsers" />
+          <NavigationProperty Name="concesionario" Relationship="sgcaModel.FK_usuario_concesionario" FromRole="usuario" ToRole="concesionario" />
+          <NavigationProperty Name="estructura_comision" Relationship="sgcaModel.FK_comision_usuario" FromRole="usuario" ToRole="estructura_comision" />
           <NavigationProperty Name="tipo_usuario" Relationship="sgcaModel.FK_usuario_tipo_usuario" FromRole="usuario" ToRole="tipo_usuario" />
           <NavigationProperty Name="transaccion_compra" Relationship="sgcaModel.FK_transaccion_compra_usuario" FromRole="usuario" ToRole="transaccion_compra" />
           <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.FK_transaccion_venta_usuario" FromRole="usuario" ToRole="transaccion_venta" />
+          <NavigationProperty Name="usuario_gana_comision" Relationship="sgcaModel.FK_usuario_gana_comision_usuario" FromRole="usuario" ToRole="usuario_gana_comision" />
           <NavigationProperty Name="usuario_tiene_mensaje" Relationship="sgcaModel.FK_usuario_tiene_mensaje_usuario" FromRole="usuario" ToRole="usuario_tiene_mensaje" />
           <NavigationProperty Name="usuario_estado" Relationship="sgcaModel.FK_usuario_usuario_estado" FromRole="usuario" ToRole="usuario_estado" />
+          <NavigationProperty Name="modulos_sistema" Relationship="sgcaModel.usuario_acede_modulo" FromRole="usuario" ToRole="modulos_sistema" />
         </EntityType>
+        <EntityType Name="usuario_estado">
+          <Key>
+            <PropertyRef Name="id_usuario_estado" />
+          </Key>
+          <Property Name="id_usuario_estado" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_usuario_estado" FromRole="usuario_estado" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="usuario_gana_comision">
+          <Key>
+            <PropertyRef Name="fk_usuario" />
+            <PropertyRef Name="fk_transaccion_venta" />
+          </Key>
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <Property Name="fk_transaccion_venta" Type="Int32" Nullable="false" />
+          <Property Name="monto" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.FK_usuario_gana_comision_transaccion_venta" FromRole="usuario_gana_comision" ToRole="transaccion_venta" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_gana_comision_usuario" FromRole="usuario_gana_comision" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="usuario_tiene_mensaje">
+          <Key>
+            <PropertyRef Name="fk_usuario" />
+            <PropertyRef Name="fk_mensaje" />
+          </Key>
+          <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <Property Name="fk_mensaje" Type="Int32" Nullable="false" />
+          <Property Name="chequeado" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="mensaje" Relationship="sgcaModel.FK_usuario_tiene_mensaje_mensaje" FromRole="usuario_tiene_mensaje" ToRole="mensaje" />
+          <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_usuario_tiene_mensaje_usuario" FromRole="usuario_tiene_mensaje" ToRole="usuario" />
+        </EntityType>
+        <EntityType Name="vehiculo">
+          <Key>
+            <PropertyRef Name="id_vehiculo" />
+          </Key>
+          <Property Name="id_vehiculo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="año" Type="Int16" Nullable="false" />
+          <Property Name="kilometraje" Type="Int32" Nullable="false" />
+          <Property Name="imagen" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="fecha_ingreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="fecha_salida" Type="DateTime" Precision="3" />
+          <Property Name="valor_compra" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <Property Name="valor_venta" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="fk_vehiculo_estado" Type="Byte" Nullable="false" />
+          <Property Name="fk_modelo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_vehiculo_modelo" FromRole="vehiculo" ToRole="modelo" />
+          <NavigationProperty Name="vehiculo_tiene_costo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_vehiculo" FromRole="vehiculo" ToRole="vehiculo_tiene_costo" />
+          <NavigationProperty Name="vehiculo_estado" Relationship="sgcaModel.FK_vehiculo_vehiculo_estado" FromRole="vehiculo" ToRole="vehiculo_estado" />
+          <NavigationProperty Name="transaccion_compra" Relationship="sgcaModel.compra_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_compra" />
+          <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.venta_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_venta" />
+        </EntityType>
+        <EntityType Name="vehiculo_estado">
+          <Key>
+            <PropertyRef Name="id_vehiculo_estado" />
+          </Key>
+          <Property Name="id_vehiculo_estado" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="factor" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.FK_vehiculo_vehiculo_estado" FromRole="vehiculo_estado" ToRole="vehiculo" />
+        </EntityType>
+        <EntityType Name="vehiculo_tiene_costo">
+          <Key>
+            <PropertyRef Name="fk_vehiculo" />
+            <PropertyRef Name="fk_costo" />
+          </Key>
+          <Property Name="fk_vehiculo" Type="Int32" Nullable="false" />
+          <Property Name="fk_costo" Type="Int32" Nullable="false" />
+          <Property Name="gasto" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+          <NavigationProperty Name="estructura_costo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_estructura_costo" FromRole="vehiculo_tiene_costo" ToRole="estructura_costo" />
+          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_vehiculo" FromRole="vehiculo_tiene_costo" ToRole="vehiculo" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
+          <End Type="sgcaModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="sgcaModel.AspNetUserClaims" Role="AspNetUserClaims" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserClaims">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId">
+          <End Type="sgcaModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="sgcaModel.AspNetUserLogins" Role="AspNetUserLogins" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserLogins">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_AspNetUsers">
+          <End Type="sgcaModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1" />
+          <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_seguridad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_banco_financia_modelo_banco">
+          <End Type="sgcaModel.banco" Role="banco" Multiplicity="1" />
+          <End Type="sgcaModel.banco_financia_modelo" Role="banco_financia_modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="banco">
+              <PropertyRef Name="id_banco" />
+            </Principal>
+            <Dependent Role="banco_financia_modelo">
+              <PropertyRef Name="fk_banco" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_banco_financia_modelo_modelo">
+          <End Type="sgcaModel.modelo" Role="modelo" Multiplicity="1" />
+          <End Type="sgcaModel.banco_financia_modelo" Role="banco_financia_modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo">
+              <PropertyRef Name="id_modelo" />
+            </Principal>
+            <Dependent Role="banco_financia_modelo">
+              <PropertyRef Name="fk_modelo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ciudad_estado">
+          <End Type="sgcaModel.estado" Role="estado" Multiplicity="1" />
+          <End Type="sgcaModel.ciudad" Role="ciudad" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado">
+              <PropertyRef Name="id_estado" />
+            </Principal>
+            <Dependent Role="ciudad">
+              <PropertyRef Name="fk_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_direccion_ciudad">
+          <End Type="sgcaModel.ciudad" Role="ciudad" Multiplicity="1" />
+          <End Type="sgcaModel.direccion" Role="direccion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ciudad">
+              <PropertyRef Name="id_ciudad" />
+            </Principal>
+            <Dependent Role="direccion">
+              <PropertyRef Name="fk_ciudad" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_cliente_direccion">
+          <End Type="sgcaModel.direccion" Role="direccion" Multiplicity="1" />
+          <End Type="sgcaModel.cliente" Role="cliente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="direccion">
+              <PropertyRef Name="id_direccion" />
+            </Principal>
+            <Dependent Role="cliente">
+              <PropertyRef Name="fk_direccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_cliente">
+          <End Type="sgcaModel.cliente" Role="cliente" Multiplicity="1" />
+          <End Type="sgcaModel.transaccion_venta" Role="transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cliente">
+              <PropertyRef Name="id_cliente" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_concesionario_direccion">
+          <End Type="sgcaModel.direccion" Role="direccion" Multiplicity="1" />
+          <End Type="sgcaModel.concesionario" Role="concesionario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="direccion">
+              <PropertyRef Name="id_direccion" />
+            </Principal>
+            <Dependent Role="concesionario">
+              <PropertyRef Name="fk_direccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_concesionario">
+          <End Type="sgcaModel.concesionario" Role="concesionario" Multiplicity="0..1" />
+          <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="concesionario">
+              <PropertyRef Name="id_concesionario" />
+            </Principal>
+            <Dependent Role="usuario">
+              <PropertyRef Name="fk_concesionario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estado_pais">
+          <End Type="sgcaModel.pais" Role="pais" Multiplicity="1" />
+          <End Type="sgcaModel.estado" Role="estado" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pais">
+              <PropertyRef Name="id_pais" />
+            </Principal>
+            <Dependent Role="estado">
+              <PropertyRef Name="fk_pais" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_compra_estado_transaccion">
+          <End Type="sgcaModel.estado_transaccion" Role="estado_transaccion" Multiplicity="1" />
+          <End Type="sgcaModel.transaccion_compra" Role="transaccion_compra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado_transaccion">
+              <PropertyRef Name="id_estado_transaccion" />
+            </Principal>
+            <Dependent Role="transaccion_compra">
+              <PropertyRef Name="fk_estado_transaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_estado_transaccion">
+          <End Type="sgcaModel.estado_transaccion" Role="estado_transaccion" Multiplicity="1" />
+          <End Type="sgcaModel.transaccion_venta" Role="transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estado_transaccion">
+              <PropertyRef Name="id_estado_transaccion" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_estado_transaccion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_comision_usuario">
           <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="1" />
-          <End Type="sgcaModel.comision" Role="comision" Multiplicity="*" />
+          <End Type="sgcaModel.estructura_comision" Role="estructura_comision" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="usuario">
               <PropertyRef Name="id_usuario" />
             </Principal>
-            <Dependent Role="comision">
+            <Dependent Role="estructura_comision">
               <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_costo_tipo_costo">
+          <End Type="sgcaModel.tipo_costo" Role="tipo_costo" Multiplicity="1" />
+          <End Type="sgcaModel.estructura_costo" Role="estructura_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_costo">
+              <PropertyRef Name="id_tipo_costo" />
+            </Principal>
+            <Dependent Role="estructura_costo">
+              <PropertyRef Name="fk_tipo_costo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_tiene_costo_estructura_costo">
+          <End Type="sgcaModel.estructura_costo" Role="estructura_costo" Multiplicity="1" />
+          <End Type="sgcaModel.vehiculo_tiene_costo" Role="vehiculo_tiene_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estructura_costo">
+              <PropertyRef Name="id_costo" />
+            </Principal>
+            <Dependent Role="vehiculo_tiene_costo">
+              <PropertyRef Name="fk_costo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_modelo_marca">
+          <End Type="sgcaModel.marca" Role="marca" Multiplicity="1" />
+          <End Type="sgcaModel.modelo" Role="modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="marca">
+              <PropertyRef Name="id_marca" />
+            </Principal>
+            <Dependent Role="modelo">
+              <PropertyRef Name="fk_marca" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_tiene_mensaje_mensaje">
+          <End Type="sgcaModel.mensaje" Role="mensaje" Multiplicity="1" />
+          <End Type="sgcaModel.usuario_tiene_mensaje" Role="usuario_tiene_mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="mensaje">
+              <PropertyRef Name="id_mensaje" />
+            </Principal>
+            <Dependent Role="usuario_tiene_mensaje">
+              <PropertyRef Name="fk_mensaje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_modelo_modelo_clasificacion">
+          <End Type="sgcaModel.modelo_clasificacion" Role="modelo_clasificacion" Multiplicity="1" />
+          <End Type="sgcaModel.modelo" Role="modelo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo_clasificacion">
+              <PropertyRef Name="id_clasificacion" />
+            </Principal>
+            <Dependent Role="modelo">
+              <PropertyRef Name="fk_clasificacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_modelo">
+          <End Type="sgcaModel.modelo" Role="modelo" Multiplicity="1" />
+          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="modelo">
+              <PropertyRef Name="id_modelo" />
+            </Principal>
+            <Dependent Role="vehiculo">
+              <PropertyRef Name="fk_modelo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_transaccion_venta_tipo_transaccion_venta">
+          <End Type="sgcaModel.tipo_transaccion_venta" Role="tipo_transaccion_venta" Multiplicity="1" />
+          <End Type="sgcaModel.transaccion_venta" Role="transaccion_venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_transaccion_venta">
+              <PropertyRef Name="id_tipo_venta" />
+            </Principal>
+            <Dependent Role="transaccion_venta">
+              <PropertyRef Name="fk_tipo_venta" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1081,6 +1855,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_usuario_gana_comision_transaccion_venta">
+          <End Type="sgcaModel.transaccion_venta" Role="transaccion_venta" Multiplicity="1" />
+          <End Type="sgcaModel.usuario_gana_comision" Role="usuario_gana_comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="transaccion_venta">
+              <PropertyRef Name="id_venta" />
+            </Principal>
+            <Dependent Role="usuario_gana_comision">
+              <PropertyRef Name="fk_transaccion_venta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_usuario_gana_comision_usuario">
+          <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="1" />
+          <End Type="sgcaModel.usuario_gana_comision" Role="usuario_gana_comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="usuario">
+              <PropertyRef Name="id_usuario" />
+            </Principal>
+            <Dependent Role="usuario_gana_comision">
+              <PropertyRef Name="fk_usuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_usuario_tiene_mensaje_usuario">
           <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="1" />
           <End Type="sgcaModel.usuario_tiene_mensaje" Role="usuario_tiene_mensaje" Multiplicity="*" />
@@ -1105,220 +1903,304 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_vehiculo_tiene_costo_vehiculo">
+          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="1" />
+          <End Type="sgcaModel.vehiculo_tiene_costo" Role="vehiculo_tiene_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo">
+              <PropertyRef Name="id_vehiculo" />
+            </Principal>
+            <Dependent Role="vehiculo_tiene_costo">
+              <PropertyRef Name="fk_vehiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_vehiculo_vehiculo_estado">
+          <End Type="sgcaModel.vehiculo_estado" Role="vehiculo_estado" Multiplicity="1" />
+          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo_estado">
+              <PropertyRef Name="id_vehiculo_estado" />
+            </Principal>
+            <Dependent Role="vehiculo">
+              <PropertyRef Name="fk_vehiculo_estado" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AspNetUserRoles">
+          <End Type="sgcaModel.AspNetRoles" Role="AspNetRoles" Multiplicity="*" />
+          <End Type="sgcaModel.AspNetUsers" Role="AspNetUsers" Multiplicity="*" />
+        </Association>
+        <Association Name="compra_tiene_vehiculo">
+          <End Type="sgcaModel.transaccion_compra" Role="transaccion_compra" Multiplicity="*" />
+          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="*" />
+        </Association>
+        <Association Name="usuario_acede_modulo">
+          <End Type="sgcaModel.modulos_sistema" Role="modulos_sistema" Multiplicity="*" />
+          <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="*" />
+        </Association>
+        <Association Name="venta_tiene_vehiculo">
+          <End Type="sgcaModel.transaccion_venta" Role="transaccion_venta" Multiplicity="*" />
+          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="*" />
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="sgcaModelStoreContainer" CdmEntityContainer="sgcaEntities">
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="sgcaModel.AspNetRoles">
+              <MappingFragment StoreEntitySet="AspNetRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="sgcaModel.AspNetUserClaims">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
+                <ScalarProperty Name="ClaimValue" ColumnName="ClaimValue" />
+                <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="sgcaModel.AspNetUserLogins">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
+                <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="sgcaModel.AspNetUsers">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="banco">
             <EntityTypeMapping TypeName="sgcaModel.banco">
               <MappingFragment StoreEntitySet="banco">
-                <ScalarProperty Name="id_banco" ColumnName="id_banco" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_banco" ColumnName="id_banco" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="banco_financia_modelo">
             <EntityTypeMapping TypeName="sgcaModel.banco_financia_modelo">
               <MappingFragment StoreEntitySet="banco_financia_modelo">
-                <ScalarProperty Name="fk_modelo" ColumnName="fk_modelo" />
-                <ScalarProperty Name="fk_banco" ColumnName="fk_banco" />
-                <ScalarProperty Name="valor_limite" ColumnName="valor_limite" />
                 <ScalarProperty Name="nivel_preferencia" ColumnName="nivel_preferencia" />
+                <ScalarProperty Name="valor_limite" ColumnName="valor_limite" />
+                <ScalarProperty Name="fk_banco" ColumnName="fk_banco" />
+                <ScalarProperty Name="fk_modelo" ColumnName="fk_modelo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ciudad">
+            <EntityTypeMapping TypeName="sgcaModel.ciudad">
+              <MappingFragment StoreEntitySet="ciudad">
+                <ScalarProperty Name="fk_estado" ColumnName="fk_estado" />
+                <ScalarProperty Name="coordenadas" ColumnName="coordenadas" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_ciudad" ColumnName="id_ciudad" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cliente">
             <EntityTypeMapping TypeName="sgcaModel.cliente">
               <MappingFragment StoreEntitySet="cliente">
-                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
-                <ScalarProperty Name="apellido" ColumnName="apellido" />
-                <ScalarProperty Name="direccion" ColumnName="direccion" />
-                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="fk_direccion" ColumnName="fk_direccion" />
                 <ScalarProperty Name="correo_electronico" ColumnName="correo_electronico" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="apellido" ColumnName="apellido" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_cliente" ColumnName="id_cliente" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="comision">
-            <EntityTypeMapping TypeName="sgcaModel.comision">
-              <MappingFragment StoreEntitySet="comision">
-                <ScalarProperty Name="id_comision" ColumnName="id_comision" />
-                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+          <EntitySetMapping Name="concesionario">
+            <EntityTypeMapping TypeName="sgcaModel.concesionario">
+              <MappingFragment StoreEntitySet="concesionario">
+                <ScalarProperty Name="fk_direccion" ColumnName="fk_direccion" />
+                <ScalarProperty Name="logo" ColumnName="logo" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_concesionario" ColumnName="id_concesionario" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="costo">
-            <EntityTypeMapping TypeName="sgcaModel.costo">
-              <MappingFragment StoreEntitySet="costo">
-                <ScalarProperty Name="id_costo" ColumnName="id_costo" />
-                <ScalarProperty Name="monto" ColumnName="monto" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="fk_tipo_costo" ColumnName="fk_tipo_costo" />
+          <EntitySetMapping Name="direccion">
+            <EntityTypeMapping TypeName="sgcaModel.direccion">
+              <MappingFragment StoreEntitySet="direccion">
+                <ScalarProperty Name="fk_ciudad" ColumnName="fk_ciudad" />
+                <ScalarProperty Name="coordenadas" ColumnName="coordenadas" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_direccion" ColumnName="id_direccion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estado">
+            <EntityTypeMapping TypeName="sgcaModel.estado">
+              <MappingFragment StoreEntitySet="estado">
+                <ScalarProperty Name="fk_pais" ColumnName="fk_pais" />
+                <ScalarProperty Name="coordenadas" ColumnName="coordenadas" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_estado" ColumnName="id_estado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="estado_transaccion">
             <EntityTypeMapping TypeName="sgcaModel.estado_transaccion">
               <MappingFragment StoreEntitySet="estado_transaccion">
-                <ScalarProperty Name="id_estado_transaccion" ColumnName="id_estado_transaccion" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_estado_transaccion" ColumnName="id_estado_transaccion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estructura_comision">
+            <EntityTypeMapping TypeName="sgcaModel.estructura_comision">
+              <MappingFragment StoreEntitySet="estructura_comision">
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+                <ScalarProperty Name="id_comision" ColumnName="id_comision" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estructura_costo">
+            <EntityTypeMapping TypeName="sgcaModel.estructura_costo">
+              <MappingFragment StoreEntitySet="estructura_costo">
+                <ScalarProperty Name="fk_tipo_costo" ColumnName="fk_tipo_costo" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="id_costo" ColumnName="id_costo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="marca">
             <EntityTypeMapping TypeName="sgcaModel.marca">
               <MappingFragment StoreEntitySet="marca">
-                <ScalarProperty Name="id_marca" ColumnName="id_marca" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="descrpcion" ColumnName="descrpcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_marca" ColumnName="id_marca" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="mensaje">
             <EntityTypeMapping TypeName="sgcaModel.mensaje">
               <MappingFragment StoreEntitySet="mensaje">
-                <ScalarProperty Name="id_mensaje" ColumnName="id_mensaje" />
-                <ScalarProperty Name="titulo" ColumnName="titulo" />
-                <ScalarProperty Name="texto" ColumnName="texto" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="texto" ColumnName="texto" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="id_mensaje" ColumnName="id_mensaje" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="modelo">
             <EntityTypeMapping TypeName="sgcaModel.modelo">
               <MappingFragment StoreEntitySet="modelo">
-                <ScalarProperty Name="id_modelo" ColumnName="id_modelo" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-                <ScalarProperty Name="valor" ColumnName="valor" />
+                <ScalarProperty Name="fk_clasificacion" ColumnName="fk_clasificacion" />
                 <ScalarProperty Name="fk_marca" ColumnName="fk_marca" />
+                <ScalarProperty Name="valor" ColumnName="valor" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_modelo" ColumnName="id_modelo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="sgcaModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
+          <EntitySetMapping Name="modelo_clasificacion">
+            <EntityTypeMapping TypeName="sgcaModel.modelo_clasificacion">
+              <MappingFragment StoreEntitySet="modelo_clasificacion">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_clasificacion" ColumnName="id_clasificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="modulos_sistema">
+            <EntityTypeMapping TypeName="sgcaModel.modulos_sistema">
+              <MappingFragment StoreEntitySet="modulos_sistema">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_modulo" ColumnName="id_modulo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pais">
+            <EntityTypeMapping TypeName="sgcaModel.pais">
+              <MappingFragment StoreEntitySet="pais">
+                <ScalarProperty Name="coordenadas" ColumnName="coordenadas" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="id_pais" ColumnName="id_pais" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tipo_costo">
             <EntityTypeMapping TypeName="sgcaModel.tipo_costo">
               <MappingFragment StoreEntitySet="tipo_costo">
-                <ScalarProperty Name="id_tipo_costo" ColumnName="id_tipo_costo" />
                 <ScalarProperty Name="concepto" ColumnName="concepto" />
+                <ScalarProperty Name="id_tipo_costo" ColumnName="id_tipo_costo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tipo_transaccion_venta">
             <EntityTypeMapping TypeName="sgcaModel.tipo_transaccion_venta">
               <MappingFragment StoreEntitySet="tipo_transaccion_venta">
-                <ScalarProperty Name="id_tipo_venta" ColumnName="id_tipo_venta" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_tipo_venta" ColumnName="id_tipo_venta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tipo_usuario">
             <EntityTypeMapping TypeName="sgcaModel.tipo_usuario">
               <MappingFragment StoreEntitySet="tipo_usuario">
-                <ScalarProperty Name="id_tipo_usuario" ColumnName="id_tipo_usuario" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_tipo_usuario" ColumnName="id_tipo_usuario" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="transaccion_compra">
             <EntityTypeMapping TypeName="sgcaModel.transaccion_compra">
               <MappingFragment StoreEntitySet="transaccion_compra">
-                <ScalarProperty Name="id_compra" ColumnName="id_compra" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="nota" ColumnName="nota" />
-                <ScalarProperty Name="fk_estado_transaccion" ColumnName="fk_estado_transaccion" />
                 <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+                <ScalarProperty Name="fk_estado_transaccion" ColumnName="fk_estado_transaccion" />
+                <ScalarProperty Name="nota" ColumnName="nota" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id_compra" ColumnName="id_compra" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="transaccion_venta">
             <EntityTypeMapping TypeName="sgcaModel.transaccion_venta">
               <MappingFragment StoreEntitySet="transaccion_venta">
-                <ScalarProperty Name="id_venta" ColumnName="id_venta" />
-                <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="nota" ColumnName="nota" />
-                <ScalarProperty Name="fk_estado_transaccion" ColumnName="fk_estado_transaccion" />
-                <ScalarProperty Name="fk_tipo_venta" ColumnName="fk_tipo_venta" />
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
                 <ScalarProperty Name="fk_cliente" ColumnName="fk_cliente" />
-                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+                <ScalarProperty Name="fk_tipo_venta" ColumnName="fk_tipo_venta" />
+                <ScalarProperty Name="fk_estado_transaccion" ColumnName="fk_estado_transaccion" />
+                <ScalarProperty Name="nota" ColumnName="nota" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="id_venta" ColumnName="id_venta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="usuario_estado">
-            <EntityTypeMapping TypeName="sgcaModel.usuario_estado">
-              <MappingFragment StoreEntitySet="usuario_estado">
-                <ScalarProperty Name="id_usuario_estado" ColumnName="id_usuario_estado" />
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="usuario_tiene_mensaje">
-            <EntityTypeMapping TypeName="sgcaModel.usuario_tiene_mensaje">
-              <MappingFragment StoreEntitySet="usuario_tiene_mensaje">
-                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
-                <ScalarProperty Name="fk_mensaje" ColumnName="fk_mensaje" />
-                <ScalarProperty Name="chequeado" ColumnName="chequeado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vehiculo">
-            <EntityTypeMapping TypeName="sgcaModel.vehiculo">
-              <MappingFragment StoreEntitySet="vehiculo">
-                <ScalarProperty Name="id_vehiculo" ColumnName="id_vehiculo" />
-                <ScalarProperty Name="año" ColumnName="año" />
-                <ScalarProperty Name="kilometraje" ColumnName="kilometraje" />
-                <ScalarProperty Name="imagen" ColumnName="imagen" />
-                <ScalarProperty Name="fecha_ingreso" ColumnName="fecha_ingreso" />
-                <ScalarProperty Name="fecha_salida" ColumnName="fecha_salida" />
-                <ScalarProperty Name="valor_compra" ColumnName="valor_compra" />
-                <ScalarProperty Name="valor_venta" ColumnName="valor_venta" />
-                <ScalarProperty Name="fk_vehiculo_estado" ColumnName="fk_vehiculo_estado" />
-                <ScalarProperty Name="fk_modelo" ColumnName="fk_modelo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vehiculo_estado">
-            <EntityTypeMapping TypeName="sgcaModel.vehiculo_estado">
-              <MappingFragment StoreEntitySet="vehiculo_estado">
-                <ScalarProperty Name="id_vehiculo_estado" ColumnName="id_vehiculo_estado" />
-                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
-                <ScalarProperty Name="factor" ColumnName="factor" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="compra_tiene_vehiculo" TypeName="sgcaModel.compra_tiene_vehiculo" StoreEntitySet="compra_tiene_vehiculo">
-            <EndProperty Name="transaccion_compra">
-              <ScalarProperty Name="id_compra" ColumnName="fk_compra" />
-            </EndProperty>
-            <EndProperty Name="vehiculo">
-              <ScalarProperty Name="id_vehiculo" ColumnName="fk_vehiculo" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="venta_tiene_vehiculo" TypeName="sgcaModel.venta_tiene_vehiculo" StoreEntitySet="venta_tiene_vehiculo">
-            <EndProperty Name="transaccion_venta">
-              <ScalarProperty Name="id_venta" ColumnName="fk_venta" />
-            </EndProperty>
-            <EndProperty Name="vehiculo">
-              <ScalarProperty Name="id_vehiculo" ColumnName="fk_vehiculo" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="usuario">
             <EntityTypeMapping TypeName="sgcaModel.usuario">
               <MappingFragment StoreEntitySet="usuario">
+                <ScalarProperty Name="fk_concesionario" ColumnName="fk_concesionario" />
                 <ScalarProperty Name="fk_seguridad" ColumnName="fk_seguridad" />
                 <ScalarProperty Name="fk_tipo_usuario" ColumnName="fk_tipo_usuario" />
                 <ScalarProperty Name="fk_usuario_estado" ColumnName="fk_usuario_estado" />
@@ -1331,6 +2213,98 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="usuario_estado">
+            <EntityTypeMapping TypeName="sgcaModel.usuario_estado">
+              <MappingFragment StoreEntitySet="usuario_estado">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_usuario_estado" ColumnName="id_usuario_estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario_gana_comision">
+            <EntityTypeMapping TypeName="sgcaModel.usuario_gana_comision">
+              <MappingFragment StoreEntitySet="usuario_gana_comision">
+                <ScalarProperty Name="monto" ColumnName="monto" />
+                <ScalarProperty Name="fk_transaccion_venta" ColumnName="fk_transaccion_venta" />
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario_tiene_mensaje">
+            <EntityTypeMapping TypeName="sgcaModel.usuario_tiene_mensaje">
+              <MappingFragment StoreEntitySet="usuario_tiene_mensaje">
+                <ScalarProperty Name="chequeado" ColumnName="chequeado" />
+                <ScalarProperty Name="fk_mensaje" ColumnName="fk_mensaje" />
+                <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vehiculo">
+            <EntityTypeMapping TypeName="sgcaModel.vehiculo">
+              <MappingFragment StoreEntitySet="vehiculo">
+                <ScalarProperty Name="fk_modelo" ColumnName="fk_modelo" />
+                <ScalarProperty Name="fk_vehiculo_estado" ColumnName="fk_vehiculo_estado" />
+                <ScalarProperty Name="valor_venta" ColumnName="valor_venta" />
+                <ScalarProperty Name="valor_compra" ColumnName="valor_compra" />
+                <ScalarProperty Name="fecha_salida" ColumnName="fecha_salida" />
+                <ScalarProperty Name="fecha_ingreso" ColumnName="fecha_ingreso" />
+                <ScalarProperty Name="imagen" ColumnName="imagen" />
+                <ScalarProperty Name="kilometraje" ColumnName="kilometraje" />
+                <ScalarProperty Name="año" ColumnName="año" />
+                <ScalarProperty Name="id_vehiculo" ColumnName="id_vehiculo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vehiculo_estado">
+            <EntityTypeMapping TypeName="sgcaModel.vehiculo_estado">
+              <MappingFragment StoreEntitySet="vehiculo_estado">
+                <ScalarProperty Name="factor" ColumnName="factor" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="id_vehiculo_estado" ColumnName="id_vehiculo_estado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vehiculo_tiene_costo">
+            <EntityTypeMapping TypeName="sgcaModel.vehiculo_tiene_costo">
+              <MappingFragment StoreEntitySet="vehiculo_tiene_costo">
+                <ScalarProperty Name="gasto" ColumnName="gasto" />
+                <ScalarProperty Name="fk_costo" ColumnName="fk_costo" />
+                <ScalarProperty Name="fk_vehiculo" ColumnName="fk_vehiculo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="sgcaModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="compra_tiene_vehiculo" TypeName="sgcaModel.compra_tiene_vehiculo" StoreEntitySet="compra_tiene_vehiculo">
+            <EndProperty Name="vehiculo">
+              <ScalarProperty Name="id_vehiculo" ColumnName="fk_vehiculo" />
+            </EndProperty>
+            <EndProperty Name="transaccion_compra">
+              <ScalarProperty Name="id_compra" ColumnName="fk_compra" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="usuario_acede_modulo" TypeName="sgcaModel.usuario_acede_modulo" StoreEntitySet="usuario_acede_modulo">
+            <EndProperty Name="usuario">
+              <ScalarProperty Name="id_usuario" ColumnName="fk_usuario" />
+            </EndProperty>
+            <EndProperty Name="modulos_sistema">
+              <ScalarProperty Name="id_modulo" ColumnName="fk_modulo" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="venta_tiene_vehiculo" TypeName="sgcaModel.venta_tiene_vehiculo" StoreEntitySet="venta_tiene_vehiculo">
+            <EndProperty Name="vehiculo">
+              <ScalarProperty Name="id_vehiculo" ColumnName="fk_vehiculo" />
+            </EndProperty>
+            <EndProperty Name="transaccion_venta">
+              <ScalarProperty Name="id_venta" ColumnName="fk_venta" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

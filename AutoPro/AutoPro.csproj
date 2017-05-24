@@ -167,6 +167,18 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetRoles.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserClaims.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUserLogins.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AspNetUsers.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\AutoPro.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -188,16 +200,28 @@
     <Compile Include="Models\banco_financia_modelo.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ciudad.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\cliente.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\comision.cs">
+    <Compile Include="Models\concesionario.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\costo.cs">
+    <Compile Include="Models\direccion.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\estado.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\estado_transaccion.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\estructura_comision.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\estructura_costo.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
@@ -211,7 +235,13 @@
     <Compile Include="Models\modelo.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sysdiagrams.cs">
+    <Compile Include="Models\modelo_clasificacion.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\modulos_sistema.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\pais.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\tipo_costo.cs">
@@ -235,6 +265,9 @@
     <Compile Include="Models\usuario_estado.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\usuario_gana_comision.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\usuario_tiene_mensaje.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
@@ -242,6 +275,9 @@
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\vehiculo_estado.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\vehiculo_tiene_costo.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

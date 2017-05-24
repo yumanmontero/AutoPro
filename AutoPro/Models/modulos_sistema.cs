@@ -12,13 +12,18 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class costo
+    public partial class modulos_sistema
     {
-        public int id_costo { get; set; }
-        public decimal monto { get; set; }
-        public System.DateTime fecha { get; set; }
-        public byte fk_tipo_costo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public modulos_sistema()
+        {
+            this.usuario = new HashSet<usuario>();
+        }
     
-        public virtual tipo_costo tipo_costo { get; set; }
+        public byte id_modulo { get; set; }
+        public string descripcion { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<usuario> usuario { get; set; }
     }
 }

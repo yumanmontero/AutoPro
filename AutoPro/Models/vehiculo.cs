@@ -17,6 +17,7 @@ namespace AutoPro.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public vehiculo()
         {
+            this.vehiculo_tiene_costo = new HashSet<vehiculo_tiene_costo>();
             this.transaccion_compra = new HashSet<transaccion_compra>();
             this.transaccion_venta = new HashSet<transaccion_venta>();
         }
@@ -33,6 +34,8 @@ namespace AutoPro.Models
         public string fk_modelo { get; set; }
     
         public virtual modelo modelo { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<vehiculo_tiene_costo> vehiculo_tiene_costo { get; set; }
         public virtual vehiculo_estado vehiculo_estado { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<transaccion_compra> transaccion_compra { get; set; }

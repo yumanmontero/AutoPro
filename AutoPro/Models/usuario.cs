@@ -17,10 +17,12 @@ namespace AutoPro.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public usuario()
         {
-            this.comision = new HashSet<comision>();
+            this.estructura_comision = new HashSet<estructura_comision>();
             this.transaccion_compra = new HashSet<transaccion_compra>();
             this.transaccion_venta = new HashSet<transaccion_venta>();
+            this.usuario_gana_comision = new HashSet<usuario_gana_comision>();
             this.usuario_tiene_mensaje = new HashSet<usuario_tiene_mensaje>();
+            this.modulos_sistema = new HashSet<modulos_sistema>();
         }
     
         public int id_usuario { get; set; }
@@ -32,16 +34,23 @@ namespace AutoPro.Models
         public byte fk_usuario_estado { get; set; }
         public byte fk_tipo_usuario { get; set; }
         public string fk_seguridad { get; set; }
+        public Nullable<int> fk_concesionario { get; set; }
     
+        public virtual AspNetUsers AspNetUsers { get; set; }
+        public virtual concesionario concesionario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<comision> comision { get; set; }
+        public virtual ICollection<estructura_comision> estructura_comision { get; set; }
         public virtual tipo_usuario tipo_usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<transaccion_compra> transaccion_compra { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<transaccion_venta> transaccion_venta { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<usuario_gana_comision> usuario_gana_comision { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<usuario_tiene_mensaje> usuario_tiene_mensaje { get; set; }
         public virtual usuario_estado usuario_estado { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<modulos_sistema> modulos_sistema { get; set; }
     }
 }

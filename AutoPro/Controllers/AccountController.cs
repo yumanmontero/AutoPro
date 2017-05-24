@@ -204,7 +204,7 @@ namespace AutoPro.Controllers
                         telefono = model.Telefono,
                         direccion = model.Direccion,
                         foto = "foto",
-                        fk_tipo_usuario = Convert.ToByte (model.Tipo_usuario),
+                        fk_tipo_usuario = Convert.ToByte(model.Tipo_usuario),
                         fk_seguridad = idSeg
                     };
 

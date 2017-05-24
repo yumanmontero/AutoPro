@@ -12,18 +12,22 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class tipo_costo
+    public partial class concesionario
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public tipo_costo()
+        public concesionario()
         {
-            this.estructura_costo = new HashSet<estructura_costo>();
+            this.usuario = new HashSet<usuario>();
         }
     
-        public byte id_tipo_costo { get; set; }
-        public string concepto { get; set; }
+        public int id_concesionario { get; set; }
+        public string nombre { get; set; }
+        public string telefono { get; set; }
+        public string logo { get; set; }
+        public int fk_direccion { get; set; }
     
+        public virtual direccion direccion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<estructura_costo> estructura_costo { get; set; }
+        public virtual ICollection<usuario> usuario { get; set; }
     }
 }

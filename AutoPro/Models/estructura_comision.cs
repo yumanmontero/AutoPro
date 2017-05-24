@@ -12,23 +12,13 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class transaccion_compra
+    public partial class estructura_comision
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public transaccion_compra()
-        {
-            this.vehiculo = new HashSet<vehiculo>();
-        }
-    
-        public int id_compra { get; set; }
+        public int id_comision { get; set; }
+        public byte porcentaje { get; set; }
         public System.DateTime fecha { get; set; }
-        public string nota { get; set; }
-        public byte fk_estado_transaccion { get; set; }
         public int fk_usuario { get; set; }
     
-        public virtual estado_transaccion estado_transaccion { get; set; }
         public virtual usuario usuario { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<vehiculo> vehiculo { get; set; }
     }
 }

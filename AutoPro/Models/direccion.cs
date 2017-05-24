@@ -12,30 +12,24 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class transaccion_venta
+    public partial class direccion
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public transaccion_venta()
+        public direccion()
         {
-            this.usuario_gana_comision = new HashSet<usuario_gana_comision>();
-            this.vehiculo = new HashSet<vehiculo>();
+            this.cliente = new HashSet<cliente>();
+            this.concesionario = new HashSet<concesionario>();
         }
     
-        public int id_venta { get; set; }
-        public System.DateTime fecha { get; set; }
-        public string nota { get; set; }
-        public byte fk_estado_transaccion { get; set; }
-        public byte fk_tipo_venta { get; set; }
-        public string fk_cliente { get; set; }
-        public int fk_usuario { get; set; }
+        public int id_direccion { get; set; }
+        public string nombre { get; set; }
+        public System.Data.Entity.Spatial.DbGeography coordenadas { get; set; }
+        public int fk_ciudad { get; set; }
     
-        public virtual cliente cliente { get; set; }
-        public virtual estado_transaccion estado_transaccion { get; set; }
-        public virtual tipo_transaccion_venta tipo_transaccion_venta { get; set; }
-        public virtual usuario usuario { get; set; }
+        public virtual ciudad ciudad { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<usuario_gana_comision> usuario_gana_comision { get; set; }
+        public virtual ICollection<cliente> cliente { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<vehiculo> vehiculo { get; set; }
+        public virtual ICollection<concesionario> concesionario { get; set; }
     }
 }
