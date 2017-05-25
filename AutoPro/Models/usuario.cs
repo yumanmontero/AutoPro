@@ -28,13 +28,12 @@ namespace AutoPro.Models
         public int id_usuario { get; set; }
         public string nombre { get; set; }
         public string apellido { get; set; }
-        public string direccion { get; set; }
         public string telefono { get; set; }
         public string foto { get; set; }
         public byte fk_usuario_estado { get; set; }
         public byte fk_tipo_usuario { get; set; }
         public string fk_seguridad { get; set; }
-        public Nullable<int> fk_concesionario { get; set; }
+        public int fk_concesionario { get; set; }
     
         public virtual AspNetUsers AspNetUsers { get; set; }
         public virtual concesionario concesionario { get; set; }

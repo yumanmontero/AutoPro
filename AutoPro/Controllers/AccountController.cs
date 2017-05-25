@@ -202,7 +202,6 @@ namespace AutoPro.Controllers
                         apellido = model.Apellido,
                         nombre = model.Nombre,
                         telefono = model.Telefono,
-                        direccion = "None",
                         foto = "foto",
                         fk_tipo_usuario = Convert.ToByte(model.id_Tipo_Usuario),
                         fk_seguridad = idSeg,

@@ -56,6 +56,5 @@ namespace AutoPro.Models
         public virtual DbSet<usuario_tiene_mensaje> usuario_tiene_mensaje { get; set; }
         public virtual DbSet<vehiculo> vehiculo { get; set; }
         public virtual DbSet<vehiculo_estado> vehiculo_estado { get; set; }
-        public virtual DbSet<vehiculo_tiene_costo> vehiculo_tiene_costo { get; set; }
     }
 }

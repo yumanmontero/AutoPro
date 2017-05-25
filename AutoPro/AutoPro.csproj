@@ -277,9 +277,6 @@
     <Compile Include="Models\vehiculo_estado.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\vehiculo_tiene_costo.cs">
-      <DependentUpon>AutoPro.tt</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

@@ -115,8 +115,8 @@
           <Key>
             <PropertyRef Name="id_direccion" />
           </Key>
-          <Property Name="id_direccion" Type="int" Nullable="false" />
-          <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="id_direccion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="descripcion" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="coordenadas" Type="geography" Nullable="false" />
           <Property Name="fk_ciudad" Type="int" Nullable="false" />
         </EntityType>
@@ -153,6 +153,7 @@
           <Property Name="monto" Type="money" Nullable="false" />
           <Property Name="fecha" Type="datetime" Nullable="false" />
           <Property Name="fk_tipo_costo" Type="tinyint" Nullable="false" />
+          <Property Name="fk_vehiculo" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="marca">
           <Key>
@@ -254,13 +255,12 @@
           <Property Name="id_usuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="25" Nullable="false" />
           <Property Name="apellido" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="direccion" Type="varchar" MaxLength="300" Nullable="false" />
           <Property Name="telefono" Type="varchar" MaxLength="13" Nullable="false" />
           <Property Name="foto" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="fk_usuario_estado" Type="tinyint" Nullable="false" />
           <Property Name="fk_tipo_usuario" Type="tinyint" Nullable="false" />
           <Property Name="fk_seguridad" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="fk_concesionario" Type="int" />
+          <Property Name="fk_concesionario" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="usuario_acede_modulo">
           <Key>
@@ -317,15 +317,6 @@
           <Property Name="id_vehiculo_estado" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="descripcion" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="factor" Type="tinyint" Nullable="false" />
-        </EntityType>
-        <EntityType Name="vehiculo_tiene_costo">
-          <Key>
-            <PropertyRef Name="fk_vehiculo" />
-            <PropertyRef Name="fk_costo" />
-          </Key>
-          <Property Name="fk_vehiculo" Type="int" Nullable="false" />
-          <Property Name="fk_costo" Type="int" Nullable="false" />
-          <Property Name="gasto" Type="money" Nullable="false" />
         </EntityType>
         <EntityType Name="venta_tiene_vehiculo">
           <Key>
@@ -523,6 +514,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_estructura_costo_vehiculo">
+          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="1" />
+          <End Role="estructura_costo" Type="Self.estructura_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo">
+              <PropertyRef Name="id_vehiculo" />
+            </Principal>
+            <Dependent Role="estructura_costo">
+              <PropertyRef Name="fk_vehiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_modelo_marca">
           <End Role="marca" Type="Self.marca" Multiplicity="1" />
           <End Role="modelo" Type="Self.modelo" Multiplicity="*" />
@@ -656,7 +659,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_usuario_concesionario">
-          <End Role="concesionario" Type="Self.concesionario" Multiplicity="0..1" />
+          <End Role="concesionario" Type="Self.concesionario" Multiplicity="1" />
           <End Role="usuario" Type="Self.usuario" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="concesionario">
@@ -751,30 +754,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_vehiculo_tiene_costo_estructura_costo">
-          <End Role="estructura_costo" Type="Self.estructura_costo" Multiplicity="1" />
-          <End Role="vehiculo_tiene_costo" Type="Self.vehiculo_tiene_costo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="estructura_costo">
-              <PropertyRef Name="id_costo" />
-            </Principal>
-            <Dependent Role="vehiculo_tiene_costo">
-              <PropertyRef Name="fk_costo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_vehiculo_tiene_costo_vehiculo">
-          <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="1" />
-          <End Role="vehiculo_tiene_costo" Type="Self.vehiculo_tiene_costo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vehiculo">
-              <PropertyRef Name="id_vehiculo" />
-            </Principal>
-            <Dependent Role="vehiculo_tiene_costo">
-              <PropertyRef Name="fk_vehiculo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_vehiculo_vehiculo_estado">
           <End Role="vehiculo_estado" Type="Self.vehiculo_estado" Multiplicity="1" />
           <End Role="vehiculo" Type="Self.vehiculo" Multiplicity="*" />
@@ -846,7 +825,6 @@
           <EntitySet Name="usuario_tiene_mensaje" EntityType="Self.usuario_tiene_mensaje" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vehiculo" EntityType="Self.vehiculo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="vehiculo_estado" EntityType="Self.vehiculo_estado" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="vehiculo_tiene_costo" EntityType="Self.vehiculo_tiene_costo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="venta_tiene_vehiculo" EntityType="Self.venta_tiene_vehiculo" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_banco_financia_modelo_banco" Association="Self.FK_banco_financia_modelo_banco">
             <End Role="banco" EntitySet="banco" />
@@ -907,6 +885,10 @@
           <AssociationSet Name="FK_estado_pais" Association="Self.FK_estado_pais">
             <End Role="pais" EntitySet="pais" />
             <End Role="estado" EntitySet="estado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estructura_costo_vehiculo" Association="Self.FK_estructura_costo_vehiculo">
+            <End Role="vehiculo" EntitySet="vehiculo" />
+            <End Role="estructura_costo" EntitySet="estructura_costo" />
           </AssociationSet>
           <AssociationSet Name="FK_modelo_marca" Association="Self.FK_modelo_marca">
             <End Role="marca" EntitySet="marca" />
@@ -984,14 +966,6 @@
             <End Role="modelo" EntitySet="modelo" />
             <End Role="vehiculo" EntitySet="vehiculo" />
           </AssociationSet>
-          <AssociationSet Name="FK_vehiculo_tiene_costo_estructura_costo" Association="Self.FK_vehiculo_tiene_costo_estructura_costo">
-            <End Role="estructura_costo" EntitySet="estructura_costo" />
-            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
-          </AssociationSet>
-          <AssociationSet Name="FK_vehiculo_tiene_costo_vehiculo" Association="Self.FK_vehiculo_tiene_costo_vehiculo">
-            <End Role="vehiculo" EntitySet="vehiculo" />
-            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
-          </AssociationSet>
           <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="Self.FK_vehiculo_vehiculo_estado">
             <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
             <End Role="vehiculo" EntitySet="vehiculo" />
@@ -1041,7 +1015,6 @@
           <EntitySet Name="usuario_tiene_mensaje" EntityType="sgcaModel.usuario_tiene_mensaje" />
           <EntitySet Name="vehiculo" EntityType="sgcaModel.vehiculo" />
           <EntitySet Name="vehiculo_estado" EntityType="sgcaModel.vehiculo_estado" />
-          <EntitySet Name="vehiculo_tiene_costo" EntityType="sgcaModel.vehiculo_tiene_costo" />
           <AssociationSet Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" Association="sgcaModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -1106,10 +1079,6 @@
             <End Role="tipo_costo" EntitySet="tipo_costo" />
             <End Role="estructura_costo" EntitySet="estructura_costo" />
           </AssociationSet>
-          <AssociationSet Name="FK_vehiculo_tiene_costo_estructura_costo" Association="sgcaModel.FK_vehiculo_tiene_costo_estructura_costo">
-            <End Role="estructura_costo" EntitySet="estructura_costo" />
-            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
-          </AssociationSet>
           <AssociationSet Name="FK_modelo_marca" Association="sgcaModel.FK_modelo_marca">
             <End Role="marca" EntitySet="marca" />
             <End Role="modelo" EntitySet="modelo" />
@@ -1158,10 +1127,6 @@
             <End Role="usuario_estado" EntitySet="usuario_estado" />
             <End Role="usuario" EntitySet="usuario" />
           </AssociationSet>
-          <AssociationSet Name="FK_vehiculo_tiene_costo_vehiculo" Association="sgcaModel.FK_vehiculo_tiene_costo_vehiculo">
-            <End Role="vehiculo" EntitySet="vehiculo" />
-            <End Role="vehiculo_tiene_costo" EntitySet="vehiculo_tiene_costo" />
-          </AssociationSet>
           <AssociationSet Name="FK_vehiculo_vehiculo_estado" Association="sgcaModel.FK_vehiculo_vehiculo_estado">
             <End Role="vehiculo_estado" EntitySet="vehiculo_estado" />
             <End Role="vehiculo" EntitySet="vehiculo" />
@@ -1181,6 +1146,10 @@
           <AssociationSet Name="venta_tiene_vehiculo" Association="sgcaModel.venta_tiene_vehiculo">
             <End Role="transaccion_venta" EntitySet="transaccion_venta" />
             <End Role="vehiculo" EntitySet="vehiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estructura_costo_vehiculo" Association="sgcaModel.FK_estructura_costo_vehiculo">
+            <End Role="vehiculo" EntitySet="vehiculo" />
+            <End Role="estructura_costo" EntitySet="estructura_costo" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AspNetRoles">
@@ -1294,12 +1263,12 @@
             <PropertyRef Name="id_direccion" />
           </Key>
           <Property Name="id_direccion" Type="Int32" Nullable="false" />
-          <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="coordenadas" Type="Geography" Nullable="false" />
           <Property Name="fk_ciudad" Type="Int32" Nullable="false" />
           <NavigationProperty Name="ciudad" Relationship="sgcaModel.FK_direccion_ciudad" FromRole="direccion" ToRole="ciudad" />
           <NavigationProperty Name="cliente" Relationship="sgcaModel.FK_cliente_direccion" FromRole="direccion" ToRole="cliente" />
           <NavigationProperty Name="concesionario" Relationship="sgcaModel.FK_concesionario_direccion" FromRole="direccion" ToRole="concesionario" />
+          <Property Name="descripcion" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="estado">
           <Key>
@@ -1340,7 +1309,8 @@
           <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="fk_tipo_costo" Type="Byte" Nullable="false" />
           <NavigationProperty Name="tipo_costo" Relationship="sgcaModel.FK_costo_tipo_costo" FromRole="estructura_costo" ToRole="tipo_costo" />
-          <NavigationProperty Name="vehiculo_tiene_costo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_estructura_costo" FromRole="estructura_costo" ToRole="vehiculo_tiene_costo" />
+          <Property Name="fk_vehiculo" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.FK_estructura_costo_vehiculo" FromRole="estructura_costo" ToRole="vehiculo" />
         </EntityType>
         <EntityType Name="marca">
           <Key>
@@ -1463,13 +1433,12 @@
           <Property Name="id_usuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="nombre" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="apellido" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="direccion" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="telefono" Type="String" Nullable="false" MaxLength="13" FixedLength="false" Unicode="false" />
           <Property Name="foto" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="fk_usuario_estado" Type="Byte" Nullable="false" />
           <Property Name="fk_tipo_usuario" Type="Byte" Nullable="false" />
           <Property Name="fk_seguridad" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-          <Property Name="fk_concesionario" Type="Int32" />
+          <Property Name="fk_concesionario" Type="Int32" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="sgcaModel.FK_usuario_AspNetUsers" FromRole="usuario" ToRole="AspNetUsers" />
           <NavigationProperty Name="concesionario" Relationship="sgcaModel.FK_usuario_concesionario" FromRole="usuario" ToRole="concesionario" />
           <NavigationProperty Name="estructura_comision" Relationship="sgcaModel.FK_comision_usuario" FromRole="usuario" ToRole="estructura_comision" />
@@ -1526,10 +1495,10 @@
           <Property Name="fk_vehiculo_estado" Type="Byte" Nullable="false" />
           <Property Name="fk_modelo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_vehiculo_modelo" FromRole="vehiculo" ToRole="modelo" />
-          <NavigationProperty Name="vehiculo_tiene_costo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_vehiculo" FromRole="vehiculo" ToRole="vehiculo_tiene_costo" />
           <NavigationProperty Name="vehiculo_estado" Relationship="sgcaModel.FK_vehiculo_vehiculo_estado" FromRole="vehiculo" ToRole="vehiculo_estado" />
           <NavigationProperty Name="transaccion_compra" Relationship="sgcaModel.compra_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_compra" />
           <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.venta_tiene_vehiculo" FromRole="vehiculo" ToRole="transaccion_venta" />
+          <NavigationProperty Name="estructura_costo" Relationship="sgcaModel.FK_estructura_costo_vehiculo" FromRole="vehiculo" ToRole="estructura_costo" />
         </EntityType>
         <EntityType Name="vehiculo_estado">
           <Key>
@@ -1539,17 +1508,6 @@
           <Property Name="descripcion" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="factor" Type="Byte" Nullable="false" />
           <NavigationProperty Name="vehiculo" Relationship="sgcaModel.FK_vehiculo_vehiculo_estado" FromRole="vehiculo_estado" ToRole="vehiculo" />
-        </EntityType>
-        <EntityType Name="vehiculo_tiene_costo">
-          <Key>
-            <PropertyRef Name="fk_vehiculo" />
-            <PropertyRef Name="fk_costo" />
-          </Key>
-          <Property Name="fk_vehiculo" Type="Int32" Nullable="false" />
-          <Property Name="fk_costo" Type="Int32" Nullable="false" />
-          <Property Name="gasto" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
-          <NavigationProperty Name="estructura_costo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_estructura_costo" FromRole="vehiculo_tiene_costo" ToRole="estructura_costo" />
-          <NavigationProperty Name="vehiculo" Relationship="sgcaModel.FK_vehiculo_tiene_costo_vehiculo" FromRole="vehiculo_tiene_costo" ToRole="vehiculo" />
         </EntityType>
         <Association Name="FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId">
           <End Type="sgcaModel.AspNetUsers" Role="AspNetUsers" Multiplicity="1">
@@ -1676,7 +1634,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_usuario_concesionario">
-          <End Type="sgcaModel.concesionario" Role="concesionario" Multiplicity="0..1" />
+          <End Type="sgcaModel.concesionario" Role="concesionario" Multiplicity="1" />
           <End Type="sgcaModel.usuario" Role="usuario" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="concesionario">
@@ -1744,18 +1702,6 @@
             </Principal>
             <Dependent Role="estructura_costo">
               <PropertyRef Name="fk_tipo_costo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_vehiculo_tiene_costo_estructura_costo">
-          <End Type="sgcaModel.estructura_costo" Role="estructura_costo" Multiplicity="1" />
-          <End Type="sgcaModel.vehiculo_tiene_costo" Role="vehiculo_tiene_costo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="estructura_costo">
-              <PropertyRef Name="id_costo" />
-            </Principal>
-            <Dependent Role="vehiculo_tiene_costo">
-              <PropertyRef Name="fk_costo" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1903,18 +1849,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_vehiculo_tiene_costo_vehiculo">
-          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="1" />
-          <End Type="sgcaModel.vehiculo_tiene_costo" Role="vehiculo_tiene_costo" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="vehiculo">
-              <PropertyRef Name="id_vehiculo" />
-            </Principal>
-            <Dependent Role="vehiculo_tiene_costo">
-              <PropertyRef Name="fk_vehiculo" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_vehiculo_vehiculo_estado">
           <End Type="sgcaModel.vehiculo_estado" Role="vehiculo_estado" Multiplicity="1" />
           <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="*" />
@@ -1942,6 +1876,18 @@
         <Association Name="venta_tiene_vehiculo">
           <End Type="sgcaModel.transaccion_venta" Role="transaccion_venta" Multiplicity="*" />
           <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_estructura_costo_vehiculo">
+          <End Type="sgcaModel.vehiculo" Role="vehiculo" Multiplicity="1" />
+          <End Type="sgcaModel.estructura_costo" Role="estructura_costo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="vehiculo">
+              <PropertyRef Name="id_vehiculo" />
+            </Principal>
+            <Dependent Role="estructura_costo">
+              <PropertyRef Name="fk_vehiculo" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -2048,9 +1994,9 @@
           <EntitySetMapping Name="direccion">
             <EntityTypeMapping TypeName="sgcaModel.direccion">
               <MappingFragment StoreEntitySet="direccion">
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="fk_ciudad" ColumnName="fk_ciudad" />
                 <ScalarProperty Name="coordenadas" ColumnName="coordenadas" />
-                <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="id_direccion" ColumnName="id_direccion" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2086,6 +2032,7 @@
           <EntitySetMapping Name="estructura_costo">
             <EntityTypeMapping TypeName="sgcaModel.estructura_costo">
               <MappingFragment StoreEntitySet="estructura_costo">
+                <ScalarProperty Name="fk_vehiculo" ColumnName="fk_vehiculo" />
                 <ScalarProperty Name="fk_tipo_costo" ColumnName="fk_tipo_costo" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
                 <ScalarProperty Name="monto" ColumnName="monto" />
@@ -2206,7 +2153,6 @@
                 <ScalarProperty Name="fk_usuario_estado" ColumnName="fk_usuario_estado" />
                 <ScalarProperty Name="foto" ColumnName="foto" />
                 <ScalarProperty Name="telefono" ColumnName="telefono" />
-                <ScalarProperty Name="direccion" ColumnName="direccion" />
                 <ScalarProperty Name="apellido" ColumnName="apellido" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="id_usuario" ColumnName="id_usuario" />
@@ -2261,15 +2207,6 @@
                 <ScalarProperty Name="factor" ColumnName="factor" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="id_vehiculo_estado" ColumnName="id_vehiculo_estado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vehiculo_tiene_costo">
-            <EntityTypeMapping TypeName="sgcaModel.vehiculo_tiene_costo">
-              <MappingFragment StoreEntitySet="vehiculo_tiene_costo">
-                <ScalarProperty Name="gasto" ColumnName="gasto" />
-                <ScalarProperty Name="fk_costo" ColumnName="fk_costo" />
-                <ScalarProperty Name="fk_vehiculo" ColumnName="fk_vehiculo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
