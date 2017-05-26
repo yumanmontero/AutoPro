@@ -28,7 +28,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-8">
-                    <div class="checkbox icheck">
+                    <div class="checkbox icheck" id="checkbox">
                         <label>
                             @Html.TextBoxFor(m => m.RememberMe, new { type = "checkbox" }) Recuerdame
                         </label>
@@ -41,6 +41,12 @@
                 <!-- /.col -->
             </div>
         }
+
+        <style type="text/css">
+            #checkbox {
+                margin: 5px 20px;
+            }
+        </style>
         <!-- /
         <div class="social-auth-links text-center">
             <p>- OR -</p>
