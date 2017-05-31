@@ -17,13 +17,12 @@ namespace AutoPro.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public vehiculo()
         {
+            this.estructura_costo = new HashSet<estructura_costo>();
             this.transaccion_compra = new HashSet<transaccion_compra>();
             this.transaccion_venta = new HashSet<transaccion_venta>();
-            this.estructura_costo = new HashSet<estructura_costo>();
         }
     
         public int id_vehiculo { get; set; }
-        public short año { get; set; }
         public int kilometraje { get; set; }
         public string imagen { get; set; }
         public System.DateTime fecha_ingreso { get; set; }
@@ -31,15 +30,17 @@ namespace AutoPro.Models
         public decimal valor_compra { get; set; }
         public Nullable<decimal> valor_venta { get; set; }
         public byte fk_vehiculo_estado { get; set; }
-        public string fk_modelo { get; set; }
+        public int fk_modelo { get; set; }
+        public int fk_concesionario { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<estructura_costo> estructura_costo { get; set; }
         public virtual modelo modelo { get; set; }
         public virtual vehiculo_estado vehiculo_estado { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<transaccion_compra> transaccion_compra { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<transaccion_venta> transaccion_venta { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<estructura_costo> estructura_costo { get; set; }
+        public virtual concesionario concesionario { get; set; }
     }
 }

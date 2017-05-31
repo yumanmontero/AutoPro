@@ -14,7 +14,7 @@ namespace AutoPro.Models
     
     public partial class banco_financia_modelo
     {
-        public string fk_modelo { get; set; }
+        public int fk_modelo { get; set; }
         public byte fk_banco { get; set; }
         public decimal valor_limite { get; set; }
         public byte nivel_preferencia { get; set; }

@@ -18,6 +18,7 @@ namespace AutoPro.Models
         public concesionario()
         {
             this.usuario = new HashSet<usuario>();
+            this.vehiculo = new HashSet<vehiculo>();
         }
     
         public int id_concesionario { get; set; }
@@ -29,5 +30,7 @@ namespace AutoPro.Models
         public virtual direccion direccion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<usuario> usuario { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<vehiculo> vehiculo { get; set; }
     }
 }

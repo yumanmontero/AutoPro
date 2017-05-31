@@ -21,12 +21,15 @@ namespace AutoPro.Models
             this.vehiculo = new HashSet<vehiculo>();
         }
     
-        public string id_modelo { get; set; }
+        public int id_modelo { get; set; }
+        public string modelo1 { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
         public decimal valor { get; set; }
         public int fk_marca { get; set; }
         public byte fk_clasificacion { get; set; }
+        public string imagen { get; set; }
+        public short año { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<banco_financia_modelo> banco_financia_modelo { get; set; }
