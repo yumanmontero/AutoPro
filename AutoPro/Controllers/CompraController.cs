@@ -12,6 +12,7 @@ using AutoPro.Models;
 using System.Data;
 using System.Data.Entity;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace AutoPro.Controllers
 {
@@ -37,6 +38,19 @@ namespace AutoPro.Controllers
             return View();
         }
 
+
+
+        [AllowAnonymous]
+        public JsonResult ObtenerModelos(string q)
+        {
+            int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
+            ModelosDetallesViewModels model = new ModelosDetallesViewModels();
+            var lista_modelos = (from l_model in autodb.modelo where l_model.modelo1.StartsWith(q) select l_model).ToList();
+
+
+            var json = JsonConvert.SerializeObject(lista_modelos);
+            return Json(json);
+        }
 
 
         // GET: Busqueda por Modelo

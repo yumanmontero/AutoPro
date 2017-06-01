@@ -28,4 +28,22 @@ namespace AutoPro.Models
         public int Busq_Modelo { get; set; }
     }
 
+    public class ModelosDetallesViewModels
+    {
+
+        public int Id { set; get; }
+
+        public string Image { set; get; }
+
+        public string Nombre { set; get; }
+
+        public string Descripcion { get; set; }
+
+        public int Nro_Inventario { get; set; }
+
+        public int Nro_Vendidos { get; set; }
+
+        public int Nro_Rezagados { get; set; }
+    }
+
 }
