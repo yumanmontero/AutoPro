@@ -97,7 +97,7 @@ namespace AutoPro.Controllers
                         Tipo_Usuario = getuser.tipo_usuario.descripcion
                     };
 
-
+                    this.Session["Concesionario"] = getuser.concesionario.id_concesionario;
                     this.Session["User"] = usuario;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:

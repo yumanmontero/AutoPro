@@ -406,6 +406,7 @@
     <Content Include="Content\Template\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.all.min.js" />
     <Content Include="Content\Template\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.css" />
     <Content Include="Content\Template\plugins\bootstrap-wysihtml5\bootstrap3-wysihtml5.min.css" />
+    <Content Include="Content\Template\plugins\MiniJava.js" />
     <Content Include="Content\Template\plugins\chartjs\Chart.js" />
     <Content Include="Content\Template\plugins\chartjs\Chart.min.js" />
     <Content Include="Content\Template\plugins\ckeditor\adapters\jquery.js" />
@@ -1204,6 +1205,12 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\imagen_user_160.png" />
+    <Content Include="Images\Modelos\C-Class\2014\C-Class_AMG_C63_Sedan.png" />
+    <Content Include="Images\Modelos\Camry\2017\Camry_LE_Sedan_4d.png" />
+    <Content Include="Images\Modelos\Mustang\2008\Mustang_Deluxe_Coupe_2d.png" />
+    <Content Include="Images\Modelos\Mustang\2015\Mustang_GT_Premium_Convertible_2D.png" />
+    <Content Include="Images\Modelos\Optima\2015\Optima_LX_Sedan_4d.png" />
+    <Content Include="Images\Modelos\Patriot\2016\Patriot_Sport_SUV_4d.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EntityDeploy Include="Models\AutoPro.edmx">
