@@ -25,7 +25,9 @@ namespace AutoPro.Models
         public string nota { get; set; }
         public byte fk_estado_transaccion { get; set; }
         public int fk_usuario { get; set; }
+        public int fk_concesionario { get; set; }
     
+        public virtual concesionario concesionario { get; set; }
         public virtual estado_transaccion estado_transaccion { get; set; }
         public virtual usuario usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

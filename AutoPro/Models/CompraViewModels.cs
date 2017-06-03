@@ -59,7 +59,7 @@ namespace AutoPro.Models
 
         public int id { set; get; }
 
-        public float Valor { set; get; }
+        public decimal Valor { set; get; }
 
         public string Nombre { get; set; }
 
@@ -71,23 +71,17 @@ namespace AutoPro.Models
 
         public bool Preferencia_Banco { set; get; }
 
-        public float Valor_Banco { set; get; }
-
-        public int Nivel_Pref_Banco { get; set; }
-
-        public float Viabilidad { set; get; }
-
         public int Estado_Vehiculo { set; get; }
 
         public string Imagen { set; get; }
 
-        public float Valor_Calculado_Maximo { set; get; }
+        public double Valor_Calculado_Maximo { set; get; }
 
-        public float Valor_Calculado_Minimo { get; set; }
+        public double Valor_Calculado_Minimo { get; set; }
 
-        public int Nivel_Pref_Cliente { get; set; }
+        public double Nivel_Pref_Cliente { get; set; }
 
-        public float Rentabilidad { set; get; }
+        public double Rentabilidad { set; get; }
 
         public int Tiempo_Inventario { get; set; }
 
@@ -97,7 +91,35 @@ namespace AutoPro.Models
 
         public int Nro_Rezagados { get; set; }
 
+        public List<BancoFinanciaModeloViewModels> Lista_Banco { get; set; }
+
+        public List<RentabilidadViewModels> Lista_Rentabilidad { get; set; }
+
         
+    }
+
+    public class RentabilidadViewModels
+    {
+        public string Fecha { set; get; }
+
+        public double Valor_Compra { get; set; }
+
+        public double Valor_Venta { get; set; }
+
+    }
+
+    public class BancoFinanciaModeloViewModels
+    {
+
+        public int id_Banco { set; get; }
+
+        public int id_Modelo { set; get; }
+
+        public string Banco { set; get; }
+
+        public decimal Valor_financia { get; set; }
+
+        public int Preferencia { get; set; }
     }
 
 }

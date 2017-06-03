@@ -32,7 +32,9 @@ namespace AutoPro.Models
         public byte fk_vehiculo_estado { get; set; }
         public int fk_modelo { get; set; }
         public int fk_concesionario { get; set; }
+        public string color { get; set; }
     
+        public virtual concesionario concesionario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<estructura_costo> estructura_costo { get; set; }
         public virtual modelo modelo { get; set; }
@@ -41,6 +43,5 @@ namespace AutoPro.Models
         public virtual ICollection<transaccion_compra> transaccion_compra { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<transaccion_venta> transaccion_venta { get; set; }
-        public virtual concesionario concesionario { get; set; }
     }
 }

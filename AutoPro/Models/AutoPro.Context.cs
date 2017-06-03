@@ -30,6 +30,7 @@ namespace AutoPro.Models
         public virtual DbSet<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<banco> banco { get; set; }
+        public virtual DbSet<banco_financia_modelo> banco_financia_modelo { get; set; }
         public virtual DbSet<ciudad> ciudad { get; set; }
         public virtual DbSet<cliente> cliente { get; set; }
         public virtual DbSet<concesionario> concesionario { get; set; }
@@ -40,6 +41,7 @@ namespace AutoPro.Models
         public virtual DbSet<estructura_costo> estructura_costo { get; set; }
         public virtual DbSet<marca> marca { get; set; }
         public virtual DbSet<mensaje> mensaje { get; set; }
+        public virtual DbSet<modelo> modelo { get; set; }
         public virtual DbSet<modelo_clasificacion> modelo_clasificacion { get; set; }
         public virtual DbSet<modulos_sistema> modulos_sistema { get; set; }
         public virtual DbSet<pais> pais { get; set; }
@@ -52,9 +54,7 @@ namespace AutoPro.Models
         public virtual DbSet<usuario_estado> usuario_estado { get; set; }
         public virtual DbSet<usuario_gana_comision> usuario_gana_comision { get; set; }
         public virtual DbSet<usuario_tiene_mensaje> usuario_tiene_mensaje { get; set; }
-        public virtual DbSet<vehiculo_estado> vehiculo_estado { get; set; }
-        public virtual DbSet<banco_financia_modelo> banco_financia_modelo { get; set; }
-        public virtual DbSet<modelo> modelo { get; set; }
         public virtual DbSet<vehiculo> vehiculo { get; set; }
+        public virtual DbSet<vehiculo_estado> vehiculo_estado { get; set; }
     }
 }

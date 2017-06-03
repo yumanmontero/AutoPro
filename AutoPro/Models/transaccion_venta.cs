@@ -28,8 +28,10 @@ namespace AutoPro.Models
         public byte fk_tipo_venta { get; set; }
         public string fk_cliente { get; set; }
         public int fk_usuario { get; set; }
+        public int fk_concesionario { get; set; }
     
         public virtual cliente cliente { get; set; }
+        public virtual concesionario concesionario { get; set; }
         public virtual estado_transaccion estado_transaccion { get; set; }
         public virtual tipo_transaccion_venta tipo_transaccion_venta { get; set; }
         public virtual usuario usuario { get; set; }

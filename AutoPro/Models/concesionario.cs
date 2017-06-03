@@ -17,6 +17,8 @@ namespace AutoPro.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public concesionario()
         {
+            this.transaccion_compra = new HashSet<transaccion_compra>();
+            this.transaccion_venta = new HashSet<transaccion_venta>();
             this.usuario = new HashSet<usuario>();
             this.vehiculo = new HashSet<vehiculo>();
         }
@@ -26,8 +28,14 @@ namespace AutoPro.Models
         public string telefono { get; set; }
         public string logo { get; set; }
         public int fk_direccion { get; set; }
+        public double porcentaje_ganancia { get; set; }
+        public short dia_max_inventario { get; set; }
     
         public virtual direccion direccion { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<transaccion_compra> transaccion_compra { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<transaccion_venta> transaccion_venta { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<usuario> usuario { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

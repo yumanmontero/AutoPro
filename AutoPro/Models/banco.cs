@@ -22,6 +22,10 @@ namespace AutoPro.Models
     
         public byte id_banco { get; set; }
         public string nombre { get; set; }
+        public Nullable<short> año_maximo_financiar { get; set; }
+        public Nullable<decimal> valor_maximo_global { get; set; }
+        public Nullable<int> km_maximo { get; set; }
+        public Nullable<double> porcentaje_financiar { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<banco_financia_modelo> banco_financia_modelo { get; set; }
