@@ -22,8 +22,6 @@ namespace AutoPro.Models
 
         public int Nro_Inventario { get; set; }
 
-        [Required]
-        [StringLength(25, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 3)]
         [Display(Name = "Modelo")]
         public int Busq_Modelo { get; set; }
     }

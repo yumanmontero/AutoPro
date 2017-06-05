@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Prueba";
+}
+
+<h2>Prueba</h2>
+
+
+
+<input id="slider" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14" />
+
+
+
+
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+
+<script src="~/Content/SliderBar/bootstrap-slider.js"></script>
+
+<script>
+    jQuery(window).load(function () {
+
+        $/* BOOTSTRAP SLIDER */
+        $('#slider').slider();
+
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>
+
+

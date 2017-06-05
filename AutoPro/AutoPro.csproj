@@ -286,6 +286,12 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\BusquedaModelo.css" />
+    <Content Include="Content\Rating\css\rating.css" />
+    <Content Include="Content\Rating\img\stars.svg" />
+    <Content Include="Content\Rating\img\start48x48.svg" />
+    <Content Include="Content\Rating\js\rating.js" />
+    <Content Include="Content\SliderBar\bootstrap-slider.css" />
+    <Content Include="Content\SliderBar\bootstrap-slider.js" />
     <Content Include="Content\Template\bootstrap\css\bootstrap-theme.css" />
     <Content Include="Content\Template\bootstrap\css\bootstrap-theme.min.css" />
     <Content Include="Content\Template\bootstrap\css\bootstrap.css" />
@@ -1319,6 +1325,8 @@
     <Content Include="Views\Account\LogOffEvent.cshtml" />
     <Content Include="Views\Compra\Evaluacion.cshtml" />
     <Content Include="Views\Compra\BusquedaPorModelo.cshtml" />
+    <Content Include="Views\Compra\ConsultarModelo.cshtml" />
+    <Content Include="Views\Compra\Prueba.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

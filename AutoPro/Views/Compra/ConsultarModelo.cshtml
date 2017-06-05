@@ -1,0 +1,528 @@
+﻿@using AutoPro.Models
+@model ModeloDestallesViewModels
+@{
+    ViewBag.Title = "Estimacion Vehiculo";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+         @Model.Nombre
+        <small>@Model.Marca - @Model.Año</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i>Inicio</a></li>
+        <li><a href="/Compra/BusquedaPorModelo">Busqueda por Modelo</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-8 col-xs-8">
+
+            <div class="box box-success">
+                
+                <div class="slimScrollDiv" style="position: relative">
+                    <div class="box-body chat" id="chat-box">
+                        
+                        <img class="img-responsive" style="height:300px; width :100%" src="@Model.Imagen" />
+
+                    </div><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 187.126px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-xs-4 text-center">
+
+            <div class="box box-success">
+                <div class="box-header">
+                    <i class="fa fa-tachometer"></i>
+
+                    <h3 class="box-title">Viabilidad</h3>
+                </div>
+                <div class="slimScrollDiv" style="position: relative">
+                    <div class="box-body chat" id="chat-box">
+                    @if (Model.Rentabilidad == -1)
+                    {
+                        <h2 class="text-muted" style="height:230px">No Existen Estadisticas Suficiente para este modelo</h2>
+                    }
+                    else
+                    {
+                        <input type="text" class="knob" value="@Model.Rentabilidad" data-anglearc="250" data-height="250" data-width="250" data-angleoffset="-125" data-fgcolor="#3c8dbc" data-readonly="true">
+                    }
+                           
+                    </div><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 187.126px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div>
+                </div>
+                
+            </div>
+  
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12 col-xs-12 text-center">
+            <div class="col-lg-3 col-xs-3 text-center">
+
+
+            </div>
+            <div class="col-lg-6 col-xs-6">
+                
+            </div>
+            <div class="col-lg-3 col-xs-3 text-center">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-xs-12 text-center">
+            <div class="col-lg-2 col-xs-2 text-center">
+
+
+            </div>
+            <div class="col-lg-8 col-xs-8">
+                @if (Model.Valor_Calculado_Minimo == Model.Valor_Calculado_Maximo)
+                {
+                    <div class="row col-lg-12 col-xs-12">
+
+                        <div class="small-box bg-green">
+
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Valor_Calculado_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Recomendado</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    
+                    double monto_max = 0;
+                    double monto_min = 0;
+                    
+                    if(Model.Valor_Calculado_Maximo < Model.Valor_Calculado_Minimo)
+                    {
+                        monto_max = Model.Valor_Calculado_Minimo;
+                        monto_min = Model.Valor_Calculado_Maximo;
+                        Model.Valor_Calculado_Minimo = monto_min;
+                        Model.Valor_Calculado_Maximo = monto_max;
+                        
+                    }
+         
+                    <div class="row col-lg-6 col-xs-6">
+
+                        <div class="small-box bg-green">
+
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Valor_Calculado_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Minimo</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-6 col-xs-6">
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Valor_Calculado_Maximo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Maximo</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+
+                
+            </div>
+            <div class="col-lg-2 col-xs-2 text-center">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-5 col-xs-5 text-center">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right">
+                    @if (Model.Lista_Banco.Count() > 0)
+                    {
+                        <li><a href="#d_banco" data-toggle="tab">Detallada</a></li>
+                    }
+                    <li class ="active"><a href="#r_banco" data-toggle="tab">Resumen</a></li>
+                    <li class="pull-left header"><i class="fa fa-building"></i> Preferencia por Los Banco</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    <div class="chart tab-pane active" id="r_banco" style="position: relative; height: 300px;">
+                        @if (Model.Lista_Banco.Count() == 0)
+                        {
+                            <h2 class="text-muted">Este modelo no es financiado por ningun Banco</h2>
+
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-lg-12 col-xs-12 text-center">
+                                    <div class="small-box bg-green">
+                                        <div class="inner">
+                                            <h3>@Model.Lista_Banco.Average(x => x.Valor_financia).ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+
+                                            <p>Financiamiento Promedio</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-cash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-xs-6 text-center">
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h3>@Model.Lista_Banco.Average(x => x.Preferencia).ToString("#,##0")<sup style="font-size: 20px">%</sup></h3>
+
+                                            <p>Preferencia Promedio</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-stats-bars"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xs-6 text-center">
+                                    <div class="small-box bg-yellow">
+                                        <div class="inner">
+                                            <h3>@Model.Lista_Banco.Count()</h3>
+
+                                            <p>Bancos</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-ios-home"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        } 
+
+
+                    </div>
+                    @if (Model.Lista_Banco.Count() > 0)
+                    {
+                        <div class="chart tab-pane" id="d_banco" style="position: relative; height: 300px;">
+                            <div class="row" id="list_d_banco">
+                                @foreach (var item in Model.Lista_Banco)
+                                {
+                                    <div class="info-box bg-green">
+                                        <span class="info-box-icon"><i class="ion ion-cash"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">@item.Banco</span>
+                                            <span class="info-box-number">@item.Valor_financia.ToString("#,##0")<sup style="font-size: 10px">USD</sup></span>
+
+                                            <div class="progress">
+                                                <div class="progress-bar" style="width: @Convert.ToInt32(item.Preferencia)%"></div>
+                                            </div>
+                                            <span class="progress-description">
+                                                @item.Preferencia.ToString("#,##0")% de Preferencia.
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+
+                                }
+                            </div>
+                          
+                        </div>
+                    }
+                    
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-7 col-xs-7 text-center">
+            <!-- Custom tabs (Charts with tabs)-->
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right">
+                    @if (Model.Lista_Rentabilidad.Count() > 0)
+                    {
+                        <li class="active"><a href="#revenue-chart" data-toggle="tab">Rentabilidad Historica</a></li>
+                        <li><a href="#sales-chart2" data-toggle="tab">Resumen</a></li>
+
+                    }
+                    else
+                    {
+                        <li class="active"><a href="#sales-chart2" data-toggle="tab">Resumen</a></li>
+                    }                   
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Estadisticas</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    @{
+                        var classdiv = "";
+                        if (Model.Lista_Rentabilidad.Count() > 0)
+                        {
+                            <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 350px;"></div>                       
+                        }
+                        else
+                        {
+                            
+                            classdiv += "active";
+                        } 
+                    }
+                    <div class="chart tab-pane @classdiv" id="sales-chart2" style="position: relative; height: 350px;">
+                        <div class="row">
+                            <div class="row col-lg-12 col-xs-12 text-center">
+                                <div class="col-lg-12 col-xs-12 text-center">
+
+                                    <div class="small-box bg-green">
+                                        <div class="inner">
+                                            <h3 class="c-rating" style="padding-left:35%" id="el"></h3>
+                                            <p>Preferencia por los Clientes</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-ios-people"></i>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row col-lg-12 col-xs-12 text-center">
+                                <div class="col-lg-4 col-xs-4 text-center">
+                                    <div class="info-box bg-aqua">
+                                        <span class="info-box-icon"><i class="ion ion-arrow-graph-up-right"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Vendidos</span>
+                                            <span class="info-box-number">@Model.Nro_Vendidos.ToString("#,##0")</span>
+
+                                            <span class="progress-description">
+
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-xs-4 text-center">
+                                    <div class="info-box bg-yellow">
+                                        <span class="info-box-icon"><i class="ion ion-ios-cart"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Inventario</span>
+                                            <span class="info-box-number">@Model.Nro_Inventario.ToString("#,##0")</span>
+
+                                            <span class="progress-description">
+
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-xs-4 text-center">
+                                    <div class="info-box bg-danger">
+                                        <span class="info-box-icon"><i class="ion ion-arrow-graph-down-right"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Rezagados</span>
+                                            <span class="info-box-number">@Model.Nro_Rezagados.ToString("#,##0")</span>
+
+                                            <span class="progress-description">
+
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-lg-6 col-xs-6 text-center">
+                                    <div class="info-box bg-lime-active">
+                                        <span class="info-box-icon"><i class="ion ion-stats-bars"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Valor en el Mercado</span>
+                                            <span class="info-box-number">@Model.Valor.ToString("#,##0")<sup style="font-size: 10px">USD</sup></span>
+
+                                            <span class="progress-description">
+
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-xs-6 text-center">
+                                    <div class="info-box bg-teal">
+                                        <span class="info-box-icon"><i class="ion ion-clock"></i></span>
+
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Tiempo promedio</span>
+                                            <span class="info-box-number">@Model.Tiempo_Inventario.ToString("#,##0") <sup style="font-size: 10px">Dias </sup></span>
+
+                                            <span class="progress-description">
+                                                INVENTARIO
+                                            </span>
+                                        </div>
+                                        <!-- /.info-box-content -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    
+
+</section>
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="~/Content/Template/bootstrap/js/bootstrap.min.js"></script>
+<!-- Rating System -->
+<script src="~/Content/Rating/js/rating.js"></script>
+
+<script src="~/Content/SliderBar/bootstrap-slider.js"></script>
+<script>
+    jQuery(window).load(function () {
+
+        //rating
+        // target element
+        var el = document.getElementById("el");
+
+        // current rating, or initial rating
+        var currentRating = @Convert.ToInt32(Model.Nivel_Pref_Cliente);
+
+        // max rating, i.e. number of stars you want
+        var maxRating= 5;
+
+        // callback to run after setting the rating
+        var callback = function(rating) {  };
+
+        // rating instance
+        var myRating = rating(el, currentRating, maxRating, callback);
+
+
+
+        $('.slider').slider();
+
+        $(".knob").knob({
+            /*change : function (value) {
+             //console.log("change : " + value);
+             },
+             release : function (value) {
+             console.log("release : " + value);
+             },
+             cancel : function () {
+             console.log("cancel : " + this.value);
+             },*/
+            draw: function () {
+
+                // "tron" case
+                if (this.$.data('skin') == 'tron') {
+
+                    var a = this.angle(this.cv)  // Angle
+                        , sa = this.startAngle          // Previous start angle
+                        , sat = this.startAngle         // Start angle
+                        , ea                            // Previous end angle
+                        , eat = sat + a                 // End angle
+                        , r = true;
+
+                    this.g.lineWidth = this.lineWidth;
+
+                    this.o.cursor
+                    && (sat = eat - 0.3)
+                    && (eat = eat + 0.3);
+
+                    if (this.o.displayPrevious) {
+                        ea = this.startAngle + this.angle(this.value);
+                        this.o.cursor
+                        && (sa = ea - 0.3)
+                        && (ea = ea + 0.3);
+                        this.g.beginPath();
+                        this.g.strokeStyle = this.previousColor;
+                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                        this.g.stroke();
+                    }
+
+                    this.g.beginPath();
+                    this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                    this.g.stroke();
+
+                    this.g.lineWidth = 2;
+                    this.g.beginPath();
+                    this.g.strokeStyle = this.o.fgColor;
+                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                    this.g.stroke();
+
+                    return false;
+                }
+            }
+        });
+
+
+        /* Morris.js Charts */
+        // Sales chart
+        var area = new Morris.Area({
+            element: 'revenue-chart',
+            resize: true,
+            data: [
+
+               @foreach(var item in Model.Lista_Rentabilidad){
+                   @:{ y: '@item.Fecha.AsDateTime().ToString("yyyy-MM-dd")', item1: @item.Valor_Compra, item2: @item.Valor_Venta },
+               }
+            ],
+            xkey: 'y',
+            ykeys: ['item1', 'item2'],
+            labels: ['Valor de Compra', 'Valor de Venta'],
+            lineColors: ['#f21818', '#1581ed'],
+            hideHover: 'auto'
+        });
+
+        //Fix for charts under tabs
+        //$('.box ul.nav a').on('shown.bs.tab', function () {
+        //    area.redraw();
+
+        // });
+
+
+
+
+        $('#list_d_banco').slimScroll({
+            height: '300px'
+        });
+
+
+
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>

@@ -46,7 +46,7 @@ namespace AutoPro.Controllers
         {
             int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
             var concesionario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == id_concesionario_session select l_concesionario).First();
-            var lista_modelos = (from l_model in autodb.modelo where (l_model.modelo1 + " " + l_model.nombre + " " + l_model.año).Contains(q) select l_model).ToList();
+            var lista_modelos = (from l_model in autodb.modelo where (l_model.modelo1 + " " + l_model.nombre + " " + l_model.año).Contains(q) select l_model).OrderBy(x => x.modelo1).ToList();
             List<ModelosDetallesViewModels> l_modelos = new List<ModelosDetallesViewModels>();
             var inventario = (from inv in autodb.vehiculo where inv.fk_concesionario == id_concesionario_session select inv).ToList();
 
@@ -66,7 +66,7 @@ namespace AutoPro.Controllers
                 l_modelos.Add(model);
 
             }
-
+            l_modelos.OrderBy(x => x.Nombre);
             ListaModelosViewModels t_modelos = new ListaModelosViewModels
             {
                 Lista_Modelo = l_modelos,
@@ -95,7 +95,22 @@ namespace AutoPro.Controllers
             return View(busqueda_modelo);
         }
 
+        [HttpPost]
+        public ActionResult BusquedaPorModelo(BusquedaPorModeloViewModels model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            return RedirectToAction("ConsultarModelo", "Compra", new { id = model.Busq_Modelo });
+
+
+        }
+
+
         // GET: Busqueda por Modelo
+        [Authorize]
         public ActionResult ConsultarModelo(int id)
         {
             int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
@@ -168,6 +183,7 @@ namespace AutoPro.Controllers
 
             if (l_vehiculo.Count() > 0)
             {
+                //Existe al menos una transaccion de compra para este modelo.
                 double promedio = 0;
                 foreach (var item_vehiculo in l_vehiculo)
                 {
@@ -180,6 +196,7 @@ namespace AutoPro.Controllers
             }
             else
             {
+                //No existe ninguna transaccion de compra, por ende el valor sera de acuerdo a la kbb
                 limite_inf = (Convert.ToDouble(m1.valor) * (100 - concesionario.porcentaje_ganancia)) / 100;
                 return (limite_inf * estado_vehiculo) / 100;
 
@@ -196,6 +213,7 @@ namespace AutoPro.Controllers
             double limite_sup = 0;
             if(l_banco_f_modelo.Count() > 0)
             {
+                //Algun banco financia al modelo de vehiculo
                 double promedio = 0;
                 foreach(var item_banco in l_banco_f_modelo)
                 {
@@ -208,11 +226,18 @@ namespace AutoPro.Controllers
             }
             else
             {
+                //Ningun banco los financia, por ende el valor sera de acuerdo a la kbb
                 limite_sup = (Convert.ToDouble(m1.valor) * (100 - concesionario.porcentaje_ganancia)) / 100;
                 return (limite_sup * estado_vehiculo) / 100;
 
             }
 
+        }
+
+        public ActionResult Prueba()
+        {
+
+            return View();
         }
 
         public double ConsultarRentabilidad(modelo m1, int id)
@@ -229,12 +254,33 @@ namespace AutoPro.Controllers
 
                 rentabilidad = rentabilidad / inventario.Count();
 
+                if(rentabilidad > inventario.First().concesionario.porcentaje_ganancia)
+                {
+                    rentabilidad = 100;
+                }
+                else
+                {
+                    if (rentabilidad < 0)
+                    {
+                        rentabilidad = 0;
+                    }
+                    else
+                    {
+                        rentabilidad = (rentabilidad * 100) / Convert.ToDouble(inventario.First().concesionario.porcentaje_ganancia);
+                    }
+                }
+
+
+                
+
+                
+
                 return rentabilidad;
 
             }
             else
             {
-                return 0;
+                return -1;
             }
 
         }
@@ -286,6 +332,11 @@ namespace AutoPro.Controllers
         public double ConsultarPromedioDiasEnInventario(modelo m1)
         {
             var inventario = from l_inventario in autodb.vehiculo where l_inventario.fk_modelo == m1.id_modelo select l_inventario;
+            if(inventario.Count() == 0)
+            {
+                return 0;
+            }
+            
             var cant_carros = inventario.Count();
             double total_dias = 0;
             var dia_final = DateTime.Now;
@@ -318,23 +369,32 @@ namespace AutoPro.Controllers
             }
             else
             {
-                var t_preventa = from l_t_preventa in autodb.transaccion_venta where l_t_preventa.fk_tipo_venta == 1 && l_t_preventa.fk_concesionario == id select l_t_preventa;
-                var l_modelos_t_preventa = t_preventa.Count( x => x.vehiculo.Where(y => y.fk_modelo == m1.id_modelo).Count() > 0);
+                    //Obtener Lista de vehiculos en inventario perteneciente al Modelo.
+                    var l_modelos_inventario = m1.vehiculo.Where(x => x.fk_concesionario == id);
+                    //Calulcar preferencia en ventas: Nro Unidades Vendidas / Nro. Unidades Compradas
+                    var unidades_inventario_total = l_modelos_inventario.Count();
+                    var unidad_inventario_modelo = l_modelos_inventario.Where(x => x.fecha_salida != null).Count();
+                    double p_ventas =  Convert.ToDouble(unidad_inventario_modelo) / Convert.ToDouble(unidades_inventario_total);
+                    //Escalar el valor a [0 - 5] 
+                    double rate_ventas = (p_ventas * 5) / 1;
+                    //Calcular preferencia en preventa: Transaccion de Preventa del Modelo / Transaciones de Preventa Total
+                    var t_preventa = from l_t_preventa in autodb.transaccion_venta where l_t_preventa.fk_tipo_venta == 1 && l_t_preventa.fk_concesionario == id select l_t_preventa;
+                    double l_modelos_t_preventa = t_preventa.Count(x => x.vehiculo.Where(y => y.fk_modelo == m1.id_modelo).Count() > 0);
+                    double rate_preventa = 0;
+                    if (t_preventa.Count() != 0)
+                    {
+                        double p_preventa = l_modelos_t_preventa / Convert.ToDouble(t_preventa.Count());
+                        //Escalar el valor a [0 - 5]
+                        rate_preventa = (p_preventa * 5) / 1;
+                    }
+                    
+                    //Calcular valor total donde al rate_ventas se le asigna un peso del 90% y al rate_preventa un 10%
+                    var t_rate = (rate_ventas * 0.9) + (rate_preventa * 0.1);
 
-                //Obtener Lista de vehiculos en inventario perteneciente al Modelo.
-                var l_modelos_inventario = m1.vehiculo.Where(x => x.fk_concesionario == id);
-                //Calulcar preferencia en ventas: Nro Unidades Vendidas / Nro. Unidades Compradas
-                var p_ventas = l_modelos_inventario.Where(x => x.fecha_salida != null).Count() / l_modelos_inventario.Count();
-                //Escalar el valor a [0 - 5] 
-                var rate_ventas = (p_ventas * 5) / 0.1;
-                //Calcular preferencia en preventa: Transaccion de Preventa del Modelo / Transaciones de Preventa Total
-                var p_preventa = l_modelos_t_preventa / t_preventa.Count();
-                //Escalar el valor a [0 - 5]
-                var rate_preventa = (p_preventa * 5) / 0.1;
-                //Calcular valor total donde al rate_ventas se le asigna un peso del 90% y al rate_preventa un 10%
-                var t_rate = (rate_ventas * 0.9) + (rate_preventa * 0.1);
 
-                return t_rate;
+                    return t_rate;
+                
+                
             }
 
         }
