@@ -1,0 +1,233 @@
+﻿@using AutoPro.Models
+@model ComprarVehiculoViewModels
+@{
+    ViewBag.Title = "Adquisición de Vehiculo";
+}
+
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @Model.Nombre
+        <small>@Model.Marca - @Model.Año</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i>Inicio</a></li>
+        <li><a href="/Compra/BusquedaPorModelo">Busqueda por Modelo</a></li>
+        <li><a href="/Compra/ConsultarModelo/@Model.id_Modelo">@Model.Modelo</a></li>
+        <li class="active"><a href="#">@ViewBag.Title</a></li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-lg-8 col-xs-8">
+            <div class="box box-success">
+
+                <div class="slimScrollDiv" style="position: relative">
+                    <div class="box-body chat" id="chat-box">
+
+                        <img class="img-responsive" style="height:300px; width :100%" src="@Model.Imagen" />
+
+                    </div><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 187.126px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-xs-4 text-center">
+
+            <div class="box box-success">
+                <div class="box-header">
+                    <i class="fa fa-tachometer"></i>
+
+                    <h3 class="box-title">Viabilidad</h3>
+                </div>
+                <div class="slimScrollDiv" style="position: relative">
+                    <div class="box-body chat" id="chat-box">
+                        <input id="Estado_Vehiculo" name="Estado_Vehiculo" type="text" class="knob" value="@Model.Estado_Vehiculo" data-width="250" data-height="250" data-fgcolor="#39CCCC">
+
+                    </div><div class="slimScrollBar" style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 187.126px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12 col-xs-12 text-center">
+            <div class="col-lg-3 col-xs-3 text-center">
+
+
+            </div>
+            <div class="col-lg-6 col-xs-6">
+
+            </div>
+            <div class="col-lg-3 col-xs-3 text-center">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-xs-12 text-center">
+            <div class="col-lg-2 col-xs-2 text-center">
+
+
+            </div>
+            <div class="col-lg-8 col-xs-8">
+                @if (Model.Valor_Minimo == Model.Valor_Maximo)
+                {
+                    <div class="row col-lg-12 col-xs-12">
+
+                        <div class="small-box bg-green">
+
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Valor_Minimo .ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Recomendado</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+
+                    double monto_max = 0;
+                    double monto_min = 0;
+
+                    if (Model.Valor_Maximo < Model.Valor_Minimo)
+                    {
+                        monto_max = Model.Valor_Minimo;
+                        monto_min = Model.Valor_Maximo;
+                        Model.Valor_Minimo = monto_min;
+                        Model.Valor_Maximo = monto_max;
+
+                    }
+
+                    <div class="row col-lg-6 col-xs-6">
+
+                        <div class="small-box bg-green">
+
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Valor_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Minimo</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row col-lg-6 col-xs-6">
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3 id="MontoMaximo">@Model.Valor_Maximo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Maximo</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+
+
+            </div>
+            
+                <div class="col-lg-2 col-xs-2 text-center">
+ 
+                </div>
+      
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="col-md-4 pull-left" style="position:fixed; z-index:999; top:80%; left:80%">
+
+                <a class="btn btn-app bg-green" href="javascript:{}" onclick="document.getElementById('agregarid').submit();">
+                    <i class="fa fa-plus-square"></i>
+                </a>
+            </div>
+            <div class="col-md-4 pull-right" style="position:fixed; z-index:999; top:80%; left:90%">
+
+                <a class="btn btn-app bg-red" href="javascript:{}" onclick="goBack();">
+                    <i class="fa fa-rotate-left"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+</section>
+
+
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Rating System -->
+<script src="~/Content/Rating/js/rating.js"></script>
+
+<script src="~/Content/SliderBar/bootstrap-slider.js"></script>
+<script>
+    jQuery(window).load(function () {
+
+
+        $("#Estado_Vehiculo").knob({
+            'change' : function (v) {
+                console.log(v);
+                var LocalidadOptions = {};
+                LocalidadOptions.url = "/Compra/ConsultarValorModelo";
+                LocalidadOptions.type = "POST";
+                LocalidadOptions.data = JSON.stringify({ id_modelo_c: @Model.id_Modelo, estado_vehiculo_c: v });
+                LocalidadOptions.datatype = "json";
+                LocalidadOptions.contentType = "application/json";
+                LocalidadOptions.success = function (data) {
+                    if (data.Valor_Maximo != undefined) {
+
+                        var minimo = data.Valor_Minimo + '<sup style="font-size: 20px">USD</sup>';
+                        var maximo = data.Valor_Maximo + '<sup style="font-size: 20px">USD</sup>';
+                        $("#MontoMinimo").innerHTML = minimo;
+                        $("#MontoMaximo").innerHTML = maximo;
+
+
+                    } else {
+                        alert("Error al calcular el Monto, Intente mas Tarde")
+                    }
+
+                };
+                LocalidadOptions.error = function () { alert("Error al calcular el Monto."); };
+                $.ajax(LocalidadOptions);
+
+            }
+        });
+
+
+
+
+    });
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+</script>

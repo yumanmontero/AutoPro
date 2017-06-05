@@ -1327,6 +1327,7 @@
     <Content Include="Views\Compra\BusquedaPorModelo.cshtml" />
     <Content Include="Views\Compra\ConsultarModelo.cshtml" />
     <Content Include="Views\Compra\Prueba.cshtml" />
+    <Content Include="Views\Compra\AdquirirVehiculo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -2,7 +2,7 @@
 /**
  * Downward compatible, touchable dial
  *
- * Version: 1.2.11
+ * Version: 1.2.12
  * Requires: jQuery v1.7+
  *
  * Copyright (c) 2012 Anthony Terrien
@@ -96,45 +96,45 @@
 
             this.extend();
             this.o = $.extend({
-                    // Config
-                    min: this.$.data('min') !== undefined ? this.$.data('min') : 0,
-                    max: this.$.data('max') !== undefined ? this.$.data('max') : 100,
-                    stopper: true,
-                    readOnly: this.$.data('readonly') || (this.$.attr('readonly') === 'readonly'),
+                // Config
+                min: this.$.data('min') !== undefined ? this.$.data('min') : 0,
+                max: this.$.data('max') !== undefined ? this.$.data('max') : 100,
+                stopper: true,
+                readOnly: this.$.data('readonly') || (this.$.attr('readonly') === 'readonly'),
 
-                    // UI
-                    cursor: this.$.data('cursor') === true && 30
-                            || this.$.data('cursor') || 0,
-                    thickness: this.$.data('thickness')
-                               && Math.max(Math.min(this.$.data('thickness'), 1), 0.01)
-                               || 0.35,
-                    lineCap: this.$.data('linecap') || 'butt',
-                    width: this.$.data('width') || 200,
-                    height: this.$.data('height') || 200,
-                    displayInput: this.$.data('displayinput') == null || this.$.data('displayinput'),
-                    displayPrevious: this.$.data('displayprevious'),
-                    fgColor: this.$.data('fgcolor') || '#87CEEB',
-                    inputColor: this.$.data('inputcolor'),
-                    font: this.$.data('font') || 'Arial',
-                    fontWeight: this.$.data('font-weight') || 'bold',
-                    inline: false,
-                    step: this.$.data('step') || 1,
-                    rotation: this.$.data('rotation'),
+                // UI
+                cursor: this.$.data('cursor') === true && 30
+                        || this.$.data('cursor') || 0,
+                thickness: this.$.data('thickness')
+                           && Math.max(Math.min(this.$.data('thickness'), 1), 0.01)
+                           || 0.35,
+                lineCap: this.$.data('linecap') || 'butt',
+                width: this.$.data('width') || 200,
+                height: this.$.data('height') || 200,
+                displayInput: this.$.data('displayinput') == null || this.$.data('displayinput'),
+                displayPrevious: this.$.data('displayprevious'),
+                fgColor: this.$.data('fgcolor') || '#87CEEB',
+                inputColor: this.$.data('inputcolor'),
+                font: this.$.data('font') || 'Arial',
+                fontWeight: this.$.data('font-weight') || 'bold',
+                inline: false,
+                step: this.$.data('step') || 1,
+                rotation: this.$.data('rotation'),
 
-                    // Hooks
-                    draw: null, // function () {}
-                    change: null, // function (value) {}
-                    cancel: null, // function () {}
-                    release: null, // function (value) {}
+                // Hooks
+                draw: null, // function () {}
+                change: null, // function (value) {}
+                cancel: null, // function () {}
+                release: null, // function (value) {}
 
-                    // Output formatting, allows to add unit: %, ms ...
-                    format: function(v) {
-                        return v;
-                    },
-                    parse: function (v) {
-                        return parseFloat(v);
-                    }
-                }, this.o
+                // Output formatting, allows to add unit: %, ms ...
+                format: function (v) {
+                    return v;
+                },
+                parse: function (v) {
+                    return parseFloat(v);
+                }
+            }, this.o
             );
 
             // finalize options
@@ -149,7 +149,7 @@
                 // fieldset = array of integer
                 this.v = {};
                 this.i = this.$.find('input');
-                this.i.each(function(k) {
+                this.i.each(function (k) {
                     var $this = $(this);
                     s.i[k] = $this;
                     s.v[k] = s.o.parse($this.val());
@@ -205,9 +205,9 @@
 
             if (!this.c) {
                 throw {
-                    name:        "CanvasNotSupportedException",
-                    message:     "Canvas not supported. Please use excanvas on IE8.0.",
-                    toString:    function(){return this.name + ": " + this.message}
+                    name: "CanvasNotSupportedException",
+                    message: "Canvas not supported. Please use excanvas on IE8.0.",
+                    toString: function () { return this.name + ": " + this.message }
                 }
             }
 
@@ -221,7 +221,7 @@
                          );
 
             // detects relative width / height
-            this.relativeWidth =  this.o.width % 1 !== 0
+            this.relativeWidth = this.o.width % 1 !== 0
                                   && this.o.width.indexOf('%');
             this.relativeHeight = this.o.height % 1 !== 0
                                   && this.o.height.indexOf('%');
@@ -258,7 +258,7 @@
             return this;
         };
 
-        this._carve = function() {
+        this._carve = function () {
             if (this.relative) {
                 var w = this.relativeWidth ?
                         this.$div.parent().width() *
@@ -297,7 +297,7 @@
             }
 
             return this;
-        }
+        };
 
         this._draw = function () {
 
@@ -423,7 +423,7 @@
             }
 
             if (this.relative) {
-                $(window).resize(function() {
+                $(window).resize(function () {
                     s._carve().init();
                     s._draw();
                 });
@@ -455,28 +455,28 @@
         };
 
         this._validate = function (v) {
-            var val = (~~ (((v < 0) ? -0.5 : 0.5) + (v/this.o.step))) * this.o.step;
+            var val = (~~(((v < 0) ? -0.5 : 0.5) + (v / this.o.step))) * this.o.step;
             return Math.round(val * 100) / 100;
         };
 
         // Abstract methods
-        this.listen = function () {}; // on start, one time
-        this.extend = function () {}; // each time configure triggered
-        this.init = function () {}; // each time configure triggered
-        this.change = function (v) {}; // on change
-        this.val = function (v) {}; // on release
-        this.xy2val = function (x, y) {}; //
-        this.draw = function () {}; // on change / on release
+        this.listen = function () { }; // on start, one time
+        this.extend = function () { }; // each time configure triggered
+        this.init = function () { }; // each time configure triggered
+        this.change = function (v) { }; // on change
+        this.val = function (v) { }; // on release
+        this.xy2val = function (x, y) { }; //
+        this.draw = function () { }; // on change / on release
         this.clear = function () { this._clear(); };
 
         // Utils
         this.h2rgba = function (h, a) {
             var rgb;
-            h = h.substring(1,7)
+            h = h.substring(1, 7);
             rgb = [
-                parseInt(h.substring(0,2), 16),
-                parseInt(h.substring(2,4), 16),
-                parseInt(h.substring(4,6), 16)
+                parseInt(h.substring(0, 2), 16),
+                parseInt(h.substring(2, 4), 16),
+                parseInt(h.substring(4, 6), 16)
             ];
 
             return "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + a + ")";
@@ -502,7 +502,7 @@
         this.lineWidth = null;
         this.cursorExt = null;
         this.w2 = null;
-        this.PI2 = 2*Math.PI;
+        this.PI2 = 2 * Math.PI;
 
         this.extend = function () {
             this.o = $.extend({
@@ -538,7 +538,7 @@
 
             a = Math.atan2(
                         x - (this.x + this.w2),
-                        - (y - this.y - this.w2)
+                        -(y - this.y - this.w2)
                     ) - this.angleOffset;
 
             if (this.o.flip) {
@@ -633,7 +633,7 @@
                             && e.preventDefault();
 
                             // arrows
-                            if ($.inArray(kc,[37,38,39,40]) > -1) {
+                            if ($.inArray(kc, [37, 38, 39, 40]) > -1) {
                                 e.preventDefault();
 
                                 var v = s.o.parse(s.$.val()) + kv[kc] * m;
@@ -669,7 +669,7 @@
                 );
 
             this.$c.bind("mousewheel DOMMouseScroll", mw);
-            this.$.bind("mousewheel DOMMouseScroll", mw)
+            this.$.bind("mousewheel DOMMouseScroll", mw);
         };
 
         this.init = function () {
@@ -706,23 +706,23 @@
 
             this.o.displayInput
                 && this.i.css({
-                        'width' : ((this.w / 2 + 4) >> 0) + 'px',
-                        'height' : ((this.w / 3) >> 0) + 'px',
-                        'position' : 'absolute',
-                        'vertical-align' : 'middle',
-                        'margin-top' : ((this.w / 3) >> 0) + 'px',
-                        'margin-left' : '-' + ((this.w * 3 / 4 + 2) >> 0) + 'px',
-                        'border' : 0,
-                        'background' : 'none',
-                        'font' : this.o.fontWeight + ' ' + ((this.w / s) >> 0) + 'px ' + this.o.font,
-                        'text-align' : 'center',
-                        'color' : this.o.inputColor || this.o.fgColor,
-                        'padding' : '0px',
-                        '-webkit-appearance': 'none'
-                        }) || this.i.css({
-                            'width': '0px',
-                            'visibility': 'hidden'
-                        });
+                    'width': ((this.w / 2 + 4) >> 0) + 'px',
+                    'height': ((this.w / 3) >> 0) + 'px',
+                    'position': 'absolute',
+                    'vertical-align': 'middle',
+                    'margin-top': ((this.w / 3) >> 0) + 'px',
+                    'margin-left': '-' + ((this.w * 3 / 4 + 2) >> 0) + 'px',
+                    'border': 0,
+                    'background': 'none',
+                    'font': this.o.fontWeight + ' ' + ((this.w / s) >> 0) + 'px ' + this.o.font,
+                    'text-align': 'center',
+                    'color': this.o.inputColor || this.o.fgColor,
+                    'padding': '0px',
+                    '-webkit-appearance': 'none'
+                }) || this.i.css({
+                    'width': '0px',
+                    'visibility': 'hidden'
+                });
         };
 
         this.change = function (v) {
@@ -735,24 +735,24 @@
         };
 
         this.arc = function (v) {
-          var sa, ea;
-          v = this.angle(v);
-          if (this.o.flip) {
-              sa = this.endAngle + 0.00001;
-              ea = sa - v - 0.00001;
-          } else {
-              sa = this.startAngle - 0.00001;
-              ea = sa + v + 0.00001;
-          }
-          this.o.cursor
-              && (sa = ea - this.cursorExt)
-              && (ea = ea + this.cursorExt);
+            var sa, ea;
+            v = this.angle(v);
+            if (this.o.flip) {
+                sa = this.endAngle + 0.00001;
+                ea = sa - v - 0.00001;
+            } else {
+                sa = this.startAngle - 0.00001;
+                ea = sa + v + 0.00001;
+            }
+            this.o.cursor
+                && (sa = ea - this.cursorExt)
+                && (ea = ea + this.cursorExt);
 
-          return {
-              s: sa,
-              e: ea,
-              d: this.o.flip && !this.o.cursor
-          };
+            return {
+                s: sa,
+                e: ea,
+                d: this.o.flip && !this.o.cursor
+            };
         };
 
         this.draw = function () {
@@ -766,8 +766,8 @@
 
             if (this.o.bgColor !== "none") {
                 c.beginPath();
-                    c.strokeStyle = this.o.bgColor;
-                    c.arc(this.xy, this.xy, this.radius, this.endAngle - 0.00001, this.startAngle + 0.00001, true);
+                c.strokeStyle = this.o.bgColor;
+                c.arc(this.xy, this.xy, this.radius, this.endAngle - 0.00001, this.startAngle + 0.00001, true);
                 c.stroke();
             }
 
@@ -781,7 +781,7 @@
             }
 
             c.beginPath();
-            c.strokeStyle = r ? this.o.fgColor : this.fgColor ;
+            c.strokeStyle = r ? this.o.fgColor : this.fgColor;
             c.arc(this.xy, this.xy, this.radius, a.s, a.e, a.d);
             c.stroke();
         };

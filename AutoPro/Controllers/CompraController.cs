@@ -114,6 +114,10 @@ namespace AutoPro.Controllers
         public ActionResult ConsultarModelo(int id)
         {
             int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
+            if(id_concesionario_session == null)
+            {
+                return RedirectToAction("Home", "Index");
+            }
             var concesionario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == id_concesionario_session select l_concesionario).First();
             var auto = from l_auto in autodb.modelo where l_auto.id_modelo == id select l_auto;
 
@@ -172,6 +176,170 @@ namespace AutoPro.Controllers
 
             }    
             
+        }
+
+        // POST: Busqueda por Modelo
+        [HttpPost]
+        public ActionResult ConsultarModelo(ModeloDestallesViewModels modelo)
+        {
+            int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
+            if (id_concesionario_session == null)
+            {
+                return RedirectToAction("Home", "Index");
+            }
+            var concesionario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == id_concesionario_session select l_concesionario).First();
+            var auto = from l_auto in autodb.modelo where l_auto.id_modelo == modelo.id select l_auto;
+
+            if (auto.Count() == 0)
+            {
+                return RedirectToAction("ConsultarModelo", "Compra", new { id = modelo.id });
+
+            }
+            else
+            {
+                TempData["Auto"] = modelo;
+                return RedirectToAction("AdquirirVehiculo", "Compra");
+
+            }
+
+        }
+
+
+        public ActionResult AdquirirVehiculo()
+        {
+            int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
+            if (id_concesionario_session == null)
+            {
+                return RedirectToAction("Home", "Index");
+            }
+            ModeloDestallesViewModels modelo = (ModeloDestallesViewModels)TempData["Auto"];
+            if(modelo == null)
+            {
+                return RedirectToAction("BusquedaPorModelo", "Compra");
+
+            }
+            var concesionario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == id_concesionario_session select l_concesionario).First();
+            var auto = from l_auto in autodb.modelo where l_auto.id_modelo == modelo.id select l_auto;
+
+            if (auto.Count() == 0)
+            {
+                return RedirectToAction("ConsultarModelo", "Compra", new { id = modelo.id });
+
+            }
+            else
+            {
+                var item_auto = auto.First();
+                List<SelectListItem> ListaDeColores= new List<SelectListItem>();
+                ListaDeColores.Add(new SelectListItem() { Value = "1", Text = "Negro" });
+                ListaDeColores.Add(new SelectListItem() { Value = "2", Text = "Blanco" });
+                ListaDeColores.Add(new SelectListItem() { Value = "3", Text = "Rojo" });
+                ListaDeColores.Add(new SelectListItem() { Value = "4", Text = "Azul" });
+                ListaDeColores.Add(new SelectListItem() { Value = "5", Text = "Verde" });
+                ListaDeColores.Add(new SelectListItem() { Value = "6", Text = "Dorado" });
+                ListaDeColores.Add(new SelectListItem() { Value = "7", Text = "Plateado" });
+
+                SelectList lista = new SelectList(ListaDeColores, "Value", "Text", "1");
+                
+                ComprarVehiculoViewModels compra_modelo = new ComprarVehiculoViewModels
+                {
+                    Estado_Vehiculo = modelo.Estado_Vehiculo,
+                    Valor_Maximo = modelo.Valor_Calculado_Maximo,
+                    Valor_Minimo = modelo.Valor_Calculado_Minimo,
+                    Valor_Mercado = Convert.ToDouble(modelo.Valor),
+                    Lista_Colores = lista,
+                    id_Modelo = item_auto.id_modelo,
+                    Imagen = item_auto.imagen,
+                    Año = item_auto.año,
+                    Marca = item_auto.marca.nombre,
+                    Modelo = item_auto.modelo1,
+                    Nombre = item_auto.modelo1 + " " + item_auto.nombre
+                };
+
+
+                return View(compra_modelo);
+
+            }
+
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult ConsultarValorModelo(string id_modelo_c, string estado_vehiculo_c)
+        {
+            int id_modelo = Convert.ToInt32(id_modelo_c);
+            double estado_vehiculo = Convert.ToDouble(estado_vehiculo_c);
+            int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
+            var m1 = (from l_modelo in autodb.modelo where l_modelo.id_modelo == id_modelo select l_modelo).First();
+            var l_vehiculo = (from l_inventario in autodb.vehiculo where l_inventario.fk_modelo == id_modelo && l_inventario.fk_concesionario == id_concesionario_session select l_inventario).OrderByDescending(x => x.fecha_ingreso).Take(20);
+            var l_banco_f_modelo = from l_banco in autodb.banco_financia_modelo where l_banco.fk_modelo == m1.id_modelo select l_banco;
+            var concesionario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == id_concesionario_session select l_concesionario).First();
+            double limite_inf = 0;
+            double limite_sup = 0;
+            MontoVehiculoViewModels modelo = new MontoVehiculoViewModels();
+            var json = modelo;
+
+            //Limite inf
+            if (l_vehiculo.Count() > 0)
+            {
+                //Existe al menos una transaccion de compra para este modelo.
+                double promedio_inf = 0;
+                foreach (var item_vehiculo in l_vehiculo)
+                {
+                    promedio_inf = promedio_inf + Convert.ToDouble(item_vehiculo.valor_compra);
+                }
+                promedio_inf = promedio_inf / l_vehiculo.Count();
+                limite_inf = (promedio_inf * (100 - concesionario.porcentaje_ganancia)) / 100;
+
+                limite_inf = (limite_inf * estado_vehiculo) / 100;
+
+                
+            }
+            else
+            {
+                //No existe ninguna transaccion de compra, por ende el valor sera de acuerdo a la kbb
+                limite_inf = (Convert.ToDouble(m1.valor) * (100 - concesionario.porcentaje_ganancia)) / 100;
+                limite_inf = (limite_inf * estado_vehiculo) / 100;
+
+
+            }
+
+            //Limite_Sup
+            if (l_banco_f_modelo.Count() > 0)
+            {
+                //Algun banco financia al modelo de vehiculo
+                double promedio_sup = 0;
+                foreach (var item_banco in l_banco_f_modelo)
+                {
+                    promedio_sup = promedio_sup + Convert.ToDouble(item_banco.valor_limite);
+                }
+                promedio_sup = promedio_sup / l_banco_f_modelo.Count();
+                limite_sup = (promedio_sup * (100 - concesionario.porcentaje_ganancia)) / 100;
+
+            }
+            else
+            {
+                //Ningun banco los financia, por ende el valor sera de acuerdo a la kbb
+                limite_sup = (Convert.ToDouble(m1.valor) * (100 - concesionario.porcentaje_ganancia)) / 100;
+
+
+            }
+
+            if(limite_inf > limite_sup)
+            {
+                modelo.Valor_Maximo = limite_inf;
+                modelo.Valor_Minimo = limite_sup;
+
+            }
+            else
+            {
+                modelo.Valor_Maximo = limite_sup;
+                modelo.Valor_Minimo = limite_inf;
+            }
+            json = modelo;
+
+            return Json(json, JsonRequestBehavior.AllowGet);
+
         }
 
         public double ConsultarValorMinimoModelo(int id_modelo, int id_concesionario, double estado_vehiculo)

@@ -96,6 +96,54 @@ namespace AutoPro.Models
         
     }
 
+    public class ComprarVehiculoViewModels
+    {
+        [Required]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "UPRN must be numeric")]
+        [Display(Name = "Código")]
+        [StringLength(11, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 1)]
+        public string Kilometraje { set; get; }
+
+        [Required]
+        [DataType(DataType.Upload)]
+        public IEnumerable<HttpPostedFileBase> FileUpload { get; set; }
+
+        [Required]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "UPRN must be numeric")]
+        [Display(Name = "Código")]
+        [StringLength(11, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 1)]
+        public string Valor_Compra { set; get; }
+
+        public int Estado_Vehiculo { set; get; }
+
+        public int id_Modelo { get; set; }
+
+        public int id_Color { get; set; }
+
+        public SelectList Lista_Colores { get; set; }
+
+        public int id_Concesionario { get; set; }
+
+        public double Valor_Maximo { get; set; }
+
+        public double Valor_Minimo { get; set; }
+
+        public double Valor_Mercado { get; set; }
+
+        public string Nombre { get; set; }
+
+        public string Marca { set; get; }
+
+        public string Modelo { set; get; }
+
+        public int Año { set; get; }
+
+        public string Imagen { get; set; }
+
+
+    }
+
+
     public class RentabilidadViewModels
     {
         public string Fecha { set; get; }
@@ -104,6 +152,14 @@ namespace AutoPro.Models
 
         public double Valor_Venta { get; set; }
 
+    }
+
+    public class MontoVehiculoViewModels
+    {
+
+        public double Valor_Maximo { get; set; }
+
+        public double Valor_Minimo { get; set; }
     }
 
     public class BancoFinanciaModeloViewModels
