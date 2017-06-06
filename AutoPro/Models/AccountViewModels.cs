@@ -153,6 +153,9 @@ namespace AutoPro.Models
 
         public int id_Usuario { get; set; }
 
+        public int id_Concesionario { get; set; }
+
+        public string Concesionario { get; set; }
 
 
     }

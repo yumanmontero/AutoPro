@@ -23,8 +23,38 @@
 
 @if ((Request.IsAuthenticated) && (user.id_Usuario != 0))
 {
-    
-  <!-- Content Header (Page header) -->
+
+    if (HttpContext.Current.Session["Mensaje"] != null)
+    {
+
+        var mensaje = HttpContext.Current.Session["Mensaje"].ToString();
+        {
+
+            HttpContext.Current.Session["Mensaje"] = null;
+        }
+
+        <!-- Modal -->
+        <div class="modal fade modal-success" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Mensaje de Respuesta</h4>
+                    </div>
+                    <div class="modal-body">
+                        @mensaje
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+
+
+    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
             @ViewBag.Title
@@ -39,40 +69,29 @@
         <!-- Main content -->
     <section class="content">
       
-        <div class="jumbotron">
-            <h1>ASP.NET</h1>
-            <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-            <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
-        </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <h2>Getting started</h2>
-                <p>
-                    ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                    enables a clean separation of concerns and gives you full control over markup
-                    for enjoyable, agile development.
-                </p>
-                <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-            </div>
-            <div class="col-md-4">
-                <h2>Get more libraries</h2>
-                <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-                <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-            </div>
-            <div class="col-md-4">
-                <h2>Web Hosting</h2>
-                <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-                <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-            </div>
-        </div>
 
     </section>
-    
-        
-    
 
-}else{
+    <script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <script>
+    jQuery(window).load(function () {
+
+        $('#myModal').modal('show');
+
+
+    });
+
+
+
+    </script>
+
+
+
+
+}
+else
+{
     @Html.Action("Login", "Account")
 
 }

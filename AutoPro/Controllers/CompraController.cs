@@ -13,6 +13,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.IO;
 
 
 namespace AutoPro.Controllers
@@ -208,6 +209,7 @@ namespace AutoPro.Controllers
         public ActionResult AdquirirVehiculo()
         {
             int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
+            
             if (id_concesionario_session == null)
             {
                 return RedirectToAction("Home", "Index");
@@ -229,16 +231,9 @@ namespace AutoPro.Controllers
             else
             {
                 var item_auto = auto.First();
-                List<SelectListItem> ListaDeColores= new List<SelectListItem>();
-                ListaDeColores.Add(new SelectListItem() { Value = "1", Text = "Negro" });
-                ListaDeColores.Add(new SelectListItem() { Value = "2", Text = "Blanco" });
-                ListaDeColores.Add(new SelectListItem() { Value = "3", Text = "Rojo" });
-                ListaDeColores.Add(new SelectListItem() { Value = "4", Text = "Azul" });
-                ListaDeColores.Add(new SelectListItem() { Value = "5", Text = "Verde" });
-                ListaDeColores.Add(new SelectListItem() { Value = "6", Text = "Dorado" });
-                ListaDeColores.Add(new SelectListItem() { Value = "7", Text = "Plateado" });
+                
 
-                SelectList lista = new SelectList(ListaDeColores, "Value", "Text", "1");
+                SelectList lista = LlenarColores();
                 
                 ComprarVehiculoViewModels compra_modelo = new ComprarVehiculoViewModels
                 {
@@ -252,7 +247,8 @@ namespace AutoPro.Controllers
                     Año = item_auto.año,
                     Marca = item_auto.marca.nombre,
                     Modelo = item_auto.modelo1,
-                    Nombre = item_auto.modelo1 + " " + item_auto.nombre
+                    Nombre = item_auto.modelo1 + " " + item_auto.nombre,
+                    id_Concesionario = id_concesionario_session
                 };
 
 
@@ -262,6 +258,130 @@ namespace AutoPro.Controllers
 
         }
 
+        
+
+        [HttpPost]
+        public ActionResult AdquirirVehiculo(ComprarVehiculoViewModels model)
+        {
+            if (!ModelState.IsValid)
+            {
+                SelectList lista = LlenarColores();
+                model.Lista_Colores = lista;
+                return View(model);
+            }
+            if (model.id_Concesionario == null)
+            {
+                return RedirectToAction("Home", "Index");
+            }
+            
+            var concesionario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == model.id_Concesionario select l_concesionario).First();
+            var auto = from l_auto in autodb.modelo where l_auto.id_modelo == model.id_Modelo select l_auto;
+            string m_imagen = "";
+
+             HttpPostedFileBase ufile = (HttpPostedFileBase)model.FileUpload;
+             if(ufile != null)
+             {
+                 if (IsImage(ufile) == false)
+                 {
+                     SelectList lista = LlenarColores();
+                     model.Lista_Colores = lista;
+                     return View(model);
+
+                 }
+                 //Updating File on Server BEGIN
+                 var folder = Path.Combine(Server.MapPath("~/Imagen/"), concesionario.nombre, "/Inventario/");
+                 var imagePath = Path.Combine(folder, ufile.FileName);
+                 if (!System.IO.Directory.Exists(folder))
+                 {
+                     System.IO.Directory.CreateDirectory(folder);
+                 }
+
+                 ufile.SaveAs(imagePath);
+                 m_imagen = imagePath;
+
+             }
+             else
+             {
+                 m_imagen = "No Imagen";
+             }
+
+             vehiculo v1 = new vehiculo
+             {
+                 color = ObtenerColores(model.id_Color),
+                 imagen = m_imagen,
+                 fecha_ingreso = DateTime.Now,
+                 kilometraje = Convert.ToInt32(model.Kilometraje),
+                 fk_concesionario = model.id_Concesionario,
+                 fk_modelo = model.id_Modelo,
+                 fk_vehiculo_estado = ObtenerEstado(model.Estado_Vehiculo),
+                 valor_compra = Convert.ToDecimal(model.Valor_Compra)
+             };
+
+             var op_add_vehiculo = autodb.vehiculo.Add(v1);
+             UsuarioViewModel u1 = (UsuarioViewModel)this.Session["User"];
+             transaccion_compra t1 = new transaccion_compra
+             {
+                 fecha = DateTime.Now,
+                 fk_concesionario = model.id_Concesionario,
+                 fk_estado_transaccion = 1,
+                 fk_usuario = u1.id_Usuario
+             };
+
+             var op_add_transaccion = autodb.transaccion_compra.Add(t1);
+             op_add_transaccion.vehiculo.Add(op_add_vehiculo);
+            //Alerta a gerente
+            if(Convert.ToDouble(model.Valor_Compra) > model.Valor_Maximo)
+            {
+                var usu_gerente = from l_usu in autodb.usuario where l_usu.fk_tipo_usuario == 2 && l_usu.fk_concesionario == model.id_Concesionario select l_usu;
+                mensaje m1 = new mensaje { 
+                    fecha =  DateTime.Now,
+                    texto = "Alerta. En la transaccion de compra Nro. " + op_add_transaccion.id_compra + " realizada por el usuario" + u1.Nombre + " " + u1.Apellido + ", paso el limite del precio estimado en el articulo: " + model.Modelo + " - " +model.Año,
+                    titulo = "Limite del valor estimado sobrepasado"
+                };
+
+                var op_add_mensaje = autodb.mensaje.Add(m1);
+                
+                foreach (var usuario_item in usu_gerente)
+                {
+                    usuario_tiene_mensaje usu_mensaje = new usuario_tiene_mensaje
+                    {
+                        fk_mensaje = op_add_mensaje.id_mensaje,
+                        fk_usuario = usuario_item.id_usuario,
+                        chequeado = 0
+                    };
+                    autodb.usuario_tiene_mensaje.Add(usu_mensaje);
+                }
+
+            }
+            
+
+             try
+             {
+                 autodb.SaveChanges();
+                 this.Session["Mensaje"] = "Transaccion Completada. La operacion Nro. "+ op_add_transaccion.id_compra + " se a completado con exito. Se ha agregado un Vehiculo: "+ model.Nombre + " - " + model.Año + ", Color: "+ op_add_vehiculo.color + " y Estado: "+ model.Estado_Vehiculo + "% en el Inventario.";
+                 return RedirectToAction("Index", "Home", new { react = "Transaccion-Completada" });
+             }catch(Exception e)
+             {
+                 SelectList lista = LlenarColores();
+                 model.Lista_Colores = lista;
+                 ModelState.AddModelError("", "Error: "+ e);
+                 return View(model);
+
+             }
+
+
+
+
+
+        }
+
+        //GET Historial
+        [Authorize]
+        public ActionResult Historial()
+        {
+
+            return View();
+        }
 
         [AllowAnonymous]
         [HttpPost]
@@ -565,6 +685,72 @@ namespace AutoPro.Controllers
                 
             }
 
+        }
+
+        public byte ObtenerEstado(int valor)
+        {
+            var l_estados = from l_estado in autodb.vehiculo_estado select l_estado;
+            byte aux = 0;
+            foreach(var item in l_estados)
+            {
+                if(valor <= item.factor)
+                {
+                    aux = item.id_vehiculo_estado;
+                    break;
+                }
+            }
+            return aux;
+
+
+        }
+
+
+        public bool IsImage(HttpPostedFileBase postedFile)
+        {
+            //-------------------------------------------
+            //  Check the image mime types
+            //-------------------------------------------
+            if (postedFile.ContentType.ToLower() != "image/jpg" &&
+                        postedFile.ContentType.ToLower() != "image/jpeg" &&
+                        postedFile.ContentType.ToLower() != "image/pjpeg" &&
+                        postedFile.ContentType.ToLower() != "image/gif" &&
+                        postedFile.ContentType.ToLower() != "image/x-png" &&
+                        postedFile.ContentType.ToLower() != "image/png")
+            {
+                return false;
+            }
+
+
+            return true;
+        }
+
+        public SelectList LlenarColores()
+        {
+
+            List<SelectListItem> ListaDeColores = new List<SelectListItem>();
+                ListaDeColores.Add(new SelectListItem() { Value = "1", Text = "Negro" });
+                ListaDeColores.Add(new SelectListItem() { Value = "2", Text = "Blanco" });
+                ListaDeColores.Add(new SelectListItem() { Value = "3", Text = "Rojo" });
+                ListaDeColores.Add(new SelectListItem() { Value = "4", Text = "Azul" });
+                ListaDeColores.Add(new SelectListItem() { Value = "5", Text = "Verde" });
+                ListaDeColores.Add(new SelectListItem() { Value = "6", Text = "Dorado" });
+                ListaDeColores.Add(new SelectListItem() { Value = "7", Text = "Plateado" });
+
+                SelectList lista = new SelectList(ListaDeColores, "Value", "Text", "1");
+
+                return lista;
+        }
+
+        public string ObtenerColores(int valor)
+        {
+            SelectList lista = LlenarColores();
+
+            var color_l = lista.Where(x => x.Value == valor.ToString());
+            var color = color_l.First().Text;
+
+
+
+            return color;
         }
 
 

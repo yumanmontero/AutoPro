@@ -1211,6 +1211,25 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\imagen_user_160.png" />
+    <Content Include="Images\Marcas\Abarth.png" />
+    <Content Include="Images\Marcas\Audi.png" />
+    <Content Include="Images\Marcas\Bentley.png" />
+    <Content Include="Images\Marcas\Bmw.png" />
+    <Content Include="Images\Marcas\Cadillac.png" />
+    <Content Include="Images\Marcas\Chevrolet.png" />
+    <Content Include="Images\Marcas\Chrysler.png" />
+    <Content Include="Images\Marcas\Citroen.png" />
+    <Content Include="Images\Marcas\Dodge.png" />
+    <Content Include="Images\Marcas\Ferrari.png" />
+    <Content Include="Images\Marcas\Fiat.png" />
+    <Content Include="Images\Marcas\Ford.png" />
+    <Content Include="Images\Marcas\Honda.png" />
+    <Content Include="Images\Marcas\Hyundai.png" />
+    <Content Include="Images\Marcas\Jeep.png" />
+    <Content Include="Images\Marcas\Kia.png" />
+    <Content Include="Images\Marcas\Mercedes.png" />
+    <Content Include="Images\Marcas\Nissan.png" />
+    <Content Include="Images\Marcas\Toyota.png" />
     <Content Include="Images\Modelos\C-Class\2014\C-Class_AMG_C63_Sedan.png" />
     <Content Include="Images\Modelos\Camry\2017\Camry_LE_Sedan_4d.png" />
     <Content Include="Images\Modelos\Mustang\2008\Mustang_Deluxe_Coupe_2d.png" />
@@ -1328,6 +1347,7 @@
     <Content Include="Views\Compra\ConsultarModelo.cshtml" />
     <Content Include="Views\Compra\Prueba.cshtml" />
     <Content Include="Views\Compra\AdquirirVehiculo.cshtml" />
+    <Content Include="Views\Compra\Historial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

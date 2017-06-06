@@ -27,6 +27,7 @@ namespace AutoPro
             HttpContext.Current.Session.Add("Cargo", null);
             HttpContext.Current.Session.Add("User", null);
             HttpContext.Current.Session.Add("Concesionario", null);
+            HttpContext.Current.Session.Add("Mensaje", null);
 
 
         }

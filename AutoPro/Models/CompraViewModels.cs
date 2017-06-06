@@ -104,9 +104,9 @@ namespace AutoPro.Models
         [StringLength(11, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 1)]
         public string Kilometraje { set; get; }
 
-        [Required]
+
         [DataType(DataType.Upload)]
-        public IEnumerable<HttpPostedFileBase> FileUpload { get; set; }
+        public HttpPostedFileBase FileUpload { get; set; }
 
         [Required]
         [RegularExpression("^[0-9]*$", ErrorMessage = "UPRN must be numeric")]
@@ -139,6 +139,12 @@ namespace AutoPro.Models
         public int Año { set; get; }
 
         public string Imagen { get; set; }
+
+
+    }
+
+    public class HistorialViewModels
+    {
 
 
     }

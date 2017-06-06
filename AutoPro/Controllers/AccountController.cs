@@ -94,7 +94,9 @@ namespace AutoPro.Controllers
                         Correo_Electronico = model.Email,
                         id_Usuario = getuser.id_usuario,
                         Nivel_Usuario = getuser.fk_tipo_usuario,
-                        Tipo_Usuario = getuser.tipo_usuario.descripcion
+                        Tipo_Usuario = getuser.tipo_usuario.descripcion,
+                        Concesionario = getuser.concesionario.nombre,
+                        id_Concesionario = getuser.concesionario.id_concesionario
                     };
 
                     this.Session["Concesionario"] = getuser.concesionario.id_concesionario;

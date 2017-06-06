@@ -1,0 +1,30 @@
+﻿@using AutoPro.Models
+@model HistorialViewModels
+@{
+    ViewBag.Title = "Historial de Compras";
+    UsuarioViewModel user = new UsuarioViewModel();
+    if (HttpContext.Current.Session["User"] != null)
+    {
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+    }
+    else
+    {
+
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+
+    }
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+        <small>@user.Concesionario</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i>Inicio</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+
