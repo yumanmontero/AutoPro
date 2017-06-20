@@ -73,10 +73,10 @@
         this.locale = {
             format: 'MM/DD/YYYY',
             separator: ' - ',
-            applyLabel: 'Aplicar',
-            cancelLabel: 'Cancelar',
+            applyLabel: 'Apply',
+            cancelLabel: 'Cancel',
             weekLabel: 'W',
-            customRangeLabel: 'Rango Personalizado',
+            customRangeLabel: 'Custom Range',
             daysOfWeek: moment.weekdaysMin(),
             monthNames: moment.monthsShort(),
             firstDay: moment.localeData().firstDayOfWeek()

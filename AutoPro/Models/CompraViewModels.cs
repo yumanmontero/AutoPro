@@ -45,50 +45,6 @@ namespace AutoPro.Models
 
     }
 
-    public class BusquedaPorMarcaViewModels
-    {
-        public List<MarcaViewModels> Lista_Marcas { get; set; }
-
-        public int Total_Modelos { get; set; }
-        
-    }
-
-    public class BusquedaPorCategoriaViewModels
-    {
-        public List<CategoriaViewModels> Lista_Categoria { get; set; }
-
-        public int Total_Modelos { get; set; }
-
-    }
-
-    public class CategoriaViewModels
-    {
-        public modelo_clasificacion Categoria { get; set; }
-
-        public int Cant_Modelos { get; set; }
-
-        public List<ModeloViewModels> Lista_Modelo { get; set; }
-
-    }
-
-
-    public class MarcaViewModels
-    {
-        public marca Marca { get; set; }
-
-        public int Cant_Modelos { get; set; }
-
-        public List<ModeloViewModels> Lista_Modelo { get; set; }
-
-    }
-
-    public class ModeloViewModels
-    {
-        public modelo Modelo { get; set; }
-
-
-    }
-
     public class ListaModelosViewModels
     {
         public IEnumerable<ModelosDetallesViewModels> Lista_Modelo { set; get; }
@@ -189,30 +145,7 @@ namespace AutoPro.Models
 
     public class HistorialViewModels
     {
-        public List<TransaccionCompraViewModels> Lista_Transaccion { get; set; } 
 
-        
-    }
-
-    public class TransaccionCompraViewModels
-    {
-        public transaccion_compra Transaccion { get; set; }
-
-        public List<VehiculoHistorialViewModels> Lista_Vehiculo { get; set; }
-
-        public string Tiempo_Transcurrido { get; set; }
-
-
-
-    }
-
-    public class VehiculoHistorialViewModels
-    {
-        public double Costo_Generado { get; set; }
-
-        public vehiculo Vehiculo { get; set; }
-
-        public int Preferencia_Publico { set; get; }
 
     }
 

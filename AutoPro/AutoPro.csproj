@@ -161,11 +161,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AdministracionController.cs" />
     <Compile Include="Controllers\CompraController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\VentaController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -281,7 +279,6 @@
     <Compile Include="Models\vehiculo_estado.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\VentaViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -289,11 +286,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\BusquedaModelo.css" />
-    <Content Include="Content\Mixitup\functional\index.html" />
-    <Content Include="Content\Mixitup\functional\main.js" />
-    <Content Include="Content\Mixitup\functional\styles.css" />
-    <Content Include="Content\Mixitup\mixitup.js" />
-    <Content Include="Content\Mixitup\mixitup.min.js" />
     <Content Include="Content\Rating\css\rating.css" />
     <Content Include="Content\Rating\img\stars.svg" />
     <Content Include="Content\Rating\img\start48x48.svg" />
@@ -1218,18 +1210,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\Clasificacion\Convertible.png" />
-    <Content Include="Images\Clasificacion\Coupe.png" />
-    <Content Include="Images\Clasificacion\Crossover.png" />
-    <Content Include="Images\Clasificacion\Electric.png" />
-    <Content Include="Images\Clasificacion\Hatchback.png" />
-    <Content Include="Images\Clasificacion\Hybrid.png" />
-    <Content Include="Images\Clasificacion\Luxury.png" />
-    <Content Include="Images\Clasificacion\Sedan.png" />
-    <Content Include="Images\Clasificacion\Suv.png" />
-    <Content Include="Images\Clasificacion\Truck.png" />
-    <Content Include="Images\Clasificacion\Van.png" />
-    <Content Include="Images\Clasificacion\Wagon.png" />
     <Content Include="Images\imagen_user_160.png" />
     <Content Include="Images\Marcas\Abarth.png" />
     <Content Include="Images\Marcas\Audi.png" />
@@ -1368,15 +1348,6 @@
     <Content Include="Views\Compra\Prueba.cshtml" />
     <Content Include="Views\Compra\AdquirirVehiculo.cshtml" />
     <Content Include="Views\Compra\Historial.cshtml" />
-    <Content Include="Views\Venta\Preventa.cshtml" />
-    <Content Include="Views\Venta\Prueba.cshtml" />
-    <Content Include="Views\Venta\Prueba2.cshtml" />
-    <Content Include="Views\Venta\Prueba3.cshtml" />
-    <Content Include="Views\Venta\Prueba4.cshtml" />
-    <Content Include="Views\Venta\HistorialComision.cshtml" />
-    <Content Include="Views\Administracion\Inventario.cshtml" />
-    <Content Include="Views\Compra\BusquedaPorMarca.cshtml" />
-    <Content Include="Views\Compra\BusquedaPorCategoria.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
