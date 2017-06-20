@@ -1,0 +1,734 @@
+﻿
+@{
+    ViewBag.Title = "Inventario";
+}
+
+<section class="content-header">
+    <h1>
+        Estadisticas
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">UI</a></li>
+        <li class="active">General</li>
+    </ol>
+</section>
+
+<section class="content">
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <!-- Custom Tabs -->
+
+            <div class="nav-tabs-custom">
+
+
+
+                <div class="tab-content">
+
+                    <div class="tab-pane active" id="tab_1">
+
+                        <!-- DENTRO DEL PRIMER TAB INVENTARIO -->
+
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+
+                                <div class="box-body">
+
+                                    <div class="callout callout-info">
+
+                                        <h4>Total de carros en inventario</h4>
+
+
+                                        <h4>283</h4>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+
+                                <!-- INVENTORY CHART -->
+                                <div class="box box-danger">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Marcas con mas Vehiculos</h3>
+                                        <div class="box-tools pull-right">
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="box-body chart-responsive">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="chart" id="inventory-chart" style="height: 300px; position: relative;"></div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="box box-warning box-solid collapsed-box">
+                                                    <div class="box-header with-border">
+                                                        <h3 class="box-title">Detalles</h3>
+                                                        <div class="box-tools pull-right">
+                                                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                                                <i class="fa fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                        <!-- /.box-tools -->
+                                                    </div>
+                                                    <!-- /.box-header -->
+                                                    <div class="box-body">
+
+                                                        <table class="table table-striped">
+
+                                                            <tr>
+
+
+                                                                <th>Marca</th>
+
+                                                                <th>Cantidad</th>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Ford</td>
+
+                                                                <td>28</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Bmw</td>
+
+                                                                <td>25</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Nissan</td>
+
+                                                                <td>23</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Toyota</td>
+
+                                                                <td>23</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Honda</td>
+
+                                                                <td>22</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Chevrolet</td>
+
+                                                                <td>18</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Mercedes-Benz</td>
+
+                                                                <td>16</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Audi</td>
+
+                                                                <td>14</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Volkswagen</td>
+
+                                                                <td>13</td>
+
+                                                            </tr>
+
+                                                            <tr>
+
+                                                                <td>Dodge</td>
+
+                                                                <td>10</td>
+
+                                                            </tr>
+
+                                                        </table>
+
+
+                                                    </div>
+                                                    <!-- /.box-body -->
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                        
+                                        
+                                        
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+
+
+                            </div>
+
+
+                            <div class="col-md-4">
+
+                                <div class="box">
+
+                                    <div class="box-header">
+
+                                        <h3 class="box-title">Modelo que mas se tiene en inventario</h3>
+
+                                    </div>
+
+                                    <!-- /.box-header -->
+
+                                    <div class="box-body no-padding">
+
+                                        <table class="table table-striped">
+
+                                            <tr>
+
+
+                                                <th>Modelo</th>
+
+                                                <th>Cantidad</th>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>3 Series</td>
+
+                                                <td>8</td>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Altima</td>
+
+                                                <td>7</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Civic</td>
+
+                                                <td>6</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Accord</td>
+
+                                                <td>6</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Range Rover</td>
+
+                                                <td>6</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>E-Class</td>
+
+                                                <td>6</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Q5</td>
+
+                                                <td>5</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Sonata</td>
+
+                                                <td>5</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>C-Class</td>
+
+                                                <td>5</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>Mustang</td>
+
+                                                <td>5</td>
+
+
+                                            </tr>
+
+                                        </table>
+
+                                    </div>
+
+                                    <!-- /.box-body -->
+
+                                </div>
+
+                                <!-- /.box -->
+                                <!-- /.box -->
+
+                            </div>
+
+
+
+
+                            <!-- /.col -->
+
+                            <div class="col-md-4">
+
+                                <div class="box">
+
+                                    <div class="box-header">
+
+                                        <h3 class="box-title">Filtro por costo</h3>
+
+                                    </div>
+
+                                    <!-- /.box-header -->
+
+                                    <div class="box-body no-padding">
+
+                                        <table class="table table-striped">
+
+                                            <tr>
+
+
+                                                <th>Costo</th>
+
+                                                <th>Cantidad</th>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td> 10.000$ </td>
+
+                                                <td>149</td>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>10.000$---20.000$</td>
+
+                                                <td>84</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>$20.000---30.000$</td>
+
+                                                <td>50</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>30.000$---></td>
+
+                                                <td>0</td>
+
+
+                                            </tr>
+
+
+                                        </table>
+
+                                    </div>
+
+                                    <!-- /.box-body -->
+
+                                </div>
+
+                                <!-- /.box -->
+
+                                <div class="box">
+
+                                    <div class="box-header">
+
+                                        <h3 class="box-title">Filtro por cantidad de tiempo en inventario</h3>
+
+                                    </div>
+
+                                    <!-- /.box-header -->
+
+                                    <div class="box-body no-padding">
+
+                                        <table class="table table-striped">
+
+                                            <tr>
+
+
+                                                <th>Dias</th>
+
+                                                <th>Cantidad</th>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>0-30</td>
+
+                                                <td>119</td>
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>30-60</td>
+
+                                                <td>29</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>60-90</td>
+
+                                                <td>32</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>90-120</td>
+
+                                                <td>13</td>
+
+
+                                            </tr>
+
+                                            <tr>
+
+                                                <td>120+</td>
+
+                                                <td>91</td>
+
+
+                                            </tr>
+
+                                        </table>
+
+                                    </div>
+
+                                    <!-- /.box-body -->
+
+                                </div>
+
+                                <!-- /.box -->
+
+                            </div>
+
+                            <!-- /.col -->
+
+                        </div>
+
+                        <!-- /.row -->
+                        <!-- TERMINA PRIMER TAB INVENTARIO -->
+
+
+                    </div>
+
+                    <!-- /.tab-pane -->
+                    <!-- /.tab-pane -->
+
+
+
+                </div>
+
+                <!-- /.tab-pane -->
+
+            </div>
+
+            <!-- /.tab-content -->
+
+        </div>
+
+        <!-- nav-tabs-custom -->
+
+    </div>
+
+    <!-- /.col -->
+    <!-- /.row -->
+
+</section>
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+
+<script>
+
+  $(function () {
+
+    /*
+
+     * BAR CHART
+
+     * ---------
+
+     */
+
+      //DONUT CHART
+      var donut = new Morris.Donut({
+          element: 'inventory-chart',
+          resize: true,
+          colors: ["#3c8dbc", "#f56954", "#00a65a", "#3c8dbc", "#f56954", "#00a65a", "#3c8dbc", "#f56954", "#00a65a", "#3c8dbc"],
+          data: [
+            { label: "Ford", value: 28 },
+            { label: "BMW", value: 25 },
+            { label: "Nissan", value: 23 },
+            { label: "Toyota", value: 23 },
+            { label: "Honda", value: 22 },
+            { label: "Chevrolet", value: 18 },
+            { label: "Mercedes-Benz", value: 16 },
+            { label: "Audi", value: 14 },
+            { label: "Volkswagen", value: 13 },
+            { label: "Dodge", value: 10 }
+          ],
+          hideHover: 'auto'
+      });
+
+
+
+     var bar_data = {
+
+      data: [["Menos de 5 unidades", 24], ["Entre 5 y 7 unidades", 4], ["Más de 7 unidades", 3]],
+
+      color: "#3c8dbc"
+
+    };
+
+    var plot_1 = $.plot("#bar-chart", [bar_data], {
+
+      grid: {
+
+        borderWidth: 1,
+
+        borderColor: "#f3f3f3",
+
+        tickColor: "#f3f3f3"
+
+      },
+
+      series: {
+
+        bars: {
+
+          show: true,
+
+          barWidth: 0.5,
+
+          align: "center"
+
+        }
+
+      },
+
+      xaxis: {
+
+        mode: "categories",
+
+        tickLength: 0
+
+      }
+
+    });
+
+    /* END BAR CHART */
+
+
+
+
+
+    var bar_data = {
+
+      data: [["Menos de <br>2500$", 63], ["Entre 2500$ <br>y 3500$", 23], ["Más <br>de 3500$", 15]],
+
+      color: "#3c8dbc"
+
+    };
+
+    var plot_2 = $.plot("#bar-chart2", [bar_data], {
+
+      grid: {
+
+        borderWidth: 1,
+
+        borderColor: "#f3f3f3",
+
+        tickColor: "#f3f3f3"
+
+      },
+
+      series: {
+
+        bars: {
+
+          show: true,
+
+          barWidth: 0.5,
+
+          align: "center"
+
+        }
+
+      },
+
+      xaxis: {
+
+        mode: "categories",
+
+        tickLength: 0
+
+      }
+
+    });
+
+
+
+  var bar_data = {
+
+      data: [["Menos de 14000$", 28], ["Entre <br>14000$ y <br>16000$", 0], ["Más de <br>16000$", 3]],
+
+      color: "#3c8dbc"
+
+    };
+
+  var plot_3 = $.plot("#bar-chart3", [bar_data], {
+
+      grid: {
+
+        borderWidth: 1,
+
+        borderColor: "#f3f3f3",
+
+        tickColor: "#f3f3f3"
+
+      },
+
+      series: {
+
+        bars: {
+
+          show: true,
+
+          barWidth: 0.5,
+
+          align: "center"
+
+        }
+
+      },
+
+      xaxis: {
+
+        mode: "categories",
+
+        tickLength: 0
+
+      }
+
+    });
+
+    /* END BAR CHART */
+
+ ////PARA QUE SE MUESTRE
+
+  $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+
+      plot_1.draw();
+
+      plot_2.draw();
+
+      plot_3.draw();
+
+  });
+
+  });
+
+  /*
+
+   * Custom Label formatter
+
+   * ----------------------
+
+   */
+
+  function labelFormatter(label, series) {
+
+    return '<div style="font-size:13px; text-align:center; padding:2px; color: #fff; font-weight: 600;">'
+
+        + label
+
+        + "<br>"
+
+        + Math.round(series.percent) + "%</div>";
+
+  }
+
+</script>
+

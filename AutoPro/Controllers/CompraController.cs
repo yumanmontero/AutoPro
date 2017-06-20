@@ -79,6 +79,88 @@ namespace AutoPro.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult BusquedaPorMarca()
+        {
+            BusquedaPorMarcaViewModels modelo = new BusquedaPorMarcaViewModels();
+
+            var marcas = (from l_marcas in autodb.marca select l_marcas).OrderBy(x => x.nombre);
+            List<MarcaViewModels> lista_marcas = new List<MarcaViewModels>();
+
+            foreach (var item in marcas)
+            {
+               if(item.modelo.Count() > 0)
+               {
+                   List<ModeloViewModels> lista_modelo = new List<ModeloViewModels>();
+                   foreach (var i_modelo in item.modelo)
+                   {
+                       ModeloViewModels a_modelo = new ModeloViewModels
+                       {
+                           Modelo = i_modelo
+                       };
+                       lista_modelo.Add(a_modelo);
+                   }
+
+
+                   MarcaViewModels i_marca = new MarcaViewModels
+                   {
+                       Marca = item,
+                       Cant_Modelos = item.modelo.Count(),
+                       Lista_Modelo = lista_modelo
+
+                   };
+                   lista_marcas.Add(i_marca);
+               }
+                   
+            }
+
+            modelo.Lista_Marcas = lista_marcas;
+            modelo.Total_Modelos = lista_marcas.Sum(x => x.Cant_Modelos);
+
+
+            return View(modelo);
+        }
+
+        public ActionResult BusquedaPorCategoria()
+        {
+            BusquedaPorCategoriaViewModels modelo = new BusquedaPorCategoriaViewModels();
+
+            var categoria = (from l_cat in autodb.modelo_clasificacion select l_cat).OrderBy(x => x.descripcion);
+            List<CategoriaViewModels> lista_categoria = new List<CategoriaViewModels>();
+
+            foreach (var item in categoria)
+            {
+                if (item.modelo.Count() > 0)
+                {
+                    List<ModeloViewModels> lista_modelo = new List<ModeloViewModels>();
+                    foreach (var i_modelo in item.modelo)
+                    {
+                        ModeloViewModels a_modelo = new ModeloViewModels
+                        {
+                            Modelo = i_modelo
+                        };
+                        lista_modelo.Add(a_modelo);
+                    }
+
+
+                    CategoriaViewModels i_cat = new CategoriaViewModels
+                    {
+                        Categoria = item,
+                        Cant_Modelos = item.modelo.Count(),
+                        Lista_Modelo = lista_modelo
+
+                    };
+                    lista_categoria.Add(i_cat);
+                }
+
+            }
+
+            modelo.Lista_Categoria = lista_categoria;
+            modelo.Total_Modelos = lista_categoria.Sum(x => x.Cant_Modelos);
+
+
+            return View(modelo);
+        }
+
 
         // GET: Busqueda por Modelo
         public ActionResult BusquedaPorModelo ()
@@ -302,7 +384,7 @@ namespace AutoPro.Controllers
              }
              else
              {
-                 m_imagen = "No Imagen";
+                 m_imagen = "";
              }
 
              vehiculo v1 = new vehiculo
@@ -379,8 +461,44 @@ namespace AutoPro.Controllers
         [Authorize]
         public ActionResult Historial()
         {
+            UsuarioViewModel user_compra = (UsuarioViewModel)this.Session["User"];
+            var c_l_transaccion_c = (from l_trasaccion in autodb.transaccion_compra where l_trasaccion.fk_usuario == user_compra.id_Usuario select l_trasaccion).OrderByDescending(x => x.fecha);
+            List<TransaccionCompraViewModels> t_list = new List<TransaccionCompraViewModels>();
 
-            return View();
+            foreach (var item in c_l_transaccion_c)
+            {
+                List<VehiculoHistorialViewModels> l_vehiculo = new List<VehiculoHistorialViewModels>();
+
+                foreach(var vehiculo in item.vehiculo.ToList())
+                {
+                    VehiculoHistorialViewModels i_vehiculo = new VehiculoHistorialViewModels
+                    {
+                        Vehiculo = vehiculo,
+                        Costo_Generado = Convert.ToDouble(vehiculo.estructura_costo.Sum(x => x.monto)),
+                        Preferencia_Publico = Convert.ToInt32(ConsultarPreferenciaCliente(vehiculo.modelo,vehiculo.fk_concesionario)*100/5)
+                    };
+                    l_vehiculo.Add(i_vehiculo);
+
+                }
+                
+                
+                TransaccionCompraViewModels item_transaccion = new TransaccionCompraViewModels
+                {
+                    Transaccion = item,
+                    Lista_Vehiculo = l_vehiculo,
+                    Tiempo_Transcurrido = CalcularTiempoFecha(item.fecha)
+
+                };
+
+                t_list.Add(item_transaccion);
+            }
+            HistorialViewModels modelo = new HistorialViewModels
+            {
+                Lista_Transaccion = t_list
+            };
+
+
+            return View(modelo);
         }
 
         [AllowAnonymous]
@@ -751,6 +869,39 @@ namespace AutoPro.Controllers
 
 
             return color;
+        }
+
+        public string CalcularTiempoFecha(DateTime fecha)
+        {
+            var dias = DateTime.Now.Subtract(fecha).TotalDays;
+            var dias_for = DateTime.Now.Subtract(fecha).Days;
+            string dias_entre_fecha = "";
+            if(dias < 1)
+            { 
+                var horas = DateTime.Now.Subtract(fecha).TotalHours;
+                var horas_for = DateTime.Now.Subtract(fecha).Hours;
+                if(horas < 1)
+                {
+                    var minutos = DateTime.Now.Subtract(fecha).TotalMinutes;
+                    var minutos_for = DateTime.Now.Subtract(fecha).Minutes;
+                    if(minutos < 1)
+                    {
+                        dias_entre_fecha = "Ahora";
+
+                    }else{
+                        dias_entre_fecha = "Hace " + minutos_for + " minutos.";
+
+                    }
+
+                }else{
+                    dias_entre_fecha = "Hace " + horas_for + " horas.";
+                }
+
+            }else{
+                dias_entre_fecha = "Hace " + dias_for + " dias.";
+            }
+
+            return dias_entre_fecha;
         }
 
 

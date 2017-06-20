@@ -15,6 +15,173 @@
     }
 }
 
+@foreach (var item in Model.Lista_Transaccion)
+{
+
+<div class="modal fade" id="trans_@item.Transaccion.id_compra" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Detalles de Transaccion # @item.Transaccion.id_compra</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12 col-xs-12">
+                    <div class="row">
+                        <h3>
+                            Datos Totales
+                            <small>@item.Transaccion.vehiculo.First().concesionario.nombre</small>
+                        </h3>
+                        <div class="row">
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>@item.Lista_Vehiculo.Sum(x => x.Vehiculo.valor_compra).ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                                        <p>Monto Total</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-cash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="small-box bg-yellow">
+                                    <div class="inner">
+                                        <h3>@item.Lista_Vehiculo.Count()</h3>
+
+                                        <p>Cantidad de Vehiculos</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-android-car"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-xs-4">
+                                <div class="small-box bg-red">
+                                    <div class="inner">
+                                        <h3>@item.Lista_Vehiculo.Sum(x => x.Costo_Generado).ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                                        <p>Gastos Generados</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-android-car"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h3>
+                            Lista de Vehiculos
+                        </h3>
+                        <div class="row">
+                            @foreach (var vehiculo in item.Lista_Vehiculo)
+                            {
+
+                            <div class="col-md-6">
+                                <!-- Widget: user widget style 1 -->
+                                <div id="vehiculo_@vehiculo.Vehiculo.id_vehiculo" class="box box-widget widget-user">
+                                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                                    @{
+                                        var fondo = "";
+
+                                        if (vehiculo.Vehiculo.fecha_salida.HasValue == true)
+                                        {
+                                            fondo = "bg-gray-active";
+                                        }
+                                        else
+                                        {
+                                            if (DateTime.Now.Subtract(vehiculo.Vehiculo.fecha_ingreso).TotalDays < vehiculo.Vehiculo.concesionario.dia_max_inventario)
+                                            {
+                                                fondo = "bg-green-active";
+                                            }
+                                            else
+                                            {
+                                                fondo = "bg-red-active";
+                                            }
+                                        }
+                                    }
+
+                                    <div class="widget-user-header @fondo">
+                                        <h3 style="font-size: 15px" class="widget-user-username"><strong> @vehiculo.Vehiculo.modelo.modelo1 @vehiculo.Vehiculo.modelo.nombre Cod. @vehiculo.Vehiculo.id_vehiculo</strong></h3>
+                                        <h5 class="widget-user-desc">@vehiculo.Vehiculo.modelo.marca.nombre - @vehiculo.Vehiculo.modelo.año</h5>
+                                    </div>
+                                    @{
+                                        var imagen = "";
+                                        if ((vehiculo.Vehiculo.imagen != null) && (vehiculo.Vehiculo.imagen != ""))
+                                        {
+                                            imagen = vehiculo.Vehiculo.imagen;
+                                        }
+                                        else
+                                        {
+                                            imagen = vehiculo.Vehiculo.modelo.imagen;
+
+                                        }
+
+                                    }
+
+                                    <div class="widget-user-image">
+                                        <img class="img-circle" src="@imagen" alt="@vehiculo.Vehiculo.modelo.nombre">
+                                    </div>
+                                    <div class="box-footer">
+                                        <div class="row">
+                                            <div class="col-sm-4 border-right">
+                                                <div class="description-block">
+                                                    <h5 class="description-header">@vehiculo.Vehiculo.valor_compra.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h5>
+                                                    <span class="description-text"><i class="fa fa-money"></i> </span>
+                                                </div>
+                                                <!-- /.description-block -->
+                                            </div>
+                                            <!-- /.col -->
+                                            <div class="col-sm-4 border-right">
+                                                <div class="description-block">
+                                                    <h5 class="description-header">@vehiculo.Vehiculo.kilometraje.ToString("#,##0") <sup style='font-size: 8px'>KM</sup></h5>
+                                                    <span class="description-text"><i class="fa fa-tachometer"></i></span>
+                                                </div>
+                                                <!-- /.description-block -->
+                                            </div>
+                                            @{
+    var dias = "";
+    if (vehiculo.Vehiculo.fecha_salida.HasValue == true)
+    {
+        dias = vehiculo.Vehiculo.fecha_salida.Value.Subtract(vehiculo.Vehiculo.fecha_ingreso).Days.ToString();
+    }
+    else
+    {
+        dias = DateTime.Now.Subtract(vehiculo.Vehiculo.fecha_ingreso).Days.ToString();
+    }
+
+
+                                            }
+                                            <!-- /.col -->
+                                            <div class="col-sm-4">
+                                                <div class="description-block">
+                                                    <h5 class="description-header">@dias <sup style='font-size: 8px'>DIAS</sup></h5>
+                                                    <span class="description-text"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                <!-- /.description-block -->
+                                            </div>
+                                            <!-- /.col -->
+                                        </div>
+                                        <!-- /.row -->
+                                    </div>
+                                </div>
+                                <!-- /.widget-user -->
+                            </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
@@ -26,5 +193,194 @@
         <li class="active">@ViewBag.Title</li>
     </ol>
 </section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        
+        <div class="col-lg-5 col-xs-5">
+            <ul class="timeline">
+                @foreach (var item in Model.Lista_Transaccion)
+                {
+                   <!-- timeline time label -->
+                    <li class="time-label">
+                        <span class="bg-red">
+                            @item.Transaccion.fecha.ToShortDateString() - @item.Transaccion.fecha.ToShortTimeString()
+                        </span>
+                    </li>
+                     <!-- timeline item -->
+                    <li>
+                        <i class="fa fa-folder-open bg-blue"></i>
+                        <div class="timeline-item">
+                            <span class="time"><i class="fa fa-clock-o"></i> @item.Tiempo_Transcurrido</span>
+                            <h3 class="timeline-header"><a href="#">Trasaccion # @item.Transaccion.id_compra</a> </h3>
+                            <div class="timeline-body">
+                                En esta operación se adquirieron @item.Lista_Vehiculo.Count() Vehiculos. Registrando un costo total de <strong>@item.Lista_Vehiculo.Sum(x => x.Vehiculo.valor_compra).ToString("#,##0")<sup style="font-size: 10px">USD</sup></strong>.
+                            </div>
+                            <div class="timeline-footer">
+                                <a id="tr_@item.Transaccion.id_compra" href="javascript:{}" class="btn btn-primary btn-xs">Detalles</a>
+                            </div>
+                        </div>
+                    </li>
+                    foreach (var vehiculo in item.Lista_Vehiculo)
+                    {
+                        <!-- timeline item -->
+                        <li>
+                            <i class="fa fa-automobile bg-yellow"></i>
+                            <div class="timeline-item">
+                                <h3 class="timeline-header"><a href="#vehiculo_@vehiculo.Vehiculo.id_vehiculo">@vehiculo.Vehiculo.modelo.modelo1 @vehiculo.Vehiculo.modelo.nombre </a> @vehiculo.Vehiculo.modelo.año  </h3>
+                                <div class="timeline-body">
+                                    El modelo es de color @vehiculo.Vehiculo.color, tiene @vehiculo.Vehiculo.kilometraje.ToString("#,##0") kilometros y el valor de compra del modelo fue de <strong>@vehiculo.Vehiculo.valor_compra.ToString("#,##0")<sup style="font-size: 10px">USD</sup></strong>.
+                                    @if (vehiculo.Vehiculo.fecha_salida != null)
+                                    {
+                                        @:Ademas se conoce que fue vendido el @vehiculo.Vehiculo.fecha_salida.Value.ToLongDateString() por un precio de <strong>@vehiculo.Vehiculo.valor_venta.Value.ToString("#,##0")<sup style="font-size: 10px">USD</sup></strong>.
+                                    }
+                                    @if ((vehiculo.Vehiculo.imagen != null) && (vehiculo.Vehiculo.imagen != ""))
+                                    {
+                                        @:<img style="height:100px; width:150px" src="@vehiculo.Vehiculo.imagen" alt="..." class="margin">
+                                    }
+                                   
+                                </div>
+                                <div class="timeline-footer">
+                                </div>
+                            </div>
+                        </li>
+
+                    }
+
+                }
+
+                <!-- END timeline item -->
+                <li>
+                    <i class="fa fa-clock-o bg-gray"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="col-lg-7 col-xs-7">
+        @foreach (var transaccion in Model.Lista_Transaccion)
+        {
+            foreach (var vehiculo in transaccion.Lista_Vehiculo)
+            {
+
+                <div class="col-md-6">
+                    <!-- Widget: user widget style 1 -->
+                    <div id="vehiculo_@vehiculo.Vehiculo.id_vehiculo" class="box box-widget widget-user">
+                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                        @{
+                            var fondo = "";
+
+                            if (vehiculo.Vehiculo.fecha_salida.HasValue == true)
+                            {
+                                fondo = "bg-gray-active";
+                            }
+                            else
+                            {
+                                if (DateTime.Now.Subtract(vehiculo.Vehiculo.fecha_ingreso).TotalDays < vehiculo.Vehiculo.concesionario.dia_max_inventario)
+                                {
+                                    fondo = "bg-green-active";
+                                }else
+                                {
+                                    fondo = "bg-red-active";
+                                }
+                            }
+
+                        }
+                        
+                        <div class="widget-user-header @fondo">
+                            <h3 style="font-size: 15px" class="widget-user-username"><strong> @vehiculo.Vehiculo.modelo.modelo1 @vehiculo.Vehiculo.modelo.nombre Cod. @vehiculo.Vehiculo.id_vehiculo</strong></h3>
+                            <h5 class="widget-user-desc">@vehiculo.Vehiculo.modelo.marca.nombre - @vehiculo.Vehiculo.modelo.año</h5>
+                        </div>
+                        @{
+                            var imagen = "";
+                            if ((vehiculo.Vehiculo.imagen != null) && (vehiculo.Vehiculo.imagen != ""))
+                            {
+                                imagen = vehiculo.Vehiculo.imagen;
+                            }
+                            else
+                            {
+                                imagen = vehiculo.Vehiculo.modelo.imagen;
+                                
+                            }
+
+                        }
+
+                        <div class="widget-user-image">
+                            <img class="img-circle" src="@imagen" alt="@vehiculo.Vehiculo.modelo.nombre">
+                        </div>
+                        <div class="box-footer">
+                            <div class="row">
+                                <div class="col-sm-4 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">@vehiculo.Vehiculo.valor_compra.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h5>
+                                        <span class="description-text"><i class="fa fa-money"></i> </span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                                <div class="col-sm-4 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">@vehiculo.Vehiculo.kilometraje.ToString("#,##0") <sup style='font-size: 8px'>KM</sup></h5>
+                                        <span class="description-text"><i class="fa fa-tachometer"></i></span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                @{
+                                    var dias = "";
+                                    if (vehiculo.Vehiculo.fecha_salida.HasValue == true)
+                                    {
+                                        dias = vehiculo.Vehiculo.fecha_salida.Value.Subtract(vehiculo.Vehiculo.fecha_ingreso).Days.ToString();
+                                    }
+                                    else
+                                    {
+                                        dias = DateTime.Now.Subtract(vehiculo.Vehiculo.fecha_ingreso).Days.ToString();
+                                    }
+                                     
+
+                                }
+                                <!-- /.col -->
+                                <div class="col-sm-4">
+                                    <div class="description-block">
+                                        <h5 class="description-header">@dias <sup style='font-size: 8px'>DIAS</sup></h5>
+                                        <span class="description-text"><i class="fa fa-calendar"></i></span>
+                                    </div>
+                                    <!-- /.description-block -->
+                                </div>
+                                <!-- /.col -->
+                            </div>
+                            <!-- /.row -->
+                        </div>
+                    </div>
+                    <!-- /.widget-user -->
+                </div>
+
+            }
+
+        }    
+
+
+        </div>
+    </div>
+</section>
+
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script>
+    jQuery(window).load(function () {
+
+       @foreach(var item in Model.Lista_Transaccion)
+       {
+           @:$("#tr_@item.Transaccion.id_compra").click(function () {
+              @:$('#trans_@item.Transaccion.id_compra').modal('show');
+              @:});    
+       }
+        
+
+      
+
+    });
+
+
+</script>
+
 
 
