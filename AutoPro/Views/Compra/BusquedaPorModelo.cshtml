@@ -16,35 +16,35 @@
     </ol>
 </section>
 
-    <!-- Main content -->
+<!-- Main content -->
 <section class="content">
     <!-- Small boxes (Stat box) -->
     <div class="row" style="height:150px">
         @using (Html.BeginForm("BusquedaPorModelo", "Compra", FormMethod.Post, new { role = "form", id = "busquedaid", enctype = "multipart/form-data" }))
         {
             <div class="col-lg-3 col-xs-3">
-                
+
             </div>
         <!-- ./col -->
-    <div class="row">
-        <div class="col-lg-6 col-xs-6" align="center">
-            <!-- small box -->
-            
-                <div class="input-group">
-                    <select class="form-control select2" data-val="true" id="Busq_Modelo" name="Busq_Modelo" data-placeholder="Escriba un Modelo" >
-                        <option value="-1"></option>
-                    </select>
-                    <span class="input-group-btn">
-                        <button href="javascript:{}" onclick="document.getElementById('busquedaid').submit();" class="btn btn-default"><i class="fa fa-search"></i></button>
-                    </span>
+            <div class="row">
+                <div class="col-lg-6 col-xs-6" align="center">
+                    <!-- small box -->
+
+                    <div class="input-group">
+                        <select class="form-control select2" data-val="true" id="Busq_Modelo" name="Busq_Modelo" data-placeholder="Escriba un Modelo">
+                            <option value="-1"></option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button href="javascript:{}" onclick="document.getElementById('busquedaid').submit();" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+
                 </div>
-            
-        </div>
-    </div>
+            </div>
         <!-- ./col -->
-    <div class="col-lg-3 col-xs-3">
-        
-    </div>
+            <div class="col-lg-3 col-xs-3">
+
+            </div>
         <!-- ./col -->
         }
     </div>
@@ -52,7 +52,7 @@
     <!-- Main row -->
     <div class="row">
         <div class="col-lg-1 col-xs-1">
-            
+
         </div>
         <div class="col-lg-5 col-xs-5">
             <!-- small box -->
@@ -84,7 +84,7 @@
         <div class="col-lg-1 col-xs-1">
 
         </div>
-        
+
         <!-- ./col -->
     </div>
     <!-- /.row (main row) -->
