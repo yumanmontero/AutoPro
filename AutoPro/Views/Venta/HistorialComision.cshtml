@@ -1,0 +1,429 @@
+﻿@{
+    ViewBag.Title = "Historial de Comisión";
+}
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Detalles de Trasansaccion de Venta</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-lg-12 col-xs-12">
+                    <div class="row margin">
+                        <ul class="products-list product-list-in-box">
+                            <li class="item">
+                                <div class="product-img">
+                                    <img src="/Images/Modelos/1Series/2012/1Series_128i_Coupe_2d.png" alt="Product Image">
+                                </div>
+                                <div class="product-info">
+                                    <a href="javascript:void(0)" class="product-title">
+                                        C-Class C63 AMG Sedan 4d
+                                        <span class="label label-success pull-right">231 USD</span>
+                                    </a>
+                                    <span class="product-description">
+                                        Mercedes-benz - 2014 - Cod. 32
+                                    </span>
+                                </div>
+                            </li>
+                            <!-- /.item -->
+                            <li class="item">
+                                <div class="product-img">
+                                    <img src="/Images/Modelos/Optima/2015/Optima_LX_Sedan_4d.png" alt="Product Image">
+                                </div>
+                                <div class="product-info">
+                                    <a href="javascript:void(0)" class="product-title">
+                                        Optima LX Sedan 4d
+                                        <span class="label label-success pull-right">198 USD</span>
+                                    </a>
+                                    <span class="product-description">
+                                        KIA - 2015 - Cod. 58
+                                    </span>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="content-header">
+    <h1>
+        @ViewBag.Title
+        <small>Auto Pro</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+        <li><a href="#">Ventas</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<section class="content">
+    <!-- row -->
+    <div class="row">
+
+        <div class="col-lg-3 col-xs-3">
+            <!-- Date and time range -->
+            <div class="form-group">
+                <label>Filtro por Periodos</label>
+                <div class="input-group">
+                    <button type="button" class="btn btn-default" id="daterange-btn">
+                        <span>
+                            <i class="fa fa-calendar"></i> Rango de Fecha
+                        </span>
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <button href="javascript:{}" onclick="document.getElementById('busquedaid').submit();" class="btn btn-default">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.form group -->
+        </div>
+
+        <div class="col-lg-5 col-xs-5">
+
+            <!-- The time line -->
+            <div id="time_comision" class="row margin">
+                <ul class="timeline">
+                    <li>
+                        <i class="fa fa-clock-o bg-aqua-active"></i>
+                        <div class="timeline-body">
+                            <br />
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-money bg-green"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Total Comision:</a> 10.423 <sup style="font-size: 8px">USD</sup> </h3>
+
+                            <div class="timeline-body">
+                                Periodo a consultado: 01/04/2017 a 30/06/2017
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-line-chart bg-orange"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Total de Ventas:</a> 32</h3>
+
+                            <div class="timeline-body">
+                                Periodo a consultado: 01/04/2017 a 30/06/2017
+                            </div>
+                        </div>
+                    </li>
+                    <!-- timeline time label -->
+                    <li class="time-label">
+                        <span class="bg-red">
+                            06/06/2017
+                        </span>
+                    </li>
+                    <!-- /.timeline-label -->
+                    <!-- timeline item -->
+                    <li>
+                        <i class="fa fa-cubes bg-yellow"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 23</h3>
+
+                            <div class="timeline-body">
+                                429 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                            </div>
+                            <div class="timeline-footer">
+                                <a id="det_1" href="javascript:{}" class="btn btn-primary btn-xs">Más información</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-cubes bg-yellow"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 31</h3>
+
+                            <div class="timeline-body">
+                                567 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                            </div>
+                            <div class="timeline-footer">
+                                <a href="" class="btn btn-primary btn-xs">Más información</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="time-label">
+                        <span class="bg-red">
+                            03/06/2017
+                        </span>
+                    </li>
+                    <li>
+                        <i class="fa fa-cubes bg-yellow"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 23</h3>
+
+                            <div class="timeline-body">
+                                367 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                            </div>
+                            <div class="timeline-footer">
+                                <a href="" class="btn btn-primary btn-xs">Más información</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-cubes bg-yellow"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 31</h3>
+
+                            <div class="timeline-body">
+                                567 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                            </div>
+                            <div class="timeline-footer">
+                                <a href="" class="btn btn-primary btn-xs">Más información</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-cubes bg-yellow"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 23</h3>
+
+                            <div class="timeline-body">
+                                367 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                            </div>
+                            <div class="timeline-footer">
+                                <a href="" class="btn btn-primary btn-xs">Más información</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-cubes bg-yellow"></i>
+
+                        <div class="timeline-item">
+                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 31</h3>
+
+                            <div class="timeline-body">
+                                567 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                            </div>
+                            <div class="timeline-footer">
+                                <a href="" class="btn btn-primary btn-xs">Más información</a>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- END timeline item -->
+                    <!-- timeline item -->
+                    <!-- END timeline item -->
+                    <!-- timeline item -->
+                    <!-- END timeline item -->
+                    <!-- timeline time label -->
+                    <!-- /.timeline-label -->
+                    <!-- timeline item -->
+
+
+
+                </ul>
+
+            </div>
+
+        </div>
+        <!-- /.col -->
+        <div class="col-lg-4 col-xs-4">
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right">
+                    <li><a href="#r-comision-chart" data-toggle="tab">Resumen</a></li>
+                    <li class="active"><a href="#g-comision-chart" data-toggle="tab">Relación Mensual</a></li>
+                    <li class="pull-left header"><i class="fa fa-inbox"></i> Comision</li>
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    <div class="chart tab-pane" id="r-comision-chart" style="position: relative; height: 400px;">
+                        <div id="i-r-comision-chart" class="row margin">
+                            <div class="col-lg-12 col-xs-12">
+                                <!-- small box -->
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3>9 <sup style="font-size: 10px">%</sup></h3>
+                                        <p>Porcentaje</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-stats-bars"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xs-12">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>3.254 <sup style="font-size: 10px">USD</sup></h3>
+                                        <p>Ultimos 30 <sup style="font-size: 10px">Dias</sup></p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-cash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xs-12">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>10.423 <sup style="font-size: 10px">USD</sup></h3>
+                                        <p>Ultimos 3 <sup style="font-size: 10px">Meses</sup></p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-cash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xs-12">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>69.011 <sup style="font-size: 10px">USD</sup></h3>
+                                        <p>Ultimo Año</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-cash"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-xs-12">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>397.798 <sup style="font-size: 10px">USD</sup></h3>
+                                        <p>Total</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-cash"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="chart tab-pane active" id="g-comision-chart" style="position: relative; height: 400px;"></div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+    <!-- /.row -->
+    <!-- /.row -->
+
+</section>
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script>
+    jQuery(window).load(function () {
+        "use strict";
+        $('#i-r-comision-chart').slimScroll({
+            height: '400px'
+        });
+
+
+        $('#time_comision').slimScroll({
+            height: '903px'
+        });
+
+        $("#det_1").click(function () {
+
+            $('#myModal').modal('show');
+
+        });
+
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges: {
+                'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                'Mes Actual': [moment().startOf('month'), moment().endOf('month')],
+                'Mes Pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Ultimos 3 Meses': [moment().subtract(3, 'month').startOf('month'), moment()],
+                'Ultimos 6 Meses': [moment().subtract(6, 'month').startOf('month'), moment()],
+                'Año Actual': [moment().startOf('year'), moment()],
+                'Año Pasado': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
+        },
+        function (start, end) {
+            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+        }
+    );
+
+        $('#daterange-btn').on('apply.daterangepicker', function (ev, picker) {
+            //Eventos
+        });
+
+        var line = new Morris.Line({
+            element: 'g-comision-chart',
+            resize: true,
+            data: [
+              { y: '2016-06', item1: 2666 },
+              { y: '2016-07', item1: 2778 },
+              { y: '2016-08', item1: 4912 },
+              { y: '2016-09', item1: 3767 },
+              { y: '2016-10', item1: 6810 },
+              { y: '2016-11', item1: 5670 },
+              { y: '2016-12', item1: 6793 },
+              { y: '2017-01', item1: 15073 },
+              { y: '2017-02', item1: 1687 },
+              { y: '2017-03', item1: 8432 },
+              { y: '2017-04', item1: 1527 },
+              { y: '2017-05', item1: 5642 },
+              { y: '2017-06', item1: 3254 }
+            ],
+            xkey: 'y',
+            ykeys: ['item1'],
+            labels: ['Comision'],
+            lineColors: ['#008bbf'],
+            hideHover: 'auto',
+            yLabelFormat: function (y) { return y.toString() + ' USD'; }
+        });
+
+        //Fix for charts under tabs
+        $('.box ul.nav a').on('shown.bs.tab', function () {
+
+            line.redraw();
+        });
+
+
+
+    });
+
+
+</script>
+

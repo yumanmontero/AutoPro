@@ -256,9 +256,8 @@
 
                         var minimo = data.Valor_Minimo + '<sup style="font-size: 20px">USD</sup>';
                         var maximo = data.Valor_Maximo + '<sup style="font-size: 20px">USD</sup>';
-                        $("#MontoMinimo").innerHTML = minimo;
-                        $("#MontoMaximo").innerHTML = maximo;
-
+                        document.getElementById("MontoMinimo").innerHTML = minimo;
+                        document.getElementById("MontoMaximo").innerHTML = maximo;
 
                     } else {
                         alert("Error al calcular el Monto, Intente mas Tarde")
