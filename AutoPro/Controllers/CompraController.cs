@@ -161,7 +161,7 @@ namespace AutoPro.Controllers
             return View(modelo);
         }
 
-
+        [Authorize]
         // GET: Busqueda por Modelo
         public ActionResult BusquedaPorModelo ()
         {
@@ -169,10 +169,22 @@ namespace AutoPro.Controllers
             var nro_marca = (from c_marca in autodb.marca select c_marca).Count();
             var nro_categoria = (from c_cat in autodb.modelo_clasificacion select c_cat).Count();
             var nro_inventario = (from c_inv in autodb.vehiculo where c_inv.fecha_salida != null && c_inv.fk_concesionario == id_concesionario_session select c_inv).Count();
+            UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;
+            O_Transaccion_CompraViewModels info_transaccion = new O_Transaccion_CompraViewModels();
+            if(usuario.id_T_Compra != 0)
+            {
+                transaccion_compra trans_c = (from l_transaccion_c in autodb.transaccion_compra where l_transaccion_c.id_compra == usuario.id_T_Compra select l_transaccion_c).First();
+                info_transaccion.Transaccion = trans_c;
+                info_transaccion.Cant_Vehiculo = trans_c.vehiculo.Count();
+                info_transaccion.Monto_Total = trans_c.vehiculo.Sum(x => x.valor_compra);
+                info_transaccion.Lista_Vehiculo = trans_c.vehiculo.ToList();
+            }
+            
             BusquedaPorModeloViewModels busqueda_modelo = new BusquedaPorModeloViewModels { 
             Nro_Categoria = nro_categoria,
             Nro_Inventario = nro_inventario,
-            Nro_Marca = nro_marca
+            Nro_Marca = nro_marca,
+            Transaccion = info_transaccion
             };
 
             return View(busqueda_modelo);
@@ -280,6 +292,10 @@ namespace AutoPro.Controllers
             }
             else
             {
+                
+                modelo.Valor_Calculado_Maximo = ConsultarValorMaximoModelo(modelo.id,id_concesionario_session,modelo.Estado_Vehiculo);
+                modelo.Valor_Calculado_Minimo = ConsultarValorMinimoModelo(modelo.id, id_concesionario_session, modelo.Estado_Vehiculo);
+                
                 TempData["Auto"] = modelo;
                 return RedirectToAction("AdquirirVehiculo", "Compra");
 
@@ -400,18 +416,32 @@ namespace AutoPro.Controllers
              };
 
              var op_add_vehiculo = autodb.vehiculo.Add(v1);
-             UsuarioViewModel u1 = (UsuarioViewModel)this.Session["User"];
-             transaccion_compra t1 = new transaccion_compra
-             {
-                 fecha = DateTime.Now,
-                 fk_concesionario = model.id_Concesionario,
-                 fk_estado_transaccion = 1,
-                 fk_usuario = u1.id_Usuario
-             };
-
-             var op_add_transaccion = autodb.transaccion_compra.Add(t1);
+             UsuarioViewModel u1 = this.Session["User"] as UsuarioViewModel;
+             transaccion_compra op_add_transaccion = new transaccion_compra();
+            
+            if(u1.id_T_Compra != 0)
+            {   
+                //En caso de que exista una transaccion de compra en curso
+                op_add_transaccion = (from l_t_compra in autodb.transaccion_compra where l_t_compra.id_compra == u1.id_T_Compra select l_t_compra).First();
+            }else
+            {
+                //En caso de que no exista una transaccion de compra en curso
+                transaccion_compra t1 = new transaccion_compra
+                {
+                    fecha = DateTime.Now,
+                    fk_concesionario = model.id_Concesionario,
+                    fk_estado_transaccion = 4,
+                    fk_usuario = u1.id_Usuario
+                };
+                op_add_transaccion = autodb.transaccion_compra.Add(t1);
+                autodb.SaveChanges();
+                u1.id_T_Compra = op_add_transaccion.id_compra;
+                this.Session["User"] = u1;
+            }
+             
              op_add_transaccion.vehiculo.Add(op_add_vehiculo);
             //Alerta a gerente
+             model.Valor_Maximo = ConsultarValorMaximoModelo(model.id_Modelo, concesionario.id_concesionario, model.Estado_Vehiculo);
             if(Convert.ToDouble(model.Valor_Compra) > model.Valor_Maximo)
             {
                 var usu_gerente = from l_usu in autodb.usuario where l_usu.fk_tipo_usuario == 2 && l_usu.fk_concesionario == model.id_Concesionario select l_usu;
@@ -440,8 +470,15 @@ namespace AutoPro.Controllers
              try
              {
                  autodb.SaveChanges();
-                 this.Session["Mensaje"] = "Transaccion Completada. La operacion Nro. "+ op_add_transaccion.id_compra + " se a completado con exito. Se ha agregado un Vehiculo: "+ model.Nombre + " - " + model.Año + ", Color: "+ op_add_vehiculo.color + " y Estado: "+ model.Estado_Vehiculo + "% en el Inventario.";
-                 return RedirectToAction("Index", "Home", new { react = "Transaccion-Completada" });
+                 MensajeViewModels m1 = new MensajeViewModels
+                 {
+                     Titulo = "Transacción Completada",
+                     Cuerpo = "La operacion Nro. " + op_add_transaccion.id_compra + " se a completado con exito. Se ha agregado un Vehiculo: " + model.Nombre + " - " + model.Año + ", Color: " + op_add_vehiculo.color + " y Estado: " + model.Estado_Vehiculo + "% en el Inventario.",
+                     Tipo_Modal = "modal-success"
+                 };
+
+                 this.Session["Mensaje"] = m1;
+                 return RedirectToAction("BusquedaPorModelo", "Compra", new { react = "Transaccion-Completada" });
              }catch(Exception e)
              {
                  SelectList lista = LlenarColores();
@@ -457,12 +494,244 @@ namespace AutoPro.Controllers
 
         }
 
+        [Authorize]
+        public ActionResult ConcretarTransaccion(int id)
+        {
+            var trans_c = from l_trans in autodb.transaccion_compra where l_trans.id_compra == id select l_trans;
+            if (trans_c.Count() > 0)
+            {
+                var transaccion = trans_c.First();
+                UsuarioViewModel user_compra = this.Session["User"] as UsuarioViewModel;
+                if (transaccion.fk_usuario == user_compra.id_Usuario)
+                {
+                    if (transaccion.fk_estado_transaccion == 4)
+                    {
+                        transaccion.fk_estado_transaccion = 1;
+                        try
+                        {
+                            autodb.SaveChanges();
+                            user_compra.id_T_Compra = 0;
+                            this.Session["User"] = user_compra;
+                            MensajeViewModels m1 = new MensajeViewModels
+                            {
+                                Titulo = "Operación Completada",
+                                Cuerpo = "La Transacción de compra Nro. " + id + " se concreto satisfactoriamente.",
+                                Tipo_Modal = "modal-info"
+                            };
+
+                            this.Session["Mensaje"] = m1;
+                            return RedirectToAction("Index", "Home", new { react = "Transaccion-Completada" });
+                        }
+                        catch (Exception e)
+                        {
+                            MensajeViewModels m1 = new MensajeViewModels
+                            {
+                                Titulo = "Error al completar la operación",
+                                Cuerpo = "La Transacción de compra Nro. " + id + " no fue concretada, por favor intente más tarde.",
+                                Tipo_Modal = "modal-warning"
+                            };
+                            this.Session["Mensaje"] = m1;
+                            return RedirectToAction("BusquedaPorModelo", "Compra", new { react = "Transaccion-Error" });
+
+                        }
+
+                    }
+                    else
+                    {
+                        MensajeViewModels m1 = new MensajeViewModels
+                        {
+                            Titulo = "Error al completar la operación",
+                            Cuerpo = "Usted no puede concretar una transaccion completada o anulada previamente.",
+                            Tipo_Modal = "modal-danger"
+                        };
+
+                        this.Session["Mensaje"] = m1;
+                        return RedirectToAction("Index", "Home", new { react = "Transaccion-Error" });
+                    }
+
+
+                }
+                else
+                {
+                    MensajeViewModels m1 = new MensajeViewModels
+                    {
+                        Titulo = "Error al completar la operación",
+                        Cuerpo = "Usted no es el usuario autorizado para realizar esta operación",
+                        Tipo_Modal = "modal-danger"
+                    };
+
+                    this.Session["Mensaje"] = m1;
+                    return RedirectToAction("Index", "Home", new { react = "Transaccion-Error" });
+                }
+
+
+            }
+            else
+            {
+                MensajeViewModels m1 = new MensajeViewModels
+                {
+                    Titulo = "Error al completar la operación",
+                    Cuerpo = "La transacción de compra " + id + " no existe.",
+                    Tipo_Modal = "modal-danger"
+                };
+
+                this.Session["Mensaje"] = m1;
+                return RedirectToAction("Index", "Home", new { react = "Transaccion-Error" });
+            }
+
+
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult EliminarVehiculoTransaccion(int id)
+        {
+            var vehiculo_c = from l_vehiculo in autodb.vehiculo where l_vehiculo.id_vehiculo == id select l_vehiculo;
+            UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;
+            var notificacion = "";
+            if(vehiculo_c.Count() > 0)
+            {
+                var vehiculo_i = vehiculo_c.First();
+                var trans = (from l_trans in autodb.transaccion_compra where l_trans.id_compra == usuario.id_T_Compra select l_trans).First();
+                trans.vehiculo.Remove(vehiculo_i);
+                autodb.vehiculo.Remove(vehiculo_i);
+                try
+                {
+                    autodb.SaveChanges();
+                    
+                   
+                    notificacion = "OK";
+                    
+                    if (trans.vehiculo.Count() == 0)
+                    {
+                        trans.fk_estado_transaccion = 2;
+                        autodb.SaveChanges();
+                        usuario.id_T_Compra = 0;
+                        this.Session["User"] = usuario;
+                        MensajeViewModels m1 = new MensajeViewModels
+                        {
+                            Titulo = "Error al completar la operación",
+                            Cuerpo = "La Transacción de compra Nro. " + id + " no fue anulada, por favor intente más tarde.",
+                            Tipo_Modal = "modal-warning"
+                        };
+                        this.Session["Mensaje"] = m1;
+                        notificacion = "OK Todos";
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    notificacion = "Mas Tarde";
+                }
+            }
+            else
+            {
+                notificacion = "No Existe";
+            }
+
+
+            return Json(notificacion, JsonRequestBehavior.AllowGet);
+
+
+
+        }
+
+        [Authorize]
+        public ActionResult AnularTransaccion(int id)
+        {
+            var trans_c = from l_trans in autodb.transaccion_compra where l_trans.id_compra == id select l_trans;
+            if(trans_c.Count() > 0)
+            {
+                var transaccion = trans_c.First();
+                UsuarioViewModel user_compra = this.Session["User"] as UsuarioViewModel;
+                if(transaccion.fk_usuario == user_compra.id_Usuario)
+                {
+                    if(transaccion.fk_estado_transaccion == 4)
+                    {
+                        autodb.vehiculo.RemoveRange(transaccion.vehiculo);
+                        transaccion.fk_estado_transaccion = 2;
+                        try
+                        {
+                            autodb.SaveChanges();
+                            user_compra.id_T_Compra = 0;
+                            this.Session["User"] = user_compra;
+                            MensajeViewModels m1 = new MensajeViewModels
+                            {
+                                Titulo = "Operación Completada",
+                                Cuerpo = "La Transacción de compra Nro. "+ id + " fue anulada satisfactoriamente.",
+                                Tipo_Modal = "modal-info"
+                            };
+
+                            this.Session["Mensaje"] = m1;
+                            return RedirectToAction("Index", "Home", new { react = "Transaccion-Completada" });
+                        }
+                        catch (Exception e)
+                        {
+                            MensajeViewModels m1 = new MensajeViewModels
+                            {
+                                Titulo = "Error al completar la operación",
+                                Cuerpo = "La Transacción de compra Nro. " + id + " no fue anulada, por favor intente más tarde.",
+                                Tipo_Modal = "modal-warning"
+                            };
+                            this.Session["Mensaje"] = m1;
+                            return RedirectToAction("BusquedaPorModelo", "Compra", new { react = "Transaccion-Error" });
+
+                        }
+
+                    }
+                    else
+                    {
+                        MensajeViewModels m1 = new MensajeViewModels
+                        {
+                            Titulo = "Error al completar la operación",
+                            Cuerpo = "Usted no puede anular una transaccion completada o anulada previamente.",
+                            Tipo_Modal = "modal-danger"
+                        };
+
+                        this.Session["Mensaje"] = m1;
+                        return RedirectToAction("Index", "Home", new { react = "Transaccion-Error" });
+                    }
+
+
+                }else
+                {
+                    MensajeViewModels m1 = new MensajeViewModels
+                    {
+                        Titulo = "Error al completar la operación",
+                        Cuerpo = "Usted no es el usuario autorizado para realizar esta operación",
+                        Tipo_Modal = "modal-danger"
+                    };
+
+                    this.Session["Mensaje"] = m1;
+                    return RedirectToAction("Index", "Home", new { react = "Transaccion-Error" });
+                }
+
+
+            }
+            else
+            {
+                MensajeViewModels m1 = new MensajeViewModels
+                {
+                    Titulo = "Error al completar la operación",
+                    Cuerpo = "La transacción de compra "+id+" no existe.",
+                    Tipo_Modal = "modal-danger"
+                };
+
+                this.Session["Mensaje"] = m1;
+                return RedirectToAction("Index", "Home", new { react = "Transaccion-Error" });
+            }
+
+            
+        
+        }
+
+
         //GET Historial
         [Authorize]
         public ActionResult Historial()
         {
             UsuarioViewModel user_compra = (UsuarioViewModel)this.Session["User"];
-            var c_l_transaccion_c = (from l_trasaccion in autodb.transaccion_compra where l_trasaccion.fk_usuario == user_compra.id_Usuario select l_trasaccion).OrderByDescending(x => x.fecha);
+            var c_l_transaccion_c = (from l_trasaccion in autodb.transaccion_compra where l_trasaccion.fk_usuario == user_compra.id_Usuario && l_trasaccion.fk_estado_transaccion == 1 select l_trasaccion).OrderByDescending(x => x.fecha);
             List<TransaccionCompraViewModels> t_list = new List<TransaccionCompraViewModels>();
 
             foreach (var item in c_l_transaccion_c)
@@ -553,13 +822,14 @@ namespace AutoPro.Controllers
                 }
                 promedio_sup = promedio_sup / l_banco_f_modelo.Count();
                 limite_sup = (promedio_sup * (100 - concesionario.porcentaje_ganancia)) / 100;
+                limite_sup = (limite_sup * estado_vehiculo) / 100;
 
             }
             else
             {
                 //Ningun banco los financia, por ende el valor sera de acuerdo a la kbb
                 limite_sup = (Convert.ToDouble(m1.valor) * (100 - concesionario.porcentaje_ganancia)) / 100;
-
+                limite_sup = (limite_sup * estado_vehiculo) / 100;
 
             }
 

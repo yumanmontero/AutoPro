@@ -88,6 +88,7 @@ namespace AutoPro.Controllers
                     string iduser_security = SignInManager.UserManager.FindByEmail(model.Email).Id;
                     var getuser = (from lp in autodb.usuario where lp.fk_seguridad == iduser_security select lp).First();
 
+
                     UsuarioViewModel usuario = new UsuarioViewModel{
                         Nombre = getuser.nombre,
                         Apellido = getuser.apellido,
@@ -96,8 +97,23 @@ namespace AutoPro.Controllers
                         Nivel_Usuario = getuser.fk_tipo_usuario,
                         Tipo_Usuario = getuser.tipo_usuario.descripcion,
                         Concesionario = getuser.concesionario.nombre,
-                        id_Concesionario = getuser.concesionario.id_concesionario
+                        id_Concesionario = getuser.concesionario.id_concesionario,
+                        id_T_Compra = 0,
+                        id_T_Preventa = 0,
+                        id_T_Venta = 0
                     };
+                    if(getuser.transaccion_compra.Where(x => x.estado_transaccion.id_estado_transaccion == 4).Count() > 0)
+                    {
+                        usuario.id_T_Compra = getuser.transaccion_compra.Where(x => x.estado_transaccion.id_estado_transaccion == 4).Last().id_compra;
+                    }
+                    if (getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 2).Count() > 0)
+                    {
+                        usuario.id_T_Venta = getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 2).Last().id_venta;
+                    }
+                    if (getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 1).Count() > 0)
+                    {
+                        usuario.id_T_Preventa = getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 1).Last().id_venta;
+                    }
 
                     this.Session["Concesionario"] = getuser.concesionario.id_concesionario;
                     this.Session["User"] = usuario;

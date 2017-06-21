@@ -4,11 +4,136 @@
     ViewBag.Title = "Busqueda por Modelo";
 }
 
+
+@if (HttpContext.Current.Session["Mensaje"] != null)
+    {
+
+        MensajeViewModels mensaje = HttpContext.Current.Session["Mensaje"] as MensajeViewModels;
+        {
+
+            HttpContext.Current.Session["Mensaje"] = null;
+        }
+
+        <!-- Modal -->
+        <div class="modal fade @mensaje.Tipo_Modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">@mensaje.Titulo</h4>
+                    </div>
+                    <div class="modal-body">
+                        @mensaje.Cuerpo
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+    
+ @if (Model.Transaccion.Transaccion != null)
+ {
+
+        <!-- Modal -->
+    <div class="modal fade-" id="Modal_transaccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalles de Transacción # @Model.Transaccion.Transaccion.id_compra</h4>
+                </div>
+                <div class="modal-body table-responsive no-padding">
+                    <table id="tabla_transaccion" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Vehiculo</th>
+                                <th>Precio</th>
+                                <th>Estado</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item_tr in Model.Transaccion.Lista_Vehiculo)
+                            {
+                                <tr>
+                                    <td>@item_tr.id_vehiculo</td>
+                                    <td>@item_tr.modelo.modelo1 @item_tr.modelo.nombre</td>
+                                    <td><span class="label label-success">@item_tr.valor_compra.ToString("#,##0")</span></td>
+                                    <td>
+                                        @{
+                                            var tipo_progress = "";
+                                            if(item_tr.vehiculo_estado.factor == 10)
+                                            {
+                                                tipo_progress = "progress-bar-danger";
+                                            }else if(item_tr.vehiculo_estado.factor == 30)
+                                            {
+                                                tipo_progress = "progress-bar-yellow";
+                                            }
+                                            else if (item_tr.vehiculo_estado.factor == 70)
+                                            {
+
+                                                tipo_progress = "progress-bar-info";
+                                            }else{
+
+                                                tipo_progress = "progress-bar-green";
+                                            }   
+                                        }
+                                        <div class="progress progress-xs">
+                                            <div class="progress-bar @tipo_progress" style="width:@item_tr.vehiculo_estado.factor%"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button onclick="eliminar_vehiculo(@item_tr.id_vehiculo);" id="vehiculo_@item_tr.id_vehiculo" type="button" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                            
+                        </tbody>
+                    </table>
+                    <table id="tabla_transaccion" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Total</th>
+                                <th> </th>
+                                <th> </th>
+                                <th></th>
+                                <th>$ @Model.Transaccion.Monto_Total.ToString("#,##0")</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    
+                    <a href="/Compra/ConcretarTransaccion/@Model.Transaccion.Transaccion.id_compra" class="btn btn-success pull-left">Aceptar</a>
+                    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ }
+
+
+
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        @ViewBag.Title
-        <small>Auto Pro</small>
+        @if(Model.Transaccion.Transaccion != null)
+        {
+          @:Transacción # @Model.Transaccion.Transaccion.id_compra
+          <small>@Model.Transaccion.Transaccion.concesionario.nombre</small>  
+        }else
+        {
+           @ViewBag.Title
+           <small>Auto Pro</small>
+        }
+
     </h1>
     <ol class="breadcrumb">
         <li><a href="/Home/"><i class="fa fa-dashboard"></i>Inicio</a></li>
@@ -54,33 +179,143 @@
         <div class="col-lg-1 col-xs-1">
 
         </div>
-        <div class="col-lg-5 col-xs-5">
-            <!-- small box -->
-            <div class="small-box bg-aqua">
-                <div class="inner">
-                    <h3>@Model.Nro_Marca</h3>
-                    <p>Marcas</p>
+        @if (Model.Transaccion.Transaccion != null)
+        {
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- small box -->
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3>@Model.Nro_Marca</h3>
+                                        <p>Marcas</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-model-s"></i>
+                                    </div>
+                                    <a href="/Compra/BusquedaPorMarca" class="small-box-footer">Buscar por marcas <i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+                            <div class="col-md-12">
+                                <!-- small box -->
+                                <div class="small-box bg-green">
+                                    <div class="inner">
+                                        <h3>@Model.Nro_Categoria</h3>
+                                        <p>Categoria</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-ios-list-outline"></i>
+                                    </div>
+                                    <a href="/Compra/BusquedaPorCategoria" class="small-box-footer">Buscar por categoria <i class="fa fa-search"></i></a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- PRODUCT LIST -->
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Vehiculos en la Transacción</h3>
+                                        
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <ul id="list_vehiculo" class="products-list product-list-in-box">
+                                            @{
+                                                
+                                                foreach (var item_vehiculo in Model.Transaccion.Lista_Vehiculo)
+                                                {
+                                                    var image = item_vehiculo.modelo.imagen;
+                                                    
+                                                    if((item_vehiculo.imagen != null) && (item_vehiculo.imagen != ""))
+                                                    {
+                                                        image = item_vehiculo.imagen;
+                                                    }
+
+                                                    <li id="vel_@item_vehiculo.id_vehiculo" class="item">
+                                                            <div class="product-img">
+                                                                <img style="width:50px;height:50px" src="@image" alt="@item_vehiculo.modelo.nombre">
+                                                            </div>
+                                                            <div class="product-info">
+                                                                <a href="javascript:void(0)" class="product-title">
+                                                                    @item_vehiculo.modelo.modelo1
+                                                                    <span class="label label-success pull-right">$@item_vehiculo.valor_compra.ToString("#,##0")</span>
+                                                                </a>
+                                                                <span class="product-description">
+                                                                    @item_vehiculo.modelo.nombre
+                                                                </span>
+                                                            </div>
+                                                    </li>
+
+                                            }
+                                                
+                                                
+                                                
+                                            }
+                                            
+                                        </ul>
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <div class="box-footer clearfix">
+                                        <a href="javascript:void(0)" onclick="modalopen();" class="btn btn-sm btn-info btn-flat pull-left">Concretar</a>
+                                        <a href="/Compra/AnularTransaccion/@Model.Transaccion.Transaccion.id_compra" class="btn btn-sm btn-danger btn-flat pull-right">Anular</a>
+                                    </div>
+                                    <!-- /.box-footer -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                
                 </div>
-                <div class="icon">
-                    <i class="ion ion-model-s"></i>
+              </div>
+
+        }
+        else
+        {
+            <div class="col-md-5">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>@Model.Nro_Marca</h3>
+                        <p>Marcas</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-model-s"></i>
+                    </div>
+                    <a href="/Compra/BusquedaPorMarca" class="small-box-footer">Buscar por marcas <i class="fa fa-search"></i></a>
                 </div>
-                <a href="/Compra/BusquedaPorMarca" class="small-box-footer">Buscar por marcas <i class="fa fa-search"></i></a>
             </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-5 col-xs-5">
-            <!-- small box -->
-            <div class="small-box bg-green">
-                <div class="inner">
-                    <h3>@Model.Nro_Categoria</h3>
-                    <p>Categoria</p>
+                <!-- ./col -->
+            <div class="col-md-5">
+                <!-- small box -->
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>@Model.Nro_Categoria</h3>
+                        <p>Categoria</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-ios-list-outline"></i>
+                    </div>
+                    <a href="/Compra/BusquedaPorCategoria" class="small-box-footer">Buscar por categoria <i class="fa fa-search"></i></a>
                 </div>
-                <div class="icon">
-                    <i class="ion ion-ios-list-outline"></i>
-                </div>
-                <a href="/Compra/BusquedaPorCategoria" class="small-box-footer">Buscar por categoria <i class="fa fa-search"></i></a>
             </div>
-        </div>
+
+        }
+
+
+
+
+
+
+        
+        
         <div class="col-lg-1 col-xs-1">
 
         </div>
@@ -91,10 +326,24 @@
 </section>
 <!-- /.content -->
 
-<script src="~/Content/Template/plugins/MiniJava.js"></script>
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script src="~/Content/Template/bootstrap/js/bootstrap.min.js"></script>
+<!-- DataTables -->
+<script src="~/Content/Template/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Content/Template/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
 <script>
     jQuery(window).load(function () {
-
+        
+        $('#myModal').modal('show');
+        $('#list_vehiculo').slimScroll({
+            height: '160px'
+        });
+        $('#tabla_transaccion').DataTable({
+            paging: false,
+            scrollY: 400,
+            ordering: false
+        });
 
         function formatRepo(repo) {
             if (repo.Image === undefined) return "Cargando...";
@@ -157,10 +406,73 @@
 
         });
 
+
+
+
+
     });
 
     function goBack() {
         window.history.back();
+    }
+
+    function modalopen() {
+        $('#Modal_transaccion').modal('show');
+
+    }
+
+    function eliminar_vehiculo(id_vehiculo)
+    {
+        var LocalidadOptions = {};
+        LocalidadOptions.url = "/Compra/EliminarVehiculoTransaccion";
+        LocalidadOptions.type = "POST";
+        LocalidadOptions.data = JSON.stringify({ id: id_vehiculo });
+        LocalidadOptions.datatype = "json";
+        LocalidadOptions.contentType = "application/json";
+        LocalidadOptions.success = function (data) {
+            if (data != undefined) {
+
+                if(data == "OK")
+                {
+                    var elemento = "vehiculo_"+ id_vehiculo;
+                    var elemento2 = "vel_"+id_vehiculo;
+                    var element1 = document.getElementById(elemento).parentElement.parentElement;
+                    element1.parentElement.removeChild(element1);
+                    var element = document.getElementById(elemento2);
+                    element.parentElement.removeChild(element);
+                    alert("Vehículo # "+ id_vehiculo + " Ha sido eliminado.")
+
+                }else if(data == "Mas Tarde")
+                {
+                    alert("Error en la Operación. Intente más tarde");
+
+                }else if(data == "No Existe")
+                {
+                    alert("Error en la Operación. el vehiculo no existe");
+
+                }else if(data == "OK Todos")
+                {
+                    window.location.replace("/Home/");
+
+                }else{
+
+                    alert("No se puede concretar la operación, intente mas tarde"+ data )
+                }
+
+
+                var minimo = data.Valor_Minimo.toFixed(0) + '<sup style="font-size: 20px">USD</sup>';
+                var maximo = data.Valor_Maximo.toFixed(0) + '<sup style="font-size: 20px">USD</sup>';
+                document.getElementById("MontoMinimo").innerHTML = minimo;
+                document.getElementById("MontoMaximo").innerHTML = maximo;
+
+            } else {
+                alert("Error al eliminar, Intente mas Tarde "+ data)
+            }
+
+        };
+        LocalidadOptions.error = function () { alert("Error al eliminar vehiculo."); };
+        $.ajax(LocalidadOptions);
+
     }
 
 

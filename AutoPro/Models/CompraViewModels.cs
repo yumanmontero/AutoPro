@@ -24,6 +24,21 @@ namespace AutoPro.Models
 
         [Display(Name = "Modelo")]
         public int Busq_Modelo { get; set; }
+
+        public O_Transaccion_CompraViewModels Transaccion { get; set; }
+
+    }
+
+    public class O_Transaccion_CompraViewModels
+    {
+        public transaccion_compra Transaccion { get; set; }
+
+        public decimal Monto_Total { get; set; }
+
+        public int Cant_Vehiculo { get; set; }
+
+        public List<vehiculo> Lista_Vehiculo { get; set; }
+
     }
 
     public class ModelosDetallesViewModels

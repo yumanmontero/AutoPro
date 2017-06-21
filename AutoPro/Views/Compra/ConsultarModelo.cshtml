@@ -464,11 +464,16 @@
                 LocalidadOptions.success = function (data) {
                     if (data.Valor_Maximo != undefined) {
 
-                        var minimo = data.Valor_Minimo + '<sup style="font-size: 20px">USD</sup>';
-                        var maximo = data.Valor_Maximo + '<sup style="font-size: 20px">USD</sup>';
+                        var minimo = parseFloat(data.Valor_Minimo, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString(); 
+                        minimo = minimo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
+                        minimo += '<sup style="font-size: 20px">USD</sup>';
+                        var maximo = parseFloat(data.Valor_Maximo, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+                        maximo = maximo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
+                        maximo += '<sup style="font-size: 20px">USD</sup>';         
+                        
                         document.getElementById("MontoMinimo").innerHTML = minimo;
                         document.getElementById("MontoMaximo").innerHTML = maximo;
-
+                        
 
                     } else {
                         alert("Error al calcular el Monto, Intente mas Tarde")

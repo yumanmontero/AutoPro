@@ -17,6 +17,16 @@ namespace AutoPro.Models
         public string ReturnUrl { get; set; }
     }
 
+    public class MensajeViewModels
+    {
+        public string Tipo_Modal { get; set; }
+
+        public string Titulo { get; set; }
+
+        public string Cuerpo { get; set; }
+
+    }
+
     public class SendCodeViewModel
     {
         public string SelectedProvider { get; set; }
@@ -156,6 +166,12 @@ namespace AutoPro.Models
         public int id_Concesionario { get; set; }
 
         public string Concesionario { get; set; }
+
+        public int id_T_Compra { get; set; }
+
+        public int id_T_Venta { get; set; }
+
+        public int id_T_Preventa { get; set; }
 
 
     }
