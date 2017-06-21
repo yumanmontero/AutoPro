@@ -610,8 +610,8 @@ namespace AutoPro.Controllers
                         this.Session["User"] = usuario;
                         MensajeViewModels m1 = new MensajeViewModels
                         {
-                            Titulo = "Error al completar la operación",
-                            Cuerpo = "La Transacción de compra Nro. " + id + " no fue anulada, por favor intente más tarde.",
+                            Titulo = "Operacón Completada",
+                            Cuerpo = "La Transacción de compra Nro. " + trans.id_compra + " fue anulada, debido a que ya no presenta vehículo en la lista",
                             Tipo_Modal = "modal-warning"
                         };
                         this.Session["Mensaje"] = m1;
