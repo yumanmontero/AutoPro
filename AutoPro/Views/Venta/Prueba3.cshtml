@@ -1,4 +1,5 @@
-﻿
+﻿@using AutoPro.Models
+@model VehiculosDetallesViewModels
 @{
     ViewBag.Title = "Prueba3";
 }
@@ -22,15 +23,15 @@
     <div class="col-lg-12 col-xs-12">
 
         <h2>
-            Camry LE Sedan 4d
-            <small>Toyota</small>
+            @Model.Vehiculo.modelo.modelo1 @Model.Vehiculo.modelo.nombre
+            <small>@Model.Vehiculo.modelo.marca.nombre - @Model.Vehiculo.modelo.año</small>
         </h2>
         <div class="row">
             <div class="col-lg-4 col-xs-4">
                 <div class="box box-success">
                     <div class="box-body chat" id="chat-box">
 
-                        <img class="img-responsive" style="height:300px; width :100%" src="/Images/Modelos/Camry/2017/Camry_LE_Sedan_4d.png" />
+                        <img class="img-responsive" style="height:300px; width :100%" src="@Model.Imagen" />
 
                     </div>
                 </div>
@@ -48,32 +49,37 @@
                             <div class="col-lg-1 col-xs-1 text-center">
 
                             </div>
-                            <div class="col-lg-5 col-xs-5">
-                                <div class="form-group">
-                                    <label>Valor de Venta</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Ingrese el Valor...">
-                                </div>
-                                <div class="form-group">
-                                    <label>Financista</label>
-                                    <select id="financista" class="form-control select2" style="width: 100%;">
-                                        <option selected="selected">Julian Martinez</option>
-                                        <option>Alexis Marcado</option>
-                                        <option>Monica Pastor</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Comentario</label>
-                                    <input type="text" class="form-control" placeholder="Comente...">
-                                </div>
+                            @using (Html.BeginForm("AdquirirVehiculo", "Venta", FormMethod.Post, new { role = "form", id = "asignarid", enctype = "multipart/form-data" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                @Html.HiddenFor(x => x.Vehiculo)
+                                @Html.HiddenFor(x => x.Monto_Maximo)
+                                @Html.HiddenFor(x => x.ID_Cliente)
+                                <div class="col-lg-5 col-xs-5">
+                                    <div class="form-group">
+                                        <label>Valor de Venta</label>
+                                        @Html.EditorFor(m => m.Valor_Venta, new { @class = "form-control", placeholder = "Ingrese el Valor ..." })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Financista</label>
+                                        @Html.DropDownListFor(x => x.id_Financista, Model.Lista_Agentes, new { @class = "form-control select2", style = "width: 100%;" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Comentario</label>
+                                        @Html.EditorFor(m => m.Comentario, new { @class = "form-control", placeholder = "Comente ..." })
+                                    </div>
 
-                            </div>
+                                </div>
+                            }
+                            
                             <div class="col-lg-6 col-xs-6">
                                 <div id="estadisticas_carro" class="row margin">
                                     <div class="col-lg-12 col-xs-12">
                                         <!-- small box -->
-                                        <div class="small-box bg-lime">
+                                        <div class="small-box bg-orange">
                                             <div class="inner">
-                                                <h3>61 <sup style="font-size: 20px">%</sup></h3>
+                                                <h3>@Model.Nivel_Pref_Cliente <sup style="font-size: 20px">%</sup></h3>
 
                                                 <p>Preferencia</p>
                                             </div>
@@ -86,7 +92,7 @@
                                         <!-- small box -->
                                         <div class="small-box bg-aqua">
                                             <div class="inner">
-                                                <h3>283 <sup style="font-size: 20px">KM</sup></h3>
+                                                <h3>@Model.Vehiculo.kilometraje.ToString("#,##0") <sup style="font-size: 20px">KM</sup></h3>
 
                                                 <p>Kilometraje</p>
                                             </div>
@@ -99,7 +105,7 @@
                                         <!-- small box -->
                                         <div class="small-box bg-yellow">
                                             <div class="inner">
-                                                <h3>12 <sup style="font-size: 20px">DIAS</sup></h3>
+                                                <h3>@Model.Tiempo_Inventario <sup style="font-size: 20px">DIAS</sup></h3>
 
                                                 <p>Tiempo en Inventario</p>
                                             </div>
@@ -112,7 +118,7 @@
                                         <!-- small box -->
                                         <div class="small-box bg-green">
                                             <div class="inner">
-                                                <h3>1.354 <sup style="font-size: 20px">USD</sup></h3>
+                                                <h3 id="comision_ganar">@Model.Comision_Obtener.ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
 
                                                 <p>Comision</p>
                                             </div>
@@ -125,7 +131,7 @@
                                         <!-- small box -->
                                         <div class="small-box bg-light-blue">
                                             <div class="inner">
-                                                <h3> Excelente</h3>
+                                                <h3>@Model.Vehiculo.vehiculo_estado.descripcion</h3>
 
                                                 <p>Estado</p>
                                             </div>
@@ -138,7 +144,7 @@
                                         <!-- small box -->
                                         <div class="small-box bg-gray">
                                             <div class="inner">
-                                                <h3>Azul</h3>
+                                                <h3>@Model.Vehiculo.color</h3>
 
                                                 <p>Color</p>
                                             </div>
@@ -187,40 +193,72 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-12 col-xs-12 text-center">
-                <div class="col-lg-2 col-xs-2 text-center">
+            <div class="col-md-12 text-center">
+                <div class="col-md-2 text-center">
 
 
                 </div>
-                <div class="col-lg-8 col-xs-8">
+                <div class="col-md-8">
 
-                    <div class="row col-lg-6 col-xs-6">
+                    @if (Model.Monto_Minimo == Model.Monto_Maximo)
+                    {
+                        <div class="row col-md-12">
 
-                        <div class="small-box bg-green">
+                            <div class="small-box bg-green">
 
-                            <div class="inner">
-                                <h3 id="MontoMinimo">10.626<sup style="font-size: 20px">USD</sup></h3>
-                                <p>Valor Minimo</p>
+                                <div class="inner">
+                                    <h3 id="MontoMinimo">@Model.Monto_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                    <p>Valor Recomendado</p>
+                                </div>
+
                             </div>
-
                         </div>
-                    </div>
 
-                    <div class="row col-lg-6 col-xs-6">
-                        <div class="small-box bg-red">
-                            <div class="inner">
-                                <h3 id="MontoMaximo">18.654<sup style="font-size: 20px">USD</sup></h3>
-                                <p>Valor Maximo</p>
+                    }
+                    else
+                    {
+
+                        decimal monto_max = 0;
+                        decimal monto_min = 0;
+
+                        if (Model.Monto_Maximo < Model.Monto_Minimo)
+                        {
+                            monto_max = Model.Monto_Minimo;
+                            monto_min = Model.Monto_Maximo;
+                            Model.Monto_Minimo = monto_min;
+                            Model.Monto_Maximo = monto_max;
+
+                        }
+
+                        <div class="row col-md-6">
+
+                            <div class="small-box bg-green">
+
+                                <div class="inner">
+                                    <h3 id="MontoMinimo">@Model.Monto_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                    <p>Valor Minimo</p>
+                                </div>
+
                             </div>
-
                         </div>
-                    </div>
+
+                        <div class="row col-md-6">
+                            <div class="small-box bg-red">
+                                <div class="inner">
+                                    <h3 id="MontoMaximo">@Model.Monto_Maximo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                    <p>Valor Maximo</p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    }
 
 
 
                 </div>
 
-                <div class="col-lg-2 col-xs-2 text-center">
+                <div class="col-md-2 text-center">
 
                 </div>
 
@@ -244,6 +282,43 @@
 
         $('#estadisticas_carro').slimScroll({
             height: '250px'
+        });
+
+        $("#id_Financista").select2({
+            placeholder: "Seleccione un Agente"
+        });
+
+        $('#Valor_Venta').removeClass('single-line');
+        $('#Valor_Venta').removeClass('text-box').addClass('form-control');
+        $('#Comentario').removeClass('single-line');
+        $('#Comentario').removeClass('text-box').addClass('form-control');
+
+        $("#Valor_Venta").on('input', function () {
+            var LocalidadOptions = {};
+            LocalidadOptions.url = "/Venta/CalcularComision";
+            LocalidadOptions.type = "POST";
+            LocalidadOptions.data = JSON.stringify({ monto: document.getElementById("Valor_Venta").value , id_usuario: @Model.ID_Usuario });
+            LocalidadOptions.datatype = "json";
+            LocalidadOptions.contentType = "application/json";
+            LocalidadOptions.success = function (data) {
+                if (data != undefined) {
+
+                    var minimo = parseFloat(data, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString(); 
+                    minimo = minimo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
+                    minimo += '<sup style="font-size: 20px">USD</sup>';
+
+                    document.getElementById("comision_ganar").innerHTML = minimo;
+
+                } else {
+                    alert("Error al calcular el Monto, Intente mas Tarde " + data)
+                }
+
+            };
+            LocalidadOptions.error = function () { alert("Error al calcular el Monto."); };
+            $.ajax(LocalidadOptions);
+
+
+
         });
 
         

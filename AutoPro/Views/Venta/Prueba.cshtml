@@ -1,4 +1,5 @@
-﻿
+﻿@using AutoPro.Models
+@model Marcas_CategoriaViewModels
 @{
     ViewBag.Title = "Prueba";
 }
@@ -56,191 +57,264 @@
                 </div>
                 <!-- /.box-header -->
                 <div id="ventana_cambio" class="box-body no-padding">
-                    <div class="row">
+                    @if ((Model.Lista_Categoria.Count() > 0) && (Model.Lista_Marcas.Count() > 0))
+                    {
+                        <div class="row">
 
-                        <div class="col-lg-6 col-xs-6">
-                            <div class="box box-widget ">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">MARCAS</h3>
-                                </div>
-                                <div class="box-body">
-                                    <div id="marcas_div" class="row">
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-yellow">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Marcas/Audi.png" alt="Audi">
+                            <div class="col-md-6">
+                                <div class="box box-widget ">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">MARCAS</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div id="marcas_div" class="row">
+                                            @foreach (var item in Model.Lista_Marcas)
+                                            {
+                                                <a data-url="/Venta/Prueba2/@item.Marca.id_marca?tipo=1&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                                    <div class="col-md-12">
+                                                        <div class="box box-widget widget-user-2">
+                                                            <div class="widget-user-header bg-yellow">
+                                                                <div class="widget-user-image">
+                                                                    <img class="img-circle" src="@item.Marca.logo" alt="@item.Marca.nombre">
+                                                                </div>
+                                                                <!-- /.widget-user-image -->
+                                                                <h3 class="widget-user-username">@item.Marca.nombre</h3>
+                                                                <h5 class="widget-user-desc"></h5>
+                                                            </div>
+                                                            <div class="box-footer no-padding">
+                                                                <ul class="nav nav-stacked">
+                                                                    <li><a href="javascript:{}">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                                    <li><a href="javascript:{}">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
                                                     </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">AUDI</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">2</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">60%</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
 
+
+                                                </a>
+
+
+                                            }
                                         </div>
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-yellow">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Marcas/Chevrolet.png" alt="Audi">
-                                                    </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">CHEVROLET</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">4</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">40%</span></a></li>
 
-                                                    </ul>
-                                                </div>
 
-                                            </div>
 
-                                        </div>
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-yellow">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Marcas/Ford.png" alt="Ford">
-                                                    </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">FORD</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">6</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">70%</span></a></li>
 
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-yellow">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Marcas/Toyota.png" alt="Toyota">
-                                                    </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">TOYOTA</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">1</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">56%</span></a></li>
-
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
                                     </div>
 
+                                </div>
+                            </div>
 
 
+                            <div class="col-md-6">
+                                <div class="box box-widget">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">CATEGORIAS</h3>
+                                        <!-- /.box-tools -->
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div id="cat_div" class="row margin">
+                                            @foreach (var item in Model.Lista_Categoria)
+                                            {
+                                                <a data-url="/Venta/Prueba2/@item.Categoria.id_clasificacion?tipo=2&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                                    <div class="col-md-12">
+                                                        <div class="box box-widget widget-user-2">
+                                                            <div class="widget-user-header bg-aqua">
+                                                                <div class="widget-user-image">
+                                                                    <img class="img-circle" src="@item.Categoria.logo" alt="@item.Categoria.descripcion">
+                                                                </div>
+                                                                <!-- /.widget-user-image -->
+                                                                <h3 class="widget-user-username">@item.Categoria.descripcion</h3>
+                                                                <h5 class="widget-user-desc"></h5>
+                                                            </div>
+                                                            <div class="box-footer no-padding">
+                                                                <ul class="nav nav-stacked">
+                                                                    <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                                    <li><a href="#">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+
+                                                                </ul>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </a>
+
+
+                                            }
+
+ 
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+                            </div>
+
+                        </div>
+
+                    }
+                    else if (Model.Lista_Marcas.Count() > 0)
+                    {
+                        <div class="row">
+
+                            <div class="col-md-3">
+
+                                <!-- /.box -->
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="box box-widget ">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">MARCAS</h3>
+                                    </div>
+                                    <div class="box-body">
+                                        <div id="marcas_div" class="row">
+                                            @foreach (var item in Model.Lista_Marcas)
+                                            {
+                                                <a data-url="/Venta/ListaModelos/@item.Marca.id_marca?tipo=1&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                                    <div class="col-md-12">
+                                                        <div class="box box-widget widget-user-2">
+                                                            <div class="widget-user-header bg-yellow">
+                                                                <div class="widget-user-image">
+                                                                    <img class="img-circle" src="@item.Marca.logo" alt="@item.Marca.nombre">
+                                                                </div>
+                                                                <!-- /.widget-user-image -->
+                                                                <h3 class="widget-user-username">@item.Marca.nombre</h3>
+                                                                <h5 class="widget-user-desc"></h5>
+                                                            </div>
+                                                            <div class="box-footer no-padding">
+                                                                <ul class="nav nav-stacked">
+                                                                    <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                                    <li><a href="#">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                </a>
+
+
+                                            }
+                                        </div>
+
+
+
+
+                                    </div>
 
                                 </div>
+                            </div>
+
+
+                            <div class="col-md-3">
+
+                                <!-- /.box -->
+                            </div>
+
+                        </div>
+
+                    }
+                    else if (Model.Lista_Categoria.Count() > 0)
+                    {
+                        <div class="row">
+
+                            <div class="col-md-3">
+                              
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="box box-widget">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">CATEGORIAS</h3>
+                                        <!-- /.box-tools -->
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <div id="cat_div" class="row margin">
+                                            @foreach (var item in Model.Lista_Categoria)
+                                            {
+                                                <a data-url="/Venta/ListaModelos/@item.Categoria.id_clasificacion?tipo=2&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                                    <div class="col-md-12">
+                                                        <div class="box box-widget widget-user-2">
+                                                            <div class="widget-user-header bg-aqua">
+                                                                <div class="widget-user-image">
+                                                                    <img class="img-circle" src="@item.Categoria.logo" alt="@item.Categoria.descripcion">
+                                                                </div>
+                                                                <!-- /.widget-user-image -->
+                                                                <h3 class="widget-user-username">@item.Categoria.descripcion</h3>
+                                                                <h5 class="widget-user-desc"></h5>
+                                                            </div>
+                                                            <div class="box-footer no-padding">
+                                                                <ul class="nav nav-stacked">
+                                                                    <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                                    <li><a href="#">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+
+                                                                </ul>
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+
+                                                </a>
+
+
+
+                                            }
+
+
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                                <!-- /.box -->
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- /.box -->
+                            </div>
+
+                        </div>
+
+                    }
+                    else
+                    {
+                        <div class="row">
+
+                            <div class="col-md-3">
 
                             </div>
+
+
+                            <div class="col-md-6">
+                                <h1>No se posee estadisticas sucientes</h1>
+                                <!-- /.box -->
+                            </div>
+
+                            <div class="col-md-3">
+                                <!-- /.box -->
+                            </div>
+
                         </div>
 
 
-                        <div class="col-lg-6 col-xs-6">
-                            <div class="box box-widget">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">CATEGORIAS</h3>
-                                    <!-- /.box-tools -->
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">
-                                    <div id="cat_div" class="row margin">
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-aqua">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Clasificacion/Convertible.png" alt="Convertible">
-                                                    </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">CONVERTIBLE</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">1</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">21%</span></a></li>
-
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-aqua">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Clasificacion/Suv.png" alt="Suv">
-                                                    </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">SUV</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">5</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">36%</span></a></li>
-
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                        <div class="col-lg-12 col-xs-12">
-                                            <div class="box box-widget widget-user-2">
-                                                <div class="widget-user-header bg-aqua">
-                                                    <div class="widget-user-image">
-                                                        <img class="img-circle" src="~/Images/Clasificacion/Sedan.png" alt="Sedan">
-                                                    </div>
-                                                    <!-- /.widget-user-image -->
-                                                    <h3 class="widget-user-username">SEDAN</h3>
-                                                    <h5 class="widget-user-desc"></h5>
-                                                </div>
-                                                <div class="box-footer no-padding">
-                                                    <ul class="nav nav-stacked">
-                                                        <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">7</span></a></li>
-                                                        <li><a href="#">Preferencia <span class="pull-right badge bg-green">93%</span></a></li>
-
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
-                        </div>
-
-                    </div>  
+                    }
+                    
+                    
 
                 </div>
                 <!-- /.box-body -->
@@ -288,7 +362,18 @@
         $('#cat_div').slimScroll({
             height: '450px'
         });
+        
+        $('#cat_div').on('click', 'a[data-url]', function () {
 
+            var dataUrl = $(this).data('url');
+            window.location.replace(dataUrl);
+        });
+
+        $('#marcas_div').on('click', 'a[data-url]', function () {
+
+            var dataUrl = $(this).data('url');
+            window.location.replace(dataUrl);
+        });
 
     });
 

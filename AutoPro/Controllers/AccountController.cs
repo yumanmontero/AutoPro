@@ -214,16 +214,18 @@ namespace AutoPro.Controllers
                 {
                     //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     //crear usuario en tabla usuario
+                    UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;
                     var idSeg = user.Id;
                     usuario user1 = new usuario
                     {
                         apellido = model.Apellido,
                         nombre = model.Nombre,
                         telefono = model.Telefono,
-                        foto = "foto",
+                        foto = "/Images/User.png",
                         fk_tipo_usuario = Convert.ToByte(model.id_Tipo_Usuario),
                         fk_seguridad = idSeg,
-                        fk_usuario_estado = 1
+                        fk_usuario_estado = 1,
+                        fk_concesionario = usuario.id_Concesionario
                     };
 
                     autodb.usuario.Add(user1);

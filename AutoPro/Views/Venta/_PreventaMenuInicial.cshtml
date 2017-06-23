@@ -1,0 +1,97 @@
+﻿@using AutoPro.Models
+@model AutoPro.Models.Preventa_MenuViewModels
+
+@if (Model.Cant_Pref_Cliente > 0)
+{
+    <div class="col-md-6">
+        <!-- small box -->
+        <div class="small-box bg-green">
+            <div class="inner">
+                <h3>@Model.Cant_Pref_Cliente</h3>
+                <p>PREFERIDOS POR CLIENTE</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-user"></i>
+            </div>
+            <a data-url="/Venta/Menu_Preferidos/?tipo=1&id_cliente=@Model.ID_Cliente" href="javascript:{}" class="small-box-footer">
+                Consultar <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+}
+
+@if (Model.Cant_Pref_Mercado > 0)
+{
+    <div class="col-md-6">
+        <!-- small box -->
+        <div class="small-box bg-red">
+            <div class="inner">
+                <h3>@Model.Cant_Prioritarios</h3>
+                <p>PRIORITARIOS</p>
+
+            </div>
+            <div class="icon">
+                <i class="fa  fa-exclamation-triangle"></i>
+            </div>
+            <a href="javascript:{}" data-url="/Venta/Menu_Prioritarios/?id_cliente=@Model.ID_Cliente" class="small-box-footer">
+                Consultar <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+    <!-- ./col -->
+
+}
+
+@if (Model.Cant_Pref_Mercado > 0)
+{
+
+    <div class="col-md-6">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+            <div class="inner">
+                <h3>@Model.Cant_Pref_Mercado</h3>
+                <p>PREFERIDOS POR EL MERCADO</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-users"></i>
+            </div>
+            <a href="javascript:{}" data-url="/Venta/Menu_Preferidos/?tipo=2&id_cliente=@Model.ID_Cliente" class="small-box-footer">
+                Consultar <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+
+}
+
+@if (Model.Cant_Pref_Mercado > 0)
+{
+    <div class="col-md-6">
+        <!-- small box -->
+        <div class="small-box bg-aqua">
+            <div class="inner">
+                <h3>@Model.Cant_Inventario</h3>
+
+                <p>INVENTARIO</p>
+            </div>
+            <div class="icon">
+                <i class="fa fa-cubes"></i>
+            </div>
+            <a href="javascript:{}" data-url="/Venta/Menu_Inventario/?id_cliente=@Model.ID_Cliente" class="small-box-footer">
+                Consultar <i class="fa fa-arrow-circle-right"></i>
+            </a>
+        </div>
+    </div>
+}
+
+
+@if(Model.Cant_Inventario == 0)
+{
+    <div class="col-md-6 margin text-center">
+
+        <h1> NO HAY VEHICULOS EN INVENTARIO</h1>
+        
+    </div>
+    
+
+}

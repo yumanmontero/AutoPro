@@ -45,6 +45,8 @@ namespace AutoPro.Models
         public virtual DbSet<modelo_clasificacion> modelo_clasificacion { get; set; }
         public virtual DbSet<modulos_sistema> modulos_sistema { get; set; }
         public virtual DbSet<pais> pais { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<tipo_comision> tipo_comision { get; set; }
         public virtual DbSet<tipo_costo> tipo_costo { get; set; }
         public virtual DbSet<tipo_transaccion_venta> tipo_transaccion_venta { get; set; }
         public virtual DbSet<tipo_usuario> tipo_usuario { get; set; }

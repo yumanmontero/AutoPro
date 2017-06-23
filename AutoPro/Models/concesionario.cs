@@ -30,6 +30,7 @@ namespace AutoPro.Models
         public int fk_direccion { get; set; }
         public double porcentaje_ganancia { get; set; }
         public short dia_max_inventario { get; set; }
+        public Nullable<decimal> comision_minima { get; set; }
     
         public virtual direccion direccion { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

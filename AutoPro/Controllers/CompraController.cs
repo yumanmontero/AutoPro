@@ -204,6 +204,8 @@ namespace AutoPro.Controllers
         }
 
 
+
+
         // GET: Busqueda por Modelo
         [Authorize]
         public ActionResult ConsultarModelo(int id)
@@ -1115,7 +1117,7 @@ namespace AutoPro.Controllers
         public SelectList LlenarColores()
         {
 
-            List<SelectListItem> ListaDeColores = new List<SelectListItem>();
+                List<SelectListItem> ListaDeColores = new List<SelectListItem>();
                 ListaDeColores.Add(new SelectListItem() { Value = "1", Text = "Negro" });
                 ListaDeColores.Add(new SelectListItem() { Value = "2", Text = "Blanco" });
                 ListaDeColores.Add(new SelectListItem() { Value = "3", Text = "Rojo" });

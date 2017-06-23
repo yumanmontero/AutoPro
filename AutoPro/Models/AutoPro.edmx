@@ -116,6 +116,7 @@
           <Property Name="fk_direccion" Type="int" Nullable="false" />
           <Property Name="porcentaje_ganancia" Type="float" Nullable="false" />
           <Property Name="dia_max_inventario" Type="smallint" Nullable="false" />
+          <Property Name="comision_minima" Type="money" />
         </EntityType>
         <EntityType Name="direccion">
           <Key>
@@ -147,9 +148,10 @@
             <PropertyRef Name="id_comision" />
           </Key>
           <Property Name="id_comision" Type="int" Nullable="false" />
-          <Property Name="porcentaje" Type="tinyint" Nullable="false" />
+          <Property Name="valor" Type="float" Nullable="false" />
           <Property Name="fecha" Type="datetime" Nullable="false" />
           <Property Name="fk_usuario" Type="int" Nullable="false" />
+          <Property Name="fk_tipo_comision" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="estructura_costo">
           <Key>
@@ -168,6 +170,7 @@
           <Property Name="id_marca" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="descrpcion" Type="varchar" MaxLength="300" />
+          <Property Name="logo" Type="varchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="mensaje">
           <Key>
@@ -198,6 +201,7 @@
           </Key>
           <Property Name="id_clasificacion" Type="tinyint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="descripcion" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="logo" Type="varchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="modulos_sistema">
           <Key>
@@ -213,6 +217,23 @@
           <Property Name="id_pais" Type="int" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="coordenadas" Type="geography" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="tipo_comision">
+          <Key>
+            <PropertyRef Name="id_tipo_comision" />
+          </Key>
+          <Property Name="id_tipo_comision" Type="tinyint" Nullable="false" />
+          <Property Name="tipo" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <EntityType Name="tipo_costo">
           <Key>
@@ -523,6 +544,18 @@
             </Principal>
             <Dependent Role="estado">
               <PropertyRef Name="fk_pais" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_estructura_comision_tipo_comision">
+          <End Role="tipo_comision" Type="Self.tipo_comision" Multiplicity="1" />
+          <End Role="estructura_comision" Type="Self.estructura_comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_comision">
+              <PropertyRef Name="id_tipo_comision" />
+            </Principal>
+            <Dependent Role="estructura_comision">
+              <PropertyRef Name="fk_tipo_comision" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -861,6 +894,8 @@
           <EntitySet Name="modelo_clasificacion" EntityType="Self.modelo_clasificacion" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="modulos_sistema" EntityType="Self.modulos_sistema" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="pais" EntityType="Self.pais" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="tipo_comision" EntityType="Self.tipo_comision" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_costo" EntityType="Self.tipo_costo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_transaccion_venta" EntityType="Self.tipo_transaccion_venta" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="tipo_usuario" EntityType="Self.tipo_usuario" Schema="dbo" store:Type="Tables" />
@@ -933,6 +968,10 @@
           <AssociationSet Name="FK_estado_pais" Association="Self.FK_estado_pais">
             <End Role="pais" EntitySet="pais" />
             <End Role="estado" EntitySet="estado" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estructura_comision_tipo_comision" Association="Self.FK_estructura_comision_tipo_comision">
+            <End Role="tipo_comision" EntitySet="tipo_comision" />
+            <End Role="estructura_comision" EntitySet="estructura_comision" />
           </AssociationSet>
           <AssociationSet Name="FK_estructura_costo_vehiculo" Association="Self.FK_estructura_costo_vehiculo">
             <End Role="vehiculo" EntitySet="vehiculo" />
@@ -1064,6 +1103,8 @@
           <EntitySet Name="modelo_clasificacion" EntityType="sgcaModel.modelo_clasificacion" />
           <EntitySet Name="modulos_sistema" EntityType="sgcaModel.modulos_sistema" />
           <EntitySet Name="pais" EntityType="sgcaModel.pais" />
+          <EntitySet Name="sysdiagrams" EntityType="sgcaModel.sysdiagrams" />
+          <EntitySet Name="tipo_comision" EntityType="sgcaModel.tipo_comision" />
           <EntitySet Name="tipo_costo" EntityType="sgcaModel.tipo_costo" />
           <EntitySet Name="tipo_transaccion_venta" EntityType="sgcaModel.tipo_transaccion_venta" />
           <EntitySet Name="tipo_usuario" EntityType="sgcaModel.tipo_usuario" />
@@ -1145,6 +1186,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_comision_usuario" Association="sgcaModel.FK_comision_usuario">
             <End Role="usuario" EntitySet="usuario" />
+            <End Role="estructura_comision" EntitySet="estructura_comision" />
+          </AssociationSet>
+          <AssociationSet Name="FK_estructura_comision_tipo_comision" Association="sgcaModel.FK_estructura_comision_tipo_comision">
+            <End Role="tipo_comision" EntitySet="tipo_comision" />
             <End Role="estructura_comision" EntitySet="estructura_comision" />
           </AssociationSet>
           <AssociationSet Name="FK_costo_tipo_costo" Association="sgcaModel.FK_costo_tipo_costo">
@@ -1333,6 +1378,7 @@
           <Property Name="fk_direccion" Type="Int32" Nullable="false" />
           <Property Name="porcentaje_ganancia" Type="Double" Nullable="false" />
           <Property Name="dia_max_inventario" Type="Int16" Nullable="false" />
+          <Property Name="comision_minima" Type="Decimal" Precision="19" Scale="4" />
           <NavigationProperty Name="direccion" Relationship="sgcaModel.FK_concesionario_direccion" FromRole="concesionario" ToRole="direccion" />
           <NavigationProperty Name="transaccion_compra" Relationship="sgcaModel.FK_transaccion_compra_concesionario" FromRole="concesionario" ToRole="transaccion_compra" />
           <NavigationProperty Name="transaccion_venta" Relationship="sgcaModel.FK_transaccion_venta_concesionario" FromRole="concesionario" ToRole="transaccion_venta" />
@@ -1376,10 +1422,12 @@
             <PropertyRef Name="id_comision" />
           </Key>
           <Property Name="id_comision" Type="Int32" Nullable="false" />
-          <Property Name="porcentaje" Type="Byte" Nullable="false" />
+          <Property Name="valor" Type="Double" Nullable="false" />
           <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="fk_usuario" Type="Int32" Nullable="false" />
+          <Property Name="fk_tipo_comision" Type="Byte" Nullable="false" />
           <NavigationProperty Name="usuario" Relationship="sgcaModel.FK_comision_usuario" FromRole="estructura_comision" ToRole="usuario" />
+          <NavigationProperty Name="tipo_comision" Relationship="sgcaModel.FK_estructura_comision_tipo_comision" FromRole="estructura_comision" ToRole="tipo_comision" />
         </EntityType>
         <EntityType Name="estructura_costo">
           <Key>
@@ -1400,6 +1448,7 @@
           <Property Name="id_marca" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="nombre" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="descrpcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="logo" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_modelo_marca" FromRole="marca" ToRole="modelo" />
         </EntityType>
         <EntityType Name="mensaje">
@@ -1436,6 +1485,7 @@
           </Key>
           <Property Name="id_clasificacion" Type="Byte" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="descripcion" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="logo" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="modelo" Relationship="sgcaModel.FK_modelo_modelo_clasificacion" FromRole="modelo_clasificacion" ToRole="modelo" />
         </EntityType>
         <EntityType Name="modulos_sistema">
@@ -1454,6 +1504,24 @@
           <Property Name="nombre" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="coordenadas" Type="Geography" Nullable="false" />
           <NavigationProperty Name="estado" Relationship="sgcaModel.FK_estado_pais" FromRole="pais" ToRole="estado" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="tipo_comision">
+          <Key>
+            <PropertyRef Name="id_tipo_comision" />
+          </Key>
+          <Property Name="id_tipo_comision" Type="Byte" Nullable="false" />
+          <Property Name="tipo" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="estructura_comision" Relationship="sgcaModel.FK_estructura_comision_tipo_comision" FromRole="tipo_comision" ToRole="estructura_comision" />
         </EntityType>
         <EntityType Name="tipo_costo">
           <Key>
@@ -1819,6 +1887,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_estructura_comision_tipo_comision">
+          <End Type="sgcaModel.tipo_comision" Role="tipo_comision" Multiplicity="1" />
+          <End Type="sgcaModel.estructura_comision" Role="estructura_comision" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tipo_comision">
+              <PropertyRef Name="id_tipo_comision" />
+            </Principal>
+            <Dependent Role="estructura_comision">
+              <PropertyRef Name="fk_tipo_comision" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_costo_tipo_costo">
           <End Type="sgcaModel.tipo_costo" Role="tipo_costo" Multiplicity="1" />
           <End Type="sgcaModel.estructura_costo" Role="estructura_costo" Multiplicity="*" />
@@ -2113,6 +2193,7 @@
           <EntitySetMapping Name="concesionario">
             <EntityTypeMapping TypeName="sgcaModel.concesionario">
               <MappingFragment StoreEntitySet="concesionario">
+                <ScalarProperty Name="comision_minima" ColumnName="comision_minima" />
                 <ScalarProperty Name="dia_max_inventario" ColumnName="dia_max_inventario" />
                 <ScalarProperty Name="porcentaje_ganancia" ColumnName="porcentaje_ganancia" />
                 <ScalarProperty Name="fk_direccion" ColumnName="fk_direccion" />
@@ -2154,9 +2235,10 @@
           <EntitySetMapping Name="estructura_comision">
             <EntityTypeMapping TypeName="sgcaModel.estructura_comision">
               <MappingFragment StoreEntitySet="estructura_comision">
+                <ScalarProperty Name="fk_tipo_comision" ColumnName="fk_tipo_comision" />
                 <ScalarProperty Name="fk_usuario" ColumnName="fk_usuario" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
-                <ScalarProperty Name="porcentaje" ColumnName="porcentaje" />
+                <ScalarProperty Name="valor" ColumnName="valor" />
                 <ScalarProperty Name="id_comision" ColumnName="id_comision" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2175,6 +2257,7 @@
           <EntitySetMapping Name="marca">
             <EntityTypeMapping TypeName="sgcaModel.marca">
               <MappingFragment StoreEntitySet="marca">
+                <ScalarProperty Name="logo" ColumnName="logo" />
                 <ScalarProperty Name="descrpcion" ColumnName="descrpcion" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="id_marca" ColumnName="id_marca" />
@@ -2209,6 +2292,7 @@
           <EntitySetMapping Name="modelo_clasificacion">
             <EntityTypeMapping TypeName="sgcaModel.modelo_clasificacion">
               <MappingFragment StoreEntitySet="modelo_clasificacion">
+                <ScalarProperty Name="logo" ColumnName="logo" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
                 <ScalarProperty Name="id_clasificacion" ColumnName="id_clasificacion" />
               </MappingFragment>
@@ -2228,6 +2312,25 @@
                 <ScalarProperty Name="coordenadas" ColumnName="coordenadas" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="id_pais" ColumnName="id_pais" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="sgcaModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipo_comision">
+            <EntityTypeMapping TypeName="sgcaModel.tipo_comision">
+              <MappingFragment StoreEntitySet="tipo_comision">
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="id_tipo_comision" ColumnName="id_tipo_comision" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

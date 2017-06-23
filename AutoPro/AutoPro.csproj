@@ -248,6 +248,12 @@
     <Compile Include="Models\pais.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\tipo_comision.cs">
+      <DependentUpon>AutoPro.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\tipo_costo.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
@@ -1377,6 +1383,7 @@
     <Content Include="Views\Administracion\Inventario.cshtml" />
     <Content Include="Views\Compra\BusquedaPorMarca.cshtml" />
     <Content Include="Views\Compra\BusquedaPorCategoria.cshtml" />
+    <Content Include="Views\Venta\_PreventaMenuInicial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

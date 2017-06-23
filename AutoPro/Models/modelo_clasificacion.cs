@@ -22,6 +22,7 @@ namespace AutoPro.Models
     
         public byte id_clasificacion { get; set; }
         public string descripcion { get; set; }
+        public string logo { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<modelo> modelo { get; set; }

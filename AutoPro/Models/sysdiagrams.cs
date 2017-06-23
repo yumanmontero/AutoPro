@@ -12,15 +12,12 @@ namespace AutoPro.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class estructura_comision
+    public partial class sysdiagrams
     {
-        public int id_comision { get; set; }
-        public double valor { get; set; }
-        public System.DateTime fecha { get; set; }
-        public int fk_usuario { get; set; }
-        public byte fk_tipo_comision { get; set; }
-    
-        public virtual usuario usuario { get; set; }
-        public virtual tipo_comision tipo_comision { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }
