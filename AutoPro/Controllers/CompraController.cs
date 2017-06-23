@@ -18,7 +18,7 @@ using System.IO;
 
 namespace AutoPro.Controllers
 {
-    [Authorize]
+    
     public class CompraController : Controller
     {
 
@@ -79,6 +79,7 @@ namespace AutoPro.Controllers
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public ActionResult BusquedaPorMarca()
         {
             BusquedaPorMarcaViewModels modelo = new BusquedaPorMarcaViewModels();
@@ -120,6 +121,7 @@ namespace AutoPro.Controllers
             return View(modelo);
         }
 
+        [Authorize]
         public ActionResult BusquedaPorCategoria()
         {
             BusquedaPorCategoriaViewModels modelo = new BusquedaPorCategoriaViewModels();
@@ -190,6 +192,7 @@ namespace AutoPro.Controllers
             return View(busqueda_modelo);
         }
 
+        [Authorize]
         [HttpPost]
         public ActionResult BusquedaPorModelo(BusquedaPorModeloViewModels model)
         {
@@ -276,6 +279,7 @@ namespace AutoPro.Controllers
         }
 
         // POST: Busqueda por Modelo
+        [Authorize]
         [HttpPost]
         public ActionResult ConsultarModelo(ModeloDestallesViewModels modelo)
         {
@@ -305,7 +309,7 @@ namespace AutoPro.Controllers
 
         }
 
-
+        [Authorize]
         public ActionResult AdquirirVehiculo()
         {
             int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
@@ -361,6 +365,7 @@ namespace AutoPro.Controllers
         
 
         [HttpPost]
+        [Authorize]
         public ActionResult AdquirirVehiculo(ComprarVehiculoViewModels model)
         {
             if (!ModelState.IsValid)

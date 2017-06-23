@@ -31,6 +31,7 @@ namespace AutoPro.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult Preventa()
         {
             ComprarVehiculoViewModels modelo = new ComprarVehiculoViewModels();
@@ -536,7 +537,7 @@ namespace AutoPro.Controllers
             return url_imagen;
         }
 
-
+        [Authorize]
         public ActionResult PreventaMenuInicial(string id_cliente)
         {
             UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;
@@ -645,6 +646,7 @@ namespace AutoPro.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult AgregarVehiculo_Transaccion(VehiculosDetallesViewModels modelo)
         {
             UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;

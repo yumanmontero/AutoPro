@@ -45,7 +45,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="myModalLabel">Detalles de Transacción # @Model.Transaccion.Transaccion.id_compra</h4>
                 </div>
-                <div class="modal-body table-responsive no-padding">
+                <div class="modal-body table-responsive">
                     <table id="tabla_transaccion" class="table table-hover">
                         <thead>
                             <tr>
@@ -327,10 +327,8 @@
 <!-- /.content -->
 
 <script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
-<script src="~/Content/Template/bootstrap/js/bootstrap.min.js"></script>
-<!-- DataTables -->
-<script src="~/Content/Template/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="~/Content/Template/plugins/datatables/dataTables.bootstrap.min.js"></script>
+
+
 
 <script>
     jQuery(window).load(function () {
@@ -339,11 +337,7 @@
         $('#list_vehiculo').slimScroll({
             height: '160px'
         });
-        $('#tabla_transaccion').DataTable({
-            paging: false,
-            scrollY: 400,
-            ordering: false
-        });
+        
 
         function formatRepo(repo) {
             if (repo.Image === undefined) return "Cargando...";
@@ -403,6 +397,19 @@
             templateResult: formatRepo,
             templateSelection: formatRepoSelection
 
+
+        });
+
+        $('#tabla_transaccion').DataTable({
+            "paging": false,
+            "ordering": false,
+            "searching": true,
+            "scrollY": "200px",
+            "language":{
+                "search": "Buscar:",
+                searchPlaceholder: "Ingrese el criterio...",
+                "info": "Mostrando un total de _TOTAL_ entradas"
+            }
 
         });
 
