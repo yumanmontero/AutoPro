@@ -1,6 +1,8 @@
 ﻿@using AutoPro.Models
 @model AutoPro.Models.Preventa_MenuViewModels
 
+
+<div class="cargando"></div>
 @if (Model.Cant_Pref_Cliente > 0)
 {
     <div class="col-md-6">
@@ -13,7 +15,7 @@
             <div class="icon">
                 <i class="fa fa-user"></i>
             </div>
-            <a data-url="/Venta/Menu_Preferidos/?tipo=1&id_cliente=@Model.ID_Cliente" href="javascript:{}" class="small-box-footer">
+            <a id="pref_cliente_div" data-url="/Venta/Menu_Preferidos/?tipo=1&id_cliente=@Model.ID_Cliente" href="javascript:{}" class="small-box-footer">
                 Consultar <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -34,7 +36,7 @@
             <div class="icon">
                 <i class="fa  fa-exclamation-triangle"></i>
             </div>
-            <a href="javascript:{}" data-url="/Venta/Menu_Prioritarios/?id_cliente=@Model.ID_Cliente" class="small-box-footer">
+            <a id="prioritario_div" href="javascript:{}" data-url="/Venta/Menu_Prioritarios/?id_cliente=@Model.ID_Cliente" class="small-box-footer">
                 Consultar <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -56,7 +58,7 @@
             <div class="icon">
                 <i class="fa fa-users"></i>
             </div>
-            <a href="javascript:{}" data-url="/Venta/Menu_Preferidos/?tipo=2&id_cliente=@Model.ID_Cliente" class="small-box-footer">
+            <a id="pref_merc_div" href="javascript:{}" data-url="/Venta/Menu_Preferidos/?tipo=2&id_cliente=@Model.ID_Cliente" class="small-box-footer">
                 Consultar <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -77,7 +79,7 @@
             <div class="icon">
                 <i class="fa fa-cubes"></i>
             </div>
-            <a href="javascript:{}" data-url="/Venta/Menu_Inventario/?id_cliente=@Model.ID_Cliente" class="small-box-footer">
+            <a id="inventario_div" href="javascript:{}" data-url="/Venta/Menu_Inventario/?id_cliente=@Model.ID_Cliente" class="small-box-footer">
                 Consultar <i class="fa fa-arrow-circle-right"></i>
             </a>
         </div>
@@ -95,3 +97,6 @@
     
 
 }
+
+
+

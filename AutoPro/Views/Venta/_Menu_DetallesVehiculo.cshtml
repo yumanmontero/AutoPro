@@ -1,0 +1,254 @@
+﻿@using AutoPro.Models
+@model VehiculosDetallesViewModels
+
+<div style="height:500px" class="cargando"></div>
+<div class="col-md-12">
+
+    <h2>
+        @Model.Vehiculo.modelo.modelo1 @Model.Vehiculo.modelo.nombre
+        <small>@Model.Vehiculo.modelo.marca.nombre - @Model.Vehiculo.modelo.año</small>
+    </h2>
+    <div class="row">
+        <div class="col-lg-4 col-xs-4">
+            <div class="box box-success">
+                <div class="box-body chat" id="chat-box">
+
+                    <img class="img-responsive" style="height:300px; width :100%" src="@Model.Imagen" />
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8 col-xs-8 text-center">
+
+            <div class="row margin">
+
+                <div class="box box-success">
+                    <div class="box-header">
+                        <h3 class="box-title">Datos del Vehiculo</h3>
+                    </div>
+                    <div class="box-body chat" id="chat-box">
+                        <div class="col-lg-1 col-xs-1 text-center">
+
+                        </div>
+                        @using (Html.BeginForm("AdquirirVehiculo", "Venta", FormMethod.Post, new { role = "form", id = "asignarid", enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary("", new { @class = "text-danger" })
+                            @Html.HiddenFor(x => x.Vehiculo)
+                            @Html.HiddenFor(x => x.Monto_Maximo)
+                            @Html.HiddenFor(x => x.ID_Cliente)
+                            <div class="col-lg-5 col-xs-5">
+                                <div class="form-group">
+                                    <label>Valor de Venta</label>
+                                    @Html.EditorFor(m => m.Valor_Venta, new { @class = "form-control", placeholder = "Ingrese el Valor ..." })
+                                </div>
+                                <div class="form-group">
+                                    <label>Financista</label>
+                                    @Html.DropDownListFor(x => x.id_Financista, Model.Lista_Agentes, new { @class = "form-control select2", style = "width: 100%;" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Comentario</label>
+                                    @Html.EditorFor(m => m.Comentario, new { @class = "form-control", placeholder = "Comente ..." })
+                                </div>
+
+                            </div>
+                        }
+
+                        <div class="col-lg-6 col-xs-6">
+                            <div id="estadisticas_carro" class="row margin">
+                                <div class="col-lg-12 col-xs-12">
+                                    <!-- small box -->
+                                    <div class="small-box bg-orange">
+                                        <div class="inner">
+                                            <h3>@Model.Nivel_Pref_Cliente <sup style="font-size: 20px">%</sup></h3>
+
+                                            <p>Preferencia</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-ios-person"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-12">
+                                    <!-- small box -->
+                                    <div class="small-box bg-aqua">
+                                        <div class="inner">
+                                            <h3>@Model.Vehiculo.kilometraje.ToString("#,##0") <sup style="font-size: 20px">KM</sup></h3>
+
+                                            <p>Kilometraje</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-ios-speedometer"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-12">
+                                    <!-- small box -->
+                                    <div class="small-box bg-yellow">
+                                        <div class="inner">
+                                            <h3>@Model.Tiempo_Inventario <sup style="font-size: 20px">DIAS</sup></h3>
+
+                                            <p>Tiempo en Inventario</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-ios-calendar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-12">
+                                    <!-- small box -->
+                                    <div class="small-box bg-green">
+                                        <div class="inner">
+                                            <h3 id="comision_ganar">@Model.Comision_Obtener.ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                                            <p>Comision</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-cash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-12">
+                                    <!-- small box -->
+                                    <div class="small-box bg-light-blue">
+                                        <div class="inner">
+                                            <h3>@Model.Vehiculo.vehiculo_estado.descripcion</h3>
+
+                                            <p>Estado</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-levels"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12 col-xs-12">
+                                    <!-- small box -->
+                                    <div class="small-box bg-gray">
+                                        <div class="inner">
+                                            <h3>@Model.Vehiculo.color</h3>
+
+                                            <p>Color</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-android-color-palette"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-xs-12 text-center">
+            <div class="col-lg-3 col-xs-3 text-center">
+
+
+            </div>
+            <div class="col-lg-6 col-xs-6">
+
+            </div>
+            <div class="col-lg-3 col-xs-3 text-center">
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="col-md-2 text-center">
+
+
+            </div>
+            <div class="col-md-8">
+
+                @if (Model.Monto_Minimo == Model.Monto_Maximo)
+                {
+                    <div class="row col-md-12">
+
+                        <div class="small-box bg-green">
+
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Monto_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Recomendado</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+
+                    decimal monto_max = 0;
+                    decimal monto_min = 0;
+
+                    if (Model.Monto_Maximo < Model.Monto_Minimo)
+                    {
+                        monto_max = Model.Monto_Minimo;
+                        monto_min = Model.Monto_Maximo;
+                        Model.Monto_Minimo = monto_min;
+                        Model.Monto_Maximo = monto_max;
+
+                    }
+
+                    <div class="row col-md-6">
+
+                        <div class="small-box bg-green">
+
+                            <div class="inner">
+                                <h3 id="MontoMinimo">@Model.Monto_Minimo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Minimo</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row col-md-6">
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3 id="MontoMaximo">@Model.Monto_Maximo.ToString("#,##0")<sup style="font-size: 20px">USD</sup></h3>
+                                <p>Valor Maximo</p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                }
+
+
+
+            </div>
+
+            <div class="col-md-2 text-center">
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+

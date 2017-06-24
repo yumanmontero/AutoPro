@@ -286,3 +286,28 @@ h1[id] { padding-top: 20px; margin-top: 0; }
 .s2-docs-panels dt { background-color: #f5f5f5; border-top-left-radius: 4px; border-top-right-radius: 4px; padding: 5px 7.5px; }
 .s2-docs-panels dd { background-color: #fff; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; margin-bottom: 0.75em; padding: 7.5px; }
 .s2-docs-panels dt + dd { border-top: none; }
+
+
+.cargando {
+    display:    none;
+    position:absolute;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .5 ) 
+                url('/Images/Loading/loading.gif') 
+                50% 50% 
+                no-repeat;
+}
+
+.carga.carga_proceso {
+    overflow: hidden;   
+}
+
+.carga.carga_proceso .cargando {
+    display: block;
+}
+
+

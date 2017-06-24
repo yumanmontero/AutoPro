@@ -2,6 +2,18 @@
 @model ComprarVehiculoViewModels
 @{
     ViewBag.Title = "Proceso de Preventa";
+
+    UsuarioViewModel user = new UsuarioViewModel();
+    if (HttpContext.Current.Session["User"] != null)
+    {
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+    }
+    else
+    {
+
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+
+    }
 }
 
 
@@ -173,8 +185,8 @@
                    </div>
                </div>
                <!-- /.box-header -->
-               <div id="ventana_cambio" class="box-body no-padding" >
-
+               <div id="ventana_cambio" class="box-body no-padding carga" >
+                   <div style="height:500px" class="cargando"></div>
 
                </div>
                <!-- /.box-body -->
@@ -206,10 +218,22 @@
 </section>
 
 
-<script src="~/Content/Template/plugins/MiniJava.js"></script>
+<!-- jQuery 2.2.3 -->
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
 <script>
+
     jQuery(window).load(function () {
 
+        $(document).ajaxStart(function() 
+        { 
+            $('#ventana_cambio').addClass("carga_proceso"); 
+        });
+
+        $(document).ajaxStop(function() 
+        { 
+            $('#ventana_cambio').removeClass("carga_proceso"); 
+        });
+        
         $('#time_line_cliente').slimScroll({
             height: '330px'
         });
@@ -220,6 +244,7 @@
               // Al div con id todos le pone como
               // contenido la partial view recibida (data)
               $('#ventana_cambio').html(data);
+              CargarFunciones_Pref_Cliente_Merc();
           }).fail(function (jqXHR, textStatus, errorThrown) {
               alert("Error: " + jqXHR);
 
@@ -291,44 +316,197 @@
 
     });
 
+    function CargarFunciones_Pref_Cliente_Merc()
+    {
+        $('#pref_cliente_div').on('click', function () {
+
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+                CargarFunciones_Lista_Marc_Cat();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+        });
+
+        $('#pref_merc_div').on('click', function () {
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+                CargarFunciones_Lista_Marc_Cat();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+        });
+
+        $('#prioritario_div').on('click', function () {
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+        });
+
+        $('#inventario_div').on('click', function () {
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+        });
+
+    }
+
     function goBack() {
         window.history.back();
     }
 
-    function ObtenerPreferidosPorCliente() {
-
-        document.getElementById("ventana_cambio").innerHTML = '<div class="row"> <div class="col-lg-6 col-xs-6"> <div class="box box-widget "> <div class="box-header with-border"> <h3 class="box-title">MARCAS</h3> </div> <div class="box-body"> <div id="marcas_div" class="row"> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-yellow"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Marcas/Audi.png" alt="Audi"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">AUDI</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li id="prueba_1"><a href="javascript:{}">Inventario <span class="pull-right badge bg-aqua-active">2</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">60%</span></a></li> </ul> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-yellow"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Marcas/Chevrolet.png" alt="Audi"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">CHEVROLET</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">4</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">40%</span></a></li> </ul> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-yellow"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Marcas/Ford.png" alt="Ford"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">FORD</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">6</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">70%</span></a></li> </ul> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-yellow"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Marcas/Toyota.png" alt="Toyota"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">TOYOTA</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">1</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">56%</span></a></li> </ul> </div> </div> </div> </div> </div> </div> </div> <div class="col-lg-6 col-xs-6"> <div class="box box-widget"> <div class="box-header with-border"> <h3 class="box-title">CATEGORIAS</h3> <!-- /.box-tools --> </div> <!-- /.box-header --> <div class="box-body"> <div id="cat_div" class="row margin"> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-aqua"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Clasificacion/Convertible.png" alt="Convertible"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">CONVERTIBLE</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">1</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">21%</span></a></li> </ul> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-aqua"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Clasificacion/Suv.png" alt="Suv"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">SUV</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">5</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">36%</span></a></li> </ul> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <div class="box box-widget widget-user-2"> <div class="widget-user-header bg-aqua"> <div class="widget-user-image"> <img class="img-circle" src="/Images/Clasificacion/Sedan.png" alt="Sedan"> </div> <!-- /.widget-user-image --> <h3 class="widget-user-username">SEDAN</h3> <h5 class="widget-user-desc"></h5> </div> <div class="box-footer no-padding"> <ul class="nav nav-stacked"> <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">7</span></a></li> <li><a href="#">Preferencia <span class="pull-right badge bg-green">93%</span></a></li> </ul> </div> </div> </div> </div> </div> <!-- /.box-body --> </div> <!-- /.box --> </div> </div>';
-
+    function CargarFunciones_Lista_Marc_Cat() {
         $('#marcas_div').slimScroll({
             height: '450px'
         });
         $('#cat_div').slimScroll({
             height: '450px'
         });
-        $('#prueba_1').click(function () {
-            ObtenerListaVehiculos();
 
+        $('#cat_div').on('click', 'a[data-url]', function () {
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+                CargarFunciones_Lista_Vehiculos();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
         });
+
+        $('#marcas_div').on('click', 'a[data-url]', function () {
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+                CargarFunciones_Lista_Vehiculos();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+        });
+
     }
 
-    function ObtenerListaVehiculos() {
-        document.getElementById("ventana_cambio").innerHTML = '<div class="row"> <div class="col-lg-12 col-xs-12"> <div class="box box-widget "> <div class="box-header with-border"> <h3 class="box-title">VEHICULOS EN INVENTARIO - CATEGORIA SEDAN</h3> </div> <div class="box-body"> <div id="vehiculos_div" class="row"> <div class="col-lg-4 col-xs-4"> <!-- Widget: user widget style 1 --> <div class="box box-widget widget-user"> <!-- Add the bg color to the header using any of the bg-* classes --> <div class="widget-user-header bg-aqua-active"> <h3 class="widget-user-username">C-Class C63 AMG Sedan 4d - Cod. 32</h3> <h5 class="widget-user-desc">Mercedes-benz - 2014</h5> </div> <div id="prueba_2" class="widget-user-image"> <img class="img-circle" src="/Images/Modelos/1Series/2012/1Series_128i_Coupe_2d.png" alt="C-Class_32"> </div> <div class="box-footer"> <div class="row"> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">32.365 <sup style="font-size: 8px">USD</sup> </h5> <span class="description-text"><i class="fa fa-money"></i> </span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">1.235 <sup style="font-size: 8px">KM</sup></h5> <span class="description-text"><i class="fa fa-tachometer"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4"> <div class="description-block"> <h5 class="description-header">5 <sup style="font-size: 8px">DIAS</sup></h5> <span class="description-text"><i class="fa fa-calendar"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> </div> <!-- /.row --> <!-- /.row --> </div> </div> <!-- /.widget-user --> </div> <div class="col-lg-4 col-xs-4"> <!-- Widget: user widget style 1 --> <div class="box box-widget widget-user"> <!-- Add the bg color to the header using any of the bg-* classes --> <div class="widget-user-header bg-aqua-active"> <h3 class="widget-user-username">Camry LE Sedan 4d - Cod. 49</h3> <h5 class="widget-user-desc">Toyota - 2017</h5> </div> <div class="widget-user-image"> <img class="img-circle" src="/Images/Modelos/Camry/2017/Camry_LE_Sedan_4d.png" alt="Mustang_32"> </div> <div class="box-footer"> <div class="row"> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">12.365 <sup style="font-size: 8px">USD</sup> </h5> <span class="description-text"><i class="fa fa-money"></i> </span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">2.353 <sup style="font-size: 8px">KM</sup></h5> <span class="description-text"><i class="fa fa-tachometer"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4"> <div class="description-block"> <h5 class="description-header">12 <sup style="font-size: 8px">DIAS</sup></h5> <span class="description-text"><i class="fa fa-calendar"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> </div> <!-- /.row --> <!-- /.row --> </div> </div> <!-- /.widget-user --> </div> <div class="col-lg-4 col-xs-4"> <!-- Widget: user widget style 1 --> <div class="box box-widget widget-user"> <!-- Add the bg color to the header using any of the bg-* classes --> <div class="widget-user-header bg-aqua-active"> <h3 class="widget-user-username">Optima LX Sedan 4d - Cod. 58</h3> <h5 class="widget-user-desc">KIA - 2015</h5> </div> <div class="widget-user-image"> <img class="img-circle" src="/Images/Modelos/Optima/2015/Optima_LX_Sedan_4d.png" alt="Mustang_32"> </div> <div class="box-footer"> <div class="row"> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">9.365 <sup style="font-size: 8px">USD</sup> </h5> <span class="description-text"><i class="fa fa-money"></i> </span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">2.565 <sup style="font-size: 8px">KM</sup></h5> <span class="description-text"><i class="fa fa-tachometer"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4"> <div class="description-block"> <h5 class="description-header">10 <sup style="font-size: 8px">DIAS</sup></h5> <span class="description-text"><i class="fa fa-calendar"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> </div> <!-- /.row --> <!-- /.row --> </div> </div> <!-- /.widget-user --> </div> <div class="col-lg-4 col-xs-4"> <!-- Widget: user widget style 1 --> <div class="box box-widget widget-user"> <!-- Add the bg color to the header using any of the bg-* classes --> <div class="widget-user-header bg-aqua-active"> <h3 class="widget-user-username">A6 3.2 Sedan 4d - Cod. 42</h3> <h5 class="widget-user-desc">Audi - 2015</h5> </div> <div class="widget-user-image"> <img class="img-circle" src="/Images/Modelos/A6/2011/A6_3.2_Sedan_4d.png" alt="Mustang_32"> </div> <div class="box-footer"> <div class="row"> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">10.365 <sup style="font-size: 8px">USD</sup> </h5> <span class="description-text"><i class="fa fa-money"></i> </span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4 border-right"> <div class="description-block"> <h5 class="description-header">974 <sup style="font-size: 8px">KM</sup></h5> <span class="description-text"><i class="fa fa-tachometer"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> <div class="col-sm-4"> <div class="description-block"> <h5 class="description-header">21 <sup style="font-size: 8px">DIAS</sup></h5> <span class="description-text"><i class="fa fa-calendar"></i></span> </div> <!-- /.description-block --> </div> <!-- /.col --> </div> <!-- /.row --> <!-- /.row --> </div> </div> <!-- /.widget-user --> </div> </div> </div> </div> </div> </div>';
+    function CargarFunciones_Lista_Vehiculos() {
 
         $('#vehiculos_div').slimScroll({
             height: '470px'
         });
-        $('#prueba_2').click(function () {
-            ObtenerVehiculoDetalles();
 
+        $('#vehiculos_div').on('click', 'a[data-url]', function () {
+
+            var dataUrl = $(this).data('url');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+                CargarFunciones_Vehiculos_Detalles();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
         });
+
 
     }
 
-    function ObtenerVehiculoDetalles(){
-        document.getElementById("ventana_cambio").innerHTML = '<div class="row margin"> <div class="col-lg-12 col-xs-12"> <h2> Camry LE Sedan 4d <small>Toyota</small> </h2> <div class="row"> <div class="col-lg-4 col-xs-4"> <div class="box box-success"> <div class="box-body chat" id="chat-box"> <img class="img-responsive" style="height:300px; width :100%" src="/Images/Modelos/Camry/2017/Camry_LE_Sedan_4d.png" /> </div> </div> </div> <div class="col-lg-8 col-xs-8 text-center"> <div class="row margin"> <div class="box box-success"> <div class="box-header"> <h3 class="box-title">Datos del Vehiculo</h3> </div> <div class="box-body chat" id="chat-box"> <div class="col-lg-1 col-xs-1 text-center"> </div> <div class="col-lg-5 col-xs-5"> <div class="form-group"> <label>Valor de Venta</label> <input type="text" class="form-control" id="exampleInputEmail1" placeholder="Ingrese el Valor..."> </div> <div class="form-group"> <label>Financista</label> <select id="financista" class="form-control select2" style="width: 100%;"> <option selected="selected">Julian Martinez</option> <option>Alexis Marcado</option> <option>Monica Pastor</option> </select> </div> <div class="form-group"> <label>Comentario</label> <input type="text" class="form-control" placeholder="Comente..."> </div> </div> <div class="col-lg-6 col-xs-6"> <div id="estadisticas_carro" class="row margin"> <div class="col-lg-12 col-xs-12"> <!-- small box --> <div class="small-box bg-lime"> <div class="inner"> <h3>61 <sup style="font-size: 20px">%</sup></h3> <p>Preferencia</p> </div> <div class="icon"> <i class="ion ion-ios-person"></i> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <!-- small box --> <div class="small-box bg-aqua"> <div class="inner"> <h3>283 <sup style="font-size: 20px">KM</sup></h3> <p>Kilometraje</p> </div> <div class="icon"> <i class="ion ion-ios-speedometer"></i> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <!-- small box --> <div class="small-box bg-yellow"> <div class="inner"> <h3>12 <sup style="font-size: 20px">DIAS</sup></h3> <p>Tiempo en Inventario</p> </div> <div class="icon"> <i class="ion ion-ios-calendar"></i> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <!-- small box --> <div class="small-box bg-green"> <div class="inner"> <h3>1.354 <sup style="font-size: 20px">USD</sup></h3> <p>Comision</p> </div> <div class="icon"> <i class="ion ion-cash"></i> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <!-- small box --> <div class="small-box bg-light-blue"> <div class="inner"> <h3> Excelente</h3> <p>Estado</p> </div> <div class="icon"> <i class="ion ion-levels"></i> </div> </div> </div> <div class="col-lg-12 col-xs-12"> <!-- small box --> <div class="small-box bg-gray"> <div class="inner"> <h3>Azul</h3> <p>Color</p> </div> <div class="icon"> <i class="ion ion-android-color-palette"></i> </div> </div> </div> </div> </div> </div> </div> </div> </div> </div> <div class="row"> <div class="col-lg-12 col-xs-12 text-center"> <div class="col-lg-3 col-xs-3 text-center"> </div> <div class="col-lg-6 col-xs-6"> </div> <div class="col-lg-3 col-xs-3 text-center"> </div> </div> </div> <div class="row"> <div class="col-lg-12 col-xs-12 text-center"> <div class="col-lg-2 col-xs-2 text-center"> </div> <div class="col-lg-8 col-xs-8"> <div class="row col-lg-6 col-xs-6"> <div class="small-box bg-green"> <div class="inner"> <h3 id="MontoMinimo">10.626<sup style="font-size: 20px">USD</sup></h3> <p>Valor Minimo</p> </div> </div> </div> <div class="row col-lg-6 col-xs-6"> <div class="small-box bg-red"> <div class="inner"> <h3 id="MontoMaximo">18.654<sup style="font-size: 20px">USD</sup></h3> <p>Valor Maximo</p> </div> </div> </div> </div> <div class="col-lg-2 col-xs-2 text-center"> </div> </div> </div> </div> </div>';
+    function CargarFunciones_Vehiculos_Detalles() {
+
+
         $('#estadisticas_carro').slimScroll({
             height: '250px'
         });
+
+        $("#id_Financista").select2({
+            placeholder: "Seleccione un Agente"
+        });
+
+        $('#Valor_Venta').removeClass('single-line');
+        $('#Valor_Venta').removeClass('text-box').addClass('form-control');
+        $('#Comentario').removeClass('single-line');
+        $('#Comentario').removeClass('text-box').addClass('form-control');
+
+        $("#Valor_Venta").on('input', function () {
+            var LocalidadOptions = {};
+            LocalidadOptions.url = "/Venta/CalcularComision";
+            LocalidadOptions.type = "POST";
+            LocalidadOptions.data = JSON.stringify({ monto: document.getElementById("Valor_Venta").value , id_usuario: @user.id_Usuario });
+            LocalidadOptions.datatype = "json";
+            LocalidadOptions.contentType = "application/json";
+            LocalidadOptions.success = function (data) {
+                if (data != undefined) {
+
+                    var minimo = parseFloat(data, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+                    minimo = minimo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
+                    minimo += '<sup style="font-size: 20px">USD</sup>';
+
+                    document.getElementById("comision_ganar").innerHTML = minimo;
+
+                } else {
+                    alert("Error al calcular el Monto, Intente mas Tarde " + data)
+                }
+
+            };
+            LocalidadOptions.error = function () { alert("Error al calcular el Monto."); };
+            $.ajax(LocalidadOptions);
+
+
+
+        });
+
+
     }
 
 

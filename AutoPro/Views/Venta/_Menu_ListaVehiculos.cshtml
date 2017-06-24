@@ -1,0 +1,74 @@
+﻿@using AutoPro.Models
+@model Venta_VehiculoViewModels
+
+
+<div class="cargando"></div>
+<div class="col-lg-12 col-xs-12">
+    <div class="box box-widget ">
+        <div class="box-header with-border">
+            <h3 class="box-title">@Model.Titulo</h3>
+        </div>
+        <div class="box-body">
+            <div id="vehiculos_div" class="row">
+                @foreach (var item_auto in Model.Lista_Vehiculos)
+                {
+                    <a href="javascript:{}" data-url="/Venta/Menu_DetallesVehiculo/@item_auto.Vehiculo.id_vehiculo?id_cliente=@Model.ID_Cliente">
+                        <div class="col-lg-4 col-xs-4">
+                            <!-- Widget: user widget style 1 -->
+                            <div class="box box-widget widget-user">
+                                <!-- Add the bg color to the header using any of the bg-* classes -->
+                                <div class="widget-user-header bg-aqua-active">
+                                    <h3 class="widget-user-username">@item_auto.Vehiculo.modelo.modelo1 @item_auto.Vehiculo.modelo.nombre - Cod. @item_auto.Vehiculo.id_vehiculo</h3>
+                                    <h5 class="widget-user-desc">@item_auto.Vehiculo.modelo.marca.nombre - @item_auto.Vehiculo.modelo.año</h5>
+                                </div>
+                                <div class="widget-user-image">
+                                    <img class="img-circle" src="@item_auto.Imagen" alt="@item_auto.Vehiculo.modelo.nombre">
+                                </div>
+                                <div class="box-footer">
+                                    <div class="row">
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">@item_auto.Monto_Venta.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h5>
+                                                <span class="description-text"><i class="fa fa-money"></i> </span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4 border-right">
+                                            <div class="description-block">
+                                                <h5 class="description-header">@item_auto.Vehiculo.kilometraje.ToString("#,##0") <sup style='font-size: 8px'>KM</sup></h5>
+                                                <span class="description-text"><i class="fa fa-tachometer"></i></span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                        <div class="col-sm-4">
+                                            <div class="description-block">
+                                                <h5 class="description-header">@item_auto.Cant_Dias_Inventario <sup style='font-size: 8px'>DIAS</sup></h5>
+                                                <span class="description-text"><i class="fa fa-calendar"></i></span>
+                                            </div>
+                                            <!-- /.description-block -->
+                                        </div>
+                                        <!-- /.col -->
+                                    </div>
+                                    <!-- /.row -->
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                            <!-- /.widget-user -->
+                        </div>
+
+
+                    </a>
+                }
+
+            </div>
+
+
+
+
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,261 @@
+﻿@using AutoPro.Models
+@model Marcas_CategoriaViewModels
+
+<div class="cargando"></div>
+@if ((Model.Lista_Categoria.Count() > 0) && (Model.Lista_Marcas.Count() > 0))
+{
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="box box-widget ">
+                <div class="box-header with-border">
+                    <h3 class="box-title">MARCAS</h3>
+                </div>
+                <div class="box-body">
+                    <div id="marcas_div" class="row">
+                        @foreach (var item in Model.Lista_Marcas)
+                        {
+                            <a data-url="/Venta/Menu_ListaVehiculos/@item.Marca.id_marca?tipo=1&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                <div class="col-md-12">
+                                    <div class="box box-widget widget-user-2">
+                                        <div class="widget-user-header bg-yellow">
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="@item.Marca.logo" alt="@item.Marca.nombre">
+                                            </div>
+                                            <!-- /.widget-user-image -->
+                                            <h3 class="widget-user-username">@item.Marca.nombre</h3>
+                                            <h5 class="widget-user-desc"></h5>
+                                        </div>
+                                        <div class="box-footer no-padding">
+                                            <ul class="nav nav-stacked">
+                                                <li><a href="javascript:{}">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                <li><a href="javascript:{}">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                            </a>
+
+
+                        }
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <h3 class="box-title">CATEGORIAS</h3>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id="cat_div" class="row margin">
+                        @foreach (var item in Model.Lista_Categoria)
+                        {
+                            <a data-url="/Venta/Menu_ListaVehiculos/@item.Categoria.id_clasificacion?tipo=2&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                <div class="col-md-12">
+                                    <div class="box box-widget widget-user-2">
+                                        <div class="widget-user-header bg-aqua">
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="@item.Categoria.logo" alt="@item.Categoria.descripcion">
+                                            </div>
+                                            <!-- /.widget-user-image -->
+                                            <h3 class="widget-user-username">@item.Categoria.descripcion</h3>
+                                            <h5 class="widget-user-desc"></h5>
+                                        </div>
+                                        <div class="box-footer no-padding">
+                                            <ul class="nav nav-stacked">
+                                                <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                <li><a href="#">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+
+                        }
+
+
+
+                    </div>
+
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+
+    </div>
+
+}
+else if (Model.Lista_Marcas.Count() > 0)
+{
+    <div class="row">
+
+        <div class="col-md-3">
+
+            <!-- /.box -->
+        </div>
+
+        <div class="col-md-6">
+            <div class="box box-widget ">
+                <div class="box-header with-border">
+                    <h3 class="box-title">MARCAS</h3>
+                </div>
+                <div class="box-body">
+                    <div id="marcas_div" class="row">
+                        @foreach (var item in Model.Lista_Marcas)
+                        {
+                            <a data-url="/Venta/Menu_ListaVehiculos/@item.Marca.id_marca?tipo=1&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                <div class="col-md-12">
+                                    <div class="box box-widget widget-user-2">
+                                        <div class="widget-user-header bg-yellow">
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="@item.Marca.logo" alt="@item.Marca.nombre">
+                                            </div>
+                                            <!-- /.widget-user-image -->
+                                            <h3 class="widget-user-username">@item.Marca.nombre</h3>
+                                            <h5 class="widget-user-desc"></h5>
+                                        </div>
+                                        <div class="box-footer no-padding">
+                                            <ul class="nav nav-stacked">
+                                                <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                <li><a href="#">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+
+                        }
+                    </div>
+
+
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="col-md-3">
+
+            <!-- /.box -->
+        </div>
+
+    </div>
+
+}
+else if (Model.Lista_Categoria.Count() > 0)
+{
+    <div class="row">
+
+        <div class="col-md-3">
+
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <h3 class="box-title">CATEGORIAS</h3>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div id="cat_div" class="row margin">
+                        @foreach (var item in Model.Lista_Categoria)
+                        {
+                            <a data-url="/Venta/Menu_ListaVehiculos/@item.Categoria.id_clasificacion?tipo=2&id_cliente=@Model.id_cliente" href="javascript:{}">
+                                <div class="col-md-12">
+                                    <div class="box box-widget widget-user-2">
+                                        <div class="widget-user-header bg-aqua">
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="@item.Categoria.logo" alt="@item.Categoria.descripcion">
+                                            </div>
+                                            <!-- /.widget-user-image -->
+                                            <h3 class="widget-user-username">@item.Categoria.descripcion</h3>
+                                            <h5 class="widget-user-desc"></h5>
+                                        </div>
+                                        <div class="box-footer no-padding">
+                                            <ul class="nav nav-stacked">
+                                                <li><a href="#">Inventario <span class="pull-right badge bg-aqua-active">@item.Nro_Inventario</span></a></li>
+                                                <li><a href="#">Preferencia <span class="pull-right badge bg-green">@item.Nivel_Preferencia%</span></a></li>
+
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+
+
+                        }
+
+
+
+                    </div>
+
+
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+
+        <div class="col-md-3">
+            <!-- /.box -->
+        </div>
+
+    </div>
+
+}
+else
+{
+    <div class="row">
+
+        <div class="col-md-3">
+
+        </div>
+
+
+        <div class="col-md-6">
+            <h1>No se posee estadisticas sucientes</h1>
+            <!-- /.box -->
+        </div>
+
+        <div class="col-md-3">
+            <!-- /.box -->
+        </div>
+
+    </div>
+
+
+}
+

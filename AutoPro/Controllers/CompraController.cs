@@ -302,15 +302,14 @@ namespace AutoPro.Controllers
                 modelo.Valor_Calculado_Maximo = ConsultarValorMaximoModelo(modelo.id,id_concesionario_session,modelo.Estado_Vehiculo);
                 modelo.Valor_Calculado_Minimo = ConsultarValorMinimoModelo(modelo.id, id_concesionario_session, modelo.Estado_Vehiculo);
                 
-                TempData["Auto"] = modelo;
-                return RedirectToAction("AdquirirVehiculo", "Compra");
+                return RedirectToAction("AdquirirVehiculo", "Compra", modelo);
 
             }
 
         }
 
         [Authorize]
-        public ActionResult AdquirirVehiculo()
+        public ActionResult AdquirirVehiculo(ModeloDestallesViewModels modelo)
         {
             int id_concesionario_session = Convert.ToInt32(this.Session["Concesionario"]);
             
@@ -318,7 +317,7 @@ namespace AutoPro.Controllers
             {
                 return RedirectToAction("Home", "Index");
             }
-            ModeloDestallesViewModels modelo = (ModeloDestallesViewModels)TempData["Auto"];
+            //ModeloDestallesViewModels modelo = (ModeloDestallesViewModels)TempData["Auto"];
             if(modelo == null)
             {
                 return RedirectToAction("BusquedaPorModelo", "Compra");
@@ -480,7 +479,7 @@ namespace AutoPro.Controllers
                  MensajeViewModels m1 = new MensajeViewModels
                  {
                      Titulo = "Transacción Completada",
-                     Cuerpo = "La operacion Nro. " + op_add_transaccion.id_compra + " se a completado con exito. Se ha agregado un Vehiculo: " + model.Nombre + " - " + model.Año + ", Color: " + op_add_vehiculo.color + " y Estado: " + model.Estado_Vehiculo + "% en el Inventario.",
+                     Cuerpo = "La operacion Nro. " + op_add_transaccion.id_compra + " se a completado con exito. Se ha agregado un Vehiculo: " + model.Nombre + " - " + model.Año + ", Color: " + op_add_vehiculo.color + " y Estado: " + model.Estado_Vehiculo + "% en la lista de compra.",
                      Tipo_Modal = "modal-success"
                  };
 

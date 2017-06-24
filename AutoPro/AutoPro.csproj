@@ -1237,6 +1237,9 @@
     <Content Include="Images\Clasificacion\Van.png" />
     <Content Include="Images\Clasificacion\Wagon.png" />
     <Content Include="Images\imagen_user_160.png" />
+    <Content Include="Images\Loading\car.loading.gif" />
+    <Content Include="Images\Loading\loading.gif" />
+    <Content Include="Images\Loading\loading.min.gif" />
     <Content Include="Images\Marcas\Abarth.png" />
     <Content Include="Images\Marcas\Audi.png" />
     <Content Include="Images\Marcas\Bentley.png" />
@@ -1384,6 +1387,9 @@
     <Content Include="Views\Compra\BusquedaPorMarca.cshtml" />
     <Content Include="Views\Compra\BusquedaPorCategoria.cshtml" />
     <Content Include="Views\Venta\_PreventaMenuInicial.cshtml" />
+    <Content Include="Views\Venta\_Menu_Preferidos.cshtml" />
+    <Content Include="Views\Venta\_Menu_ListaVehiculos.cshtml" />
+    <Content Include="Views\Venta\_Menu_DetallesVehiculo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
