@@ -13,7 +13,7 @@
                 @foreach (var item_auto in Model.Lista_Vehiculos)
                 {
                     <a href="javascript:{}" data-url="/Venta/Menu_DetallesVehiculo/@item_auto.Vehiculo.id_vehiculo?id_cliente=@Model.ID_Cliente">
-                        <div class="col-lg-4 col-xs-4">
+                        <div class="col-lg-4 col-xs-12 col-md-4">
                             <!-- Widget: user widget style 1 -->
                             <div class="box box-widget widget-user">
                                 <!-- Add the bg color to the header using any of the bg-* classes -->
@@ -24,36 +24,40 @@
                                 <div class="widget-user-image">
                                     <img class="img-circle" src="@item_auto.Imagen" alt="@item_auto.Vehiculo.modelo.nombre">
                                 </div>
-                                <div class="box-footer">
-                                    <div class="row">
-                                        <div class="col-sm-4 border-right">
-                                            <div class="description-block">
-                                                <h5 class="description-header">@item_auto.Monto_Venta.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h5>
-                                                <span class="description-text"><i class="fa fa-money"></i> </span>
+                                <font color="black">
+                                    <div class="box-footer">
+                                        <div class="row">
+                                            <div class="col-sm-4 border-right">
+                                                <div class="description-block">
+                                                    <h5 class="description-header">@item_auto.Monto_Venta.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h5>
+                                                    <span class="description-text"><i class="fa fa-money"></i> </span>
+                                                </div>
+                                                <!-- /.description-block -->
                                             </div>
-                                            <!-- /.description-block -->
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col-sm-4 border-right">
-                                            <div class="description-block">
-                                                <h5 class="description-header">@item_auto.Vehiculo.kilometraje.ToString("#,##0") <sup style='font-size: 8px'>KM</sup></h5>
-                                                <span class="description-text"><i class="fa fa-tachometer"></i></span>
+                                            <!-- /.col -->
+                                            <div class="col-sm-4 border-right">
+                                                <div class="description-block">
+                                                    <h5 class="description-header">@item_auto.Vehiculo.kilometraje.ToString("#,##0") <sup style='font-size: 8px'>KM</sup></h5>
+                                                    <span class="description-text"><i class="fa fa-tachometer"></i></span>
+                                                </div>
+                                                <!-- /.description-block -->
                                             </div>
-                                            <!-- /.description-block -->
-                                        </div>
-                                        <!-- /.col -->
-                                        <div class="col-sm-4">
-                                            <div class="description-block">
-                                                <h5 class="description-header">@item_auto.Cant_Dias_Inventario <sup style='font-size: 8px'>DIAS</sup></h5>
-                                                <span class="description-text"><i class="fa fa-calendar"></i></span>
+                                            <!-- /.col -->
+                                            <div class="col-sm-4">
+                                                <div class="description-block">
+                                                    <h5 class="description-header">@item_auto.Cant_Dias_Inventario <sup style='font-size: 8px'>DIAS</sup></h5>
+                                                    <span class="description-text"><i class="fa fa-calendar"></i></span>
+                                                </div>
+                                                <!-- /.description-block -->
                                             </div>
-                                            <!-- /.description-block -->
+                                            <!-- /.col -->
                                         </div>
-                                        <!-- /.col -->
+                                        <!-- /.row -->
+                                        <!-- /.row -->
                                     </div>
-                                    <!-- /.row -->
-                                    <!-- /.row -->
-                                </div>
+
+                                </font>
+    
                             </div>
                             <!-- /.widget-user -->
                         </div>

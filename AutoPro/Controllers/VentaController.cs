@@ -34,12 +34,52 @@ namespace AutoPro.Controllers
         [Authorize]
         public ActionResult Preventa()
         {
-            ComprarVehiculoViewModels modelo = new ComprarVehiculoViewModels();
+            PreventaViewModels modelo = new PreventaViewModels();
             UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;
+            List<TransaccionesVentaViewModels> lista_trans = new List<TransaccionesVentaViewModels>();
             usuario.id_T_Preventa = 0;
             this.Session["User"] = usuario;
+            var id_cliente = "1";
+
+            var i_cliente = (from l_clientes in autodb.cliente where l_clientes.id_cliente == id_cliente select new { l_clientes.nombre, l_clientes.apellido, l_clientes.telefono, l_clientes.correo_electronico, direcion = l_clientes.direccion.descripcion + ", " + l_clientes.direccion.ciudad.nombre }).First();
+            ClienteViewModels c1 = new ClienteViewModels
+            {
+                Direccion = i_cliente.direcion,
+                Email = i_cliente.correo_electronico,
+                Nombre_Completo = i_cliente.nombre + " " + i_cliente.apellido,
+                Nro_Telefono = i_cliente.telefono
+            };
+
+            var trans = (from l_trans in autodb.transaccion_venta where l_trans.fk_cliente == id_cliente && l_trans.fk_concesionario == usuario.id_Concesionario select new { l_trans.id_venta, l_trans.fecha, l_trans.fk_tipo_venta, l_trans.vehiculo, l_trans.usuario }).Take(10).OrderByDescending(x => x.fecha);
+
+            foreach (var item in trans)
+            {
+                TransaccionesVentaViewModels t1 = new TransaccionesVentaViewModels();
+
+                t1.id = item.id_venta;
+                t1.fecha = item.fecha;
+                t1.Tipo_Transaccion = item.fk_tipo_venta;
+                t1.Lista_Vehiculo = item.vehiculo.ToList();
+                var u = item.usuario;
+                t1.Nombre_Operador = u.nombre + " " + u.apellido;
+                t1.Cant_Vehiculos = item.vehiculo.Count();
+                t1.Cant_Tiempo_Transcurrido = CalcularTiempoFecha(item.fecha);
+                if(item.fk_tipo_venta == 1)
+                {
+                    t1.Mayor_Monto = item.vehiculo.Max(x => x.valor_compra);
+                    t1.Menor_Monto = item.vehiculo.Min(x => x.valor_compra );
+                    t1.Monto_Total = 0;
+                }else{
+                    t1.Mayor_Monto = item.vehiculo.Max(x => x.valor_venta.Value);
+                    t1.Menor_Monto = item.vehiculo.Min(x => x.valor_venta.Value );
+                    t1.Monto_Total = item.vehiculo.Sum(x => x.valor_venta.Value);
+                }
+                lista_trans.Add(t1);
+            }
 
 
+            modelo.Lista_Transacciones = lista_trans;
+            modelo.Cliente = c1;
             return View(modelo);
         }
 
@@ -59,79 +99,52 @@ namespace AutoPro.Controllers
             IQueryable<transaccion_venta> consulta_transacciones = null;
 
             //Preferencia del Cliente
-            if(tipo == 1)
+            if (tipo == 1)
             {
                 consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.fk_cliente == id_cliente select l_tran;
-                
-                
-            }else{
-            //Preferencia del Mercado
-                var c_usuario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == usuario.id_Concesionario select l_concesionario).First();
-                consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.concesionario.direccion.ciudad.estado.id_estado == c_usuario.direccion.ciudad.estado.id_estado select l_tran;
+
+
+            }
+            else
+            {
+                //Preferencia del Mercado
+                var c_usuario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == usuario.id_Concesionario select new { id_estado = l_concesionario.direccion.ciudad.fk_estado }).First();
+                consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.concesionario.direccion.ciudad.estado.id_estado == c_usuario.id_estado select l_tran;
             }
 
             /////////MARCAS ////////
             //Obtener Lista de las Marcas en Inventario
-            var marcas_inventario = inventario.GroupBy(x => x.modelo.marca.id_marca);
+            var marcas_inventario = inventario.GroupBy(x => x.modelo.fk_marca);
             //Obtener Lista de las Marcar preferidas por el cliente en general
-            var marcas_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(x => x.modelo.marca.id_marca);
+            var marcas_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(y => y.modelo.fk_marca);
 
             if (marcas_preferidas_cliente.Count() > 0)
             {
                 //Obtener las Marcas que entasn en inventario y que el cliente prefiere
-                var marcas_inventario_preferidas_cliente = marcas_inventario.Where(x => marcas_preferidas_cliente.Select(y => y.Key).Contains(x.Key));
-                IQueryable<IGrouping<int,vehiculo>> marca_pref_cliente_preventa = null;
-                IQueryable<IGrouping<int, vehiculo>> marca_pref_cliente_venta = null;
+                var marcas_inventario_preferidas_cliente = marcas_preferidas_cliente.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
+
                 /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
-                var transaccion_vehiculos_preventa = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 1);
-                var cant_veh_preventa_total = 1;
-                if (transaccion_vehiculos_preventa.Count() > 0)
+                var cant_veh_preventa_total = marcas_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 1)));
+                if (cant_veh_preventa_total == 0)
                 {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en preventa
-                    var vehiculos_consultados_cliente_preventa = transaccion_vehiculos_preventa.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en preventa, por marca
-                    marca_pref_cliente_preventa = vehiculos_consultados_cliente_preventa.GroupBy(x => x.modelo.marca.id_marca);
-                    //Obtener Lista de marcas en inventario que el cliente prefiere de acuerdo a la preventa
-                    var marca_inv_pref_preventa = marca_pref_cliente_preventa.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_preventa_total = marca_inv_pref_preventa.Sum(x => x.Count());
-                    
+                    cant_veh_preventa_total = 1;
+                }
+                var cant_veh_venta_total = marcas_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 2)));
+                if (cant_veh_venta_total == 0)
+                {
+                    cant_veh_venta_total = 1;
                 }
 
-                /////////////Estadisticas de Preventa////////////////// Se le asigna el 75% de la importancia en el calculo
-                var transaccion_vehiculos_venta = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 2);
-                var cant_veh_venta_total = 1;
-                if (transaccion_vehiculos_venta.Count() > 0)
-                {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en venta
-                    var vehiculos_consultados_cliente_venta = transaccion_vehiculos_venta.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en venta, por marca
-                    marca_pref_cliente_venta = vehiculos_consultados_cliente_venta.GroupBy(x => x.modelo.marca.id_marca);
-                    //Obtener Lista de marcas en inventario que el cliente prefiere de acuerdo a la preventa
-                    var marca_inv_pref_venta = marca_pref_cliente_venta.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_venta_total = marca_inv_pref_venta.Sum(x => x.Count());
-                }
-
-                
                 foreach (var item_marca in marcas_inventario_preferidas_cliente)
                 {
-                    var cant_veh_preventa_marca = 0;
-                    if (marca_pref_cliente_preventa.Where(x => x.Key == item_marca.Key).Count() > 0)
-                    {
-                        cant_veh_preventa_marca = marca_pref_cliente_preventa.Where(x => x.Key == item_marca.Key).First().Count();
-                    }
-                    var cant_veh_venta_marca = 0;
-                    if (marca_pref_cliente_venta.Where(x => x.Key == item_marca.Key).Count() > 0)
-                    {
-                        cant_veh_venta_marca = marca_pref_cliente_venta.Where(x => x.Key == item_marca.Key).First().Count();
-                    }
-                    
-                    
+
+                    var cant_veh_preventa_marca = item_marca.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 1));
+                    var cant_veh_venta_marca = item_marca.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 2));
+
                     Venta_MarcasViewModels i_marca = new Venta_MarcasViewModels
                     {
-                        Marca = inventario.Where(x => x.modelo.marca.id_marca == item_marca.Key).First().modelo.marca,
-                        Nro_Inventario = item_marca.Count(),
+                        Marca = item_marca.First().modelo.marca,
+                        Nro_Inventario = inventario.Count(x => x.modelo.fk_marca == item_marca.Key),
                         Nivel_Preferencia = CalcularPreferenciaCliente_Ambos(cant_veh_preventa_marca, cant_veh_preventa_total, cant_veh_venta_marca, cant_veh_venta_total)
                     };
                     l_marcas.Add(i_marca);
@@ -142,43 +155,23 @@ namespace AutoPro.Controllers
             //Obtener Lista de las Cat en Inventario
             var categoria_inventario = inventario.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
             //Obtener Lista de las Cat preferidas por el cliente en general
+
             var categoria_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
             if (categoria_preferidas_cliente.Count() > 0)
             {
                 //Obtener las Cat que entasn en inventario y que el cliente prefiere
-                var categoria_inventario_preferidas_cliente = categoria_inventario.Where(x => categoria_preferidas_cliente.Select(y => y.Key).Contains(x.Key));
-                IQueryable<IGrouping<byte, vehiculo>> categoria_pref_cliente_preventa = null;
-                IQueryable<IGrouping<byte, vehiculo>> categoria_pref_cliente_venta = null;
-                /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
-                var transaccion_vehiculos_preventa = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 1);
-                var cant_veh_preventa_total = 1;
-                if (transaccion_vehiculos_preventa.Count() > 0)
-                {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en preventa
-                    var vehiculos_consultados_cliente_preventa = transaccion_vehiculos_preventa.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en preventa, por categoria
-                    categoria_pref_cliente_preventa = vehiculos_consultados_cliente_preventa.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
-                    //Obtener Lista de categoria en inventario que el cliente prefiere de acuerdo a la preventa
-                    var categoria_inv_pref_preventa = categoria_pref_cliente_preventa.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_preventa_total = categoria_inv_pref_preventa.Sum(x => x.Count());
-                    
-                }
+                var categoria_inventario_preferidas_cliente = categoria_preferidas_cliente.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
 
-                /////////////Estadisticas de Preventa////////////////// Se le asigna el 75% de la importancia en el calculo
-                var transaccion_vehiculos_venta = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 2);
-                var cant_veh_venta_total = 1;
-                if (transaccion_vehiculos_venta.Count() > 0)
+                /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
+                var cant_veh_preventa_total = categoria_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 1)));
+                if (cant_veh_preventa_total == 0)
                 {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en venta
-                    var vehiculos_consultados_cliente_venta = transaccion_vehiculos_venta.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en venta, por categoria
-                    categoria_pref_cliente_venta = vehiculos_consultados_cliente_venta.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
-                    //Obtener Lista de categoria en inventario que el cliente prefiere de acuerdo a la preventa
-                    var categoria_inv_pref_venta = categoria_pref_cliente_venta.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_venta_total = categoria_inv_pref_venta.Sum(x => x.Count());
-                    
+                    cant_veh_preventa_total = 1;
+                }
+                var cant_veh_venta_total = categoria_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 2)));
+                if (cant_veh_venta_total == 0)
+                {
+                    cant_veh_venta_total = 1;
                 }
 
 
@@ -186,23 +179,14 @@ namespace AutoPro.Controllers
                 foreach (var item_cat in categoria_inventario_preferidas_cliente)
                 {
                     //Calcular cantidad de vehiculos en preventas perteneciente a la marca
-                    var cant_veh_preventa_categoria = 0;
-                    if (categoria_pref_cliente_preventa.Where(x => x.Key == item_cat.Key).Count() > 0)
-                    {
-                        cant_veh_preventa_categoria = categoria_pref_cliente_preventa.Where(x => x.Key == item_cat.Key).First().Count();
-                    }
-                    //Calcular cantidad de vehiculos en preventas perteneciente a la marca
-                    var cant_veh_venta_categoria = 0;
-                    if (categoria_pref_cliente_venta.Where(x => x.Key == item_cat.Key).Count() > 0)
-                    {
-                        cant_veh_venta_categoria = categoria_pref_cliente_venta.Where(x => x.Key == item_cat.Key).First().Count();
-                    }
-                    
-                    
+                    var cant_veh_preventa_categoria = item_cat.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 1));
+                    var cant_veh_venta_categoria = item_cat.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 2));
+
+
                     Venta_CategoriaViewModels i_cat = new Venta_CategoriaViewModels
                     {
-                        Categoria = inventario.Where(x => x.modelo.modelo_clasificacion.id_clasificacion == item_cat.Key).First().modelo.modelo_clasificacion,
-                        Nro_Inventario = item_cat.Count(),
+                        Categoria = item_cat.First().modelo.modelo_clasificacion,
+                        Nro_Inventario = inventario.Count(x => x.modelo.fk_clasificacion == item_cat.Key),
                         Nivel_Preferencia = CalcularPreferenciaCliente_Ambos(cant_veh_preventa_categoria, cant_veh_preventa_total, cant_veh_venta_categoria, cant_veh_venta_total)
                     };
                     l_categoria.Add(i_cat);
@@ -607,72 +591,43 @@ namespace AutoPro.Controllers
             else
             {
                 //Preferencia del Mercado
-                var c_usuario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == usuario.id_Concesionario select l_concesionario).First();
-                consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.concesionario.direccion.ciudad.estado.id_estado == c_usuario.direccion.ciudad.estado.id_estado select l_tran;
+                var c_usuario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == usuario.id_Concesionario select new { id_estado = l_concesionario.direccion.ciudad.fk_estado }).First();
+                consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.concesionario.direccion.ciudad.estado.id_estado == c_usuario.id_estado select l_tran;
             }
 
             /////////MARCAS ////////
             //Obtener Lista de las Marcas en Inventario
-            var marcas_inventario = inventario.GroupBy(x => x.modelo.marca.id_marca);
+            var marcas_inventario = inventario.GroupBy(x => x.modelo.fk_marca);
             //Obtener Lista de las Marcar preferidas por el cliente en general
-            var marcas_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(x => x.modelo.marca.id_marca);
+            var marcas_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(y => y.modelo.fk_marca);
 
             if (marcas_preferidas_cliente.Count() > 0)
             {
                 //Obtener las Marcas que entasn en inventario y que el cliente prefiere
-                var marcas_inventario_preferidas_cliente = marcas_inventario.Where(x => marcas_preferidas_cliente.Select(y => y.Key).Contains(x.Key));
-                IQueryable<IGrouping<int, vehiculo>> marca_pref_cliente_preventa = null;
-                IQueryable<IGrouping<int, vehiculo>> marca_pref_cliente_venta = null;
+                var marcas_inventario_preferidas_cliente = marcas_preferidas_cliente.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
+
                 /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
-                var transaccion_vehiculos_preventa = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 1);
-                var cant_veh_preventa_total = 1;
-                if (transaccion_vehiculos_preventa.Count() > 0)
+                var cant_veh_preventa_total = marcas_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 1)));
+                if (cant_veh_preventa_total == 0)
                 {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en preventa
-                    var vehiculos_consultados_cliente_preventa = transaccion_vehiculos_preventa.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en preventa, por marca
-                    marca_pref_cliente_preventa = vehiculos_consultados_cliente_preventa.GroupBy(x => x.modelo.marca.id_marca);
-                    //Obtener Lista de marcas en inventario que el cliente prefiere de acuerdo a la preventa
-                    var marca_inv_pref_preventa = marca_pref_cliente_preventa.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_preventa_total = marca_inv_pref_preventa.Sum(x => x.Count());
-
+                    cant_veh_preventa_total = 1;
                 }
-
-                /////////////Estadisticas de Preventa////////////////// Se le asigna el 75% de la importancia en el calculo
-                var transaccion_vehiculos_venta = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 2);
-                var cant_veh_venta_total = 1;
-                if (transaccion_vehiculos_venta.Count() > 0)
+                var cant_veh_venta_total = marcas_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 2)));
+                if (cant_veh_venta_total == 0)
                 {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en venta
-                    var vehiculos_consultados_cliente_venta = transaccion_vehiculos_venta.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en venta, por marca
-                    marca_pref_cliente_venta = vehiculos_consultados_cliente_venta.GroupBy(x => x.modelo.marca.id_marca);
-                    //Obtener Lista de marcas en inventario que el cliente prefiere de acuerdo a la preventa
-                    var marca_inv_pref_venta = marca_pref_cliente_venta.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_venta_total = marca_inv_pref_venta.Sum(x => x.Count());
+                    cant_veh_venta_total = 1;
                 }
-
 
                 foreach (var item_marca in marcas_inventario_preferidas_cliente)
                 {
-                    var cant_veh_preventa_marca = 0;
-                    if (marca_pref_cliente_preventa.Where(x => x.Key == item_marca.Key).Count() > 0)
-                    {
-                        cant_veh_preventa_marca = marca_pref_cliente_preventa.Where(x => x.Key == item_marca.Key).First().Count();
-                    }
-                    var cant_veh_venta_marca = 0;
-                    if (marca_pref_cliente_venta.Where(x => x.Key == item_marca.Key).Count() > 0)
-                    {
-                        cant_veh_venta_marca = marca_pref_cliente_venta.Where(x => x.Key == item_marca.Key).First().Count();
-                    }
 
+                    var cant_veh_preventa_marca = item_marca.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 1));
+                    var cant_veh_venta_marca = item_marca.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 2));
 
                     Venta_MarcasViewModels i_marca = new Venta_MarcasViewModels
                     {
-                        Marca = inventario.Where(x => x.modelo.marca.id_marca == item_marca.Key).First().modelo.marca,
-                        Nro_Inventario = item_marca.Count(),
+                        Marca = item_marca.First().modelo.marca,
+                        Nro_Inventario = inventario.Count(x => x.modelo.fk_marca == item_marca.Key),
                         Nivel_Preferencia = CalcularPreferenciaCliente_Ambos(cant_veh_preventa_marca, cant_veh_preventa_total, cant_veh_venta_marca, cant_veh_venta_total)
                     };
                     l_marcas.Add(i_marca);
@@ -683,43 +638,23 @@ namespace AutoPro.Controllers
             //Obtener Lista de las Cat en Inventario
             var categoria_inventario = inventario.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
             //Obtener Lista de las Cat preferidas por el cliente en general
+
             var categoria_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
             if (categoria_preferidas_cliente.Count() > 0)
             {
                 //Obtener las Cat que entasn en inventario y que el cliente prefiere
-                var categoria_inventario_preferidas_cliente = categoria_inventario.Where(x => categoria_preferidas_cliente.Select(y => y.Key).Contains(x.Key));
-                IQueryable<IGrouping<byte, vehiculo>> categoria_pref_cliente_preventa = null;
-                IQueryable<IGrouping<byte, vehiculo>> categoria_pref_cliente_venta = null;
+                var categoria_inventario_preferidas_cliente = categoria_preferidas_cliente.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
+
                 /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
-                var transaccion_vehiculos_preventa = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 1);
-                var cant_veh_preventa_total = 1;
-                if (transaccion_vehiculos_preventa.Count() > 0)
+                var cant_veh_preventa_total = categoria_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 1)));
+                if (cant_veh_preventa_total == 0)
                 {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en preventa
-                    var vehiculos_consultados_cliente_preventa = transaccion_vehiculos_preventa.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en preventa, por categoria
-                    categoria_pref_cliente_preventa = vehiculos_consultados_cliente_preventa.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
-                    //Obtener Lista de categoria en inventario que el cliente prefiere de acuerdo a la preventa
-                    var categoria_inv_pref_preventa = categoria_pref_cliente_preventa.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_preventa_total = categoria_inv_pref_preventa.Sum(x => x.Count());
-
+                    cant_veh_preventa_total = 1;
                 }
-
-                /////////////Estadisticas de Preventa////////////////// Se le asigna el 75% de la importancia en el calculo
-                var transaccion_vehiculos_venta = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 2);
-                var cant_veh_venta_total = 1;
-                if (transaccion_vehiculos_venta.Count() > 0)
+                var cant_veh_venta_total = categoria_inventario_preferidas_cliente.Sum(x => x.Distinct().Sum(y => y.transaccion_venta.Count(z => z.fk_tipo_venta == 2)));
+                if (cant_veh_venta_total == 0)
                 {
-                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en venta
-                    var vehiculos_consultados_cliente_venta = transaccion_vehiculos_venta.SelectMany(x => x.vehiculo);
-                    //Agrupar los vehiculos consultados en venta, por categoria
-                    categoria_pref_cliente_venta = vehiculos_consultados_cliente_venta.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
-                    //Obtener Lista de categoria en inventario que el cliente prefiere de acuerdo a la preventa
-                    var categoria_inv_pref_venta = categoria_pref_cliente_venta.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
-                    //Calcular el total de vehiculos restante de las consulta anteriores
-                    cant_veh_venta_total = categoria_inv_pref_venta.Sum(x => x.Count());
-
+                    cant_veh_venta_total = 1;
                 }
 
 
@@ -727,23 +662,14 @@ namespace AutoPro.Controllers
                 foreach (var item_cat in categoria_inventario_preferidas_cliente)
                 {
                     //Calcular cantidad de vehiculos en preventas perteneciente a la marca
-                    var cant_veh_preventa_categoria = 0;
-                    if (categoria_pref_cliente_preventa.Where(x => x.Key == item_cat.Key).Count() > 0)
-                    {
-                        cant_veh_preventa_categoria = categoria_pref_cliente_preventa.Where(x => x.Key == item_cat.Key).First().Count();
-                    }
-                    //Calcular cantidad de vehiculos en preventas perteneciente a la marca
-                    var cant_veh_venta_categoria = 0;
-                    if (categoria_pref_cliente_venta.Where(x => x.Key == item_cat.Key).Count() > 0)
-                    {
-                        cant_veh_venta_categoria = categoria_pref_cliente_venta.Where(x => x.Key == item_cat.Key).First().Count();
-                    }
+                    var cant_veh_preventa_categoria = item_cat.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 1));
+                    var cant_veh_venta_categoria = item_cat.Distinct().Sum(x => x.transaccion_venta.Count(y => y.fk_tipo_venta == 2));
 
 
                     Venta_CategoriaViewModels i_cat = new Venta_CategoriaViewModels
                     {
-                        Categoria = inventario.Where(x => x.modelo.modelo_clasificacion.id_clasificacion == item_cat.Key).First().modelo.modelo_clasificacion,
-                        Nro_Inventario = item_cat.Count(),
+                        Categoria = item_cat.First().modelo.modelo_clasificacion,
+                        Nro_Inventario = inventario.Count(x => x.modelo.fk_clasificacion == item_cat.Key),
                         Nivel_Preferencia = CalcularPreferenciaCliente_Ambos(cant_veh_preventa_categoria, cant_veh_preventa_total, cant_veh_venta_categoria, cant_veh_venta_total)
                     };
                     l_categoria.Add(i_cat);
@@ -1150,9 +1076,175 @@ namespace AutoPro.Controllers
             return lista_agentes;
         }
 
-        public ActionResult Prueba4()
+        public ActionResult Prueba4(int tipo, string id_cliente)
         {
-            return View();
+            UsuarioViewModel usuario = this.Session["User"] as UsuarioViewModel;
+            Marcas_CategoriaViewModels modelo = new Marcas_CategoriaViewModels();
+            List<Venta_MarcasViewModels> l_marcas = new List<Venta_MarcasViewModels>();
+            List<Venta_CategoriaViewModels> l_categoria = new List<Venta_CategoriaViewModels>();
+            var inventario = from l_vehiculos in autodb.vehiculo where l_vehiculos.fk_concesionario == usuario.id_Concesionario && l_vehiculos.fecha_salida == null select l_vehiculos;
+            IQueryable<transaccion_venta> consulta_transacciones = null;
+
+            //Preferencia del Cliente
+            if (tipo == 1)
+            {
+                consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.fk_cliente == id_cliente select l_tran;
+
+
+            }
+            else
+            {
+                //Preferencia del Mercado
+                var c_usuario = (from l_concesionario in autodb.concesionario where l_concesionario.id_concesionario == usuario.id_Concesionario select l_concesionario).First();
+                consulta_transacciones = from l_tran in autodb.transaccion_venta where l_tran.concesionario.direccion.ciudad.estado.id_estado == c_usuario.direccion.ciudad.estado.id_estado select l_tran;
+            }
+
+            /////////MARCAS ////////
+            //Obtener Lista de las Marcas en Inventario
+            var marcas_inventario = inventario.GroupBy(x => x.modelo.marca.id_marca);
+            //Obtener Lista de las Marcar preferidas por el cliente en general
+            var marcas_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(x => x.modelo.marca.id_marca);
+
+            if (marcas_preferidas_cliente.Count() > 0)
+            {
+                //Obtener las Marcas que entasn en inventario y que el cliente prefiere
+                var marcas_inventario_preferidas_cliente = marcas_inventario.Where(x => marcas_preferidas_cliente.Select(y => y.Key).Contains(x.Key));
+                IQueryable<IGrouping<int, vehiculo>> marca_pref_cliente_preventa = null;
+                IQueryable<IGrouping<int, vehiculo>> marca_pref_cliente_venta = null;
+                /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
+                var transaccion_vehiculos_preventa = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 1);
+                var cant_veh_preventa_total = 1;
+                if (transaccion_vehiculos_preventa.Count() > 0)
+                {
+                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en preventa
+                    var vehiculos_consultados_cliente_preventa = transaccion_vehiculos_preventa.SelectMany(x => x.vehiculo);
+                    //Agrupar los vehiculos consultados en preventa, por marca
+                    marca_pref_cliente_preventa = vehiculos_consultados_cliente_preventa.GroupBy(x => x.modelo.marca.id_marca);
+                    //Obtener Lista de marcas en inventario que el cliente prefiere de acuerdo a la preventa
+                    var marca_inv_pref_preventa = marca_pref_cliente_preventa.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
+                    //Calcular el total de vehiculos restante de las consulta anteriores
+                    cant_veh_preventa_total = marca_inv_pref_preventa.Sum(x => x.Count());
+
+                }
+
+                /////////////Estadisticas de Preventa////////////////// Se le asigna el 75% de la importancia en el calculo
+                var transaccion_vehiculos_venta = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 2);
+                var cant_veh_venta_total = 1;
+                if (transaccion_vehiculos_venta.Count() > 0)
+                {
+                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en venta
+                    var vehiculos_consultados_cliente_venta = transaccion_vehiculos_venta.SelectMany(x => x.vehiculo);
+                    //Agrupar los vehiculos consultados en venta, por marca
+                    marca_pref_cliente_venta = vehiculos_consultados_cliente_venta.GroupBy(x => x.modelo.marca.id_marca);
+                    //Obtener Lista de marcas en inventario que el cliente prefiere de acuerdo a la preventa
+                    var marca_inv_pref_venta = marca_pref_cliente_venta.Where(x => marcas_inventario.Select(y => y.Key).Contains(x.Key));
+                    //Calcular el total de vehiculos restante de las consulta anteriores
+                    cant_veh_venta_total = marca_inv_pref_venta.Sum(x => x.Count());
+                }
+
+
+                foreach (var item_marca in marcas_inventario_preferidas_cliente)
+                {
+                    var cant_veh_preventa_marca = 0;
+                    if (marca_pref_cliente_preventa.Where(x => x.Key == item_marca.Key).Count() > 0)
+                    {
+                        cant_veh_preventa_marca = marca_pref_cliente_preventa.Where(x => x.Key == item_marca.Key).First().Count();
+                    }
+                    var cant_veh_venta_marca = 0;
+                    if (marca_pref_cliente_venta.Where(x => x.Key == item_marca.Key).Count() > 0)
+                    {
+                        cant_veh_venta_marca = marca_pref_cliente_venta.Where(x => x.Key == item_marca.Key).First().Count();
+                    }
+
+
+                    Venta_MarcasViewModels i_marca = new Venta_MarcasViewModels
+                    {
+                        Marca = inventario.Where(x => x.modelo.marca.id_marca == item_marca.Key).First().modelo.marca,
+                        Nro_Inventario = item_marca.Count(),
+                        Nivel_Preferencia = CalcularPreferenciaCliente_Ambos(cant_veh_preventa_marca, cant_veh_preventa_total, cant_veh_venta_marca, cant_veh_venta_total)
+                    };
+                    l_marcas.Add(i_marca);
+                }
+            }
+
+            /////////CATEGORIA ////////
+            //Obtener Lista de las Cat en Inventario
+            var categoria_inventario = inventario.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
+            //Obtener Lista de las Cat preferidas por el cliente en general
+            var categoria_preferidas_cliente = consulta_transacciones.SelectMany(x => x.vehiculo).GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
+            if (categoria_preferidas_cliente.Count() > 0)
+            {
+                //Obtener las Cat que entasn en inventario y que el cliente prefiere
+                var categoria_inventario_preferidas_cliente = categoria_inventario.Where(x => categoria_preferidas_cliente.Select(y => y.Key).Contains(x.Key));
+                IQueryable<IGrouping<byte, vehiculo>> categoria_pref_cliente_preventa = null;
+                IQueryable<IGrouping<byte, vehiculo>> categoria_pref_cliente_venta = null;
+                /////////////Estadisticas de Preventa////////////////// Se le asigna el 25% de la importancia en el calculo
+                var transaccion_vehiculos_preventa = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 1);
+                var cant_veh_preventa_total = 1;
+                if (transaccion_vehiculos_preventa.Count() > 0)
+                {
+                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en preventa
+                    var vehiculos_consultados_cliente_preventa = transaccion_vehiculos_preventa.SelectMany(x => x.vehiculo);
+                    //Agrupar los vehiculos consultados en preventa, por categoria
+                    categoria_pref_cliente_preventa = vehiculos_consultados_cliente_preventa.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
+                    //Obtener Lista de categoria en inventario que el cliente prefiere de acuerdo a la preventa
+                    var categoria_inv_pref_preventa = categoria_pref_cliente_preventa.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
+                    //Calcular el total de vehiculos restante de las consulta anteriores
+                    cant_veh_preventa_total = categoria_inv_pref_preventa.Sum(x => x.Count());
+
+                }
+
+                /////////////Estadisticas de Preventa////////////////// Se le asigna el 75% de la importancia en el calculo
+                var transaccion_vehiculos_venta = consulta_transacciones.Where(x => x.tipo_transaccion_venta.id_tipo_venta == 2);
+                var cant_veh_venta_total = 1;
+                if (transaccion_vehiculos_venta.Count() > 0)
+                {
+                    //Obtener todos los vehiculos en los cuales el cliente estuvo interesado en venta
+                    var vehiculos_consultados_cliente_venta = transaccion_vehiculos_venta.SelectMany(x => x.vehiculo);
+                    //Agrupar los vehiculos consultados en venta, por categoria
+                    categoria_pref_cliente_venta = vehiculos_consultados_cliente_venta.GroupBy(x => x.modelo.modelo_clasificacion.id_clasificacion);
+                    //Obtener Lista de categoria en inventario que el cliente prefiere de acuerdo a la preventa
+                    var categoria_inv_pref_venta = categoria_pref_cliente_venta.Where(x => categoria_inventario.Select(y => y.Key).Contains(x.Key));
+                    //Calcular el total de vehiculos restante de las consulta anteriores
+                    cant_veh_venta_total = categoria_inv_pref_venta.Sum(x => x.Count());
+
+                }
+
+
+
+                foreach (var item_cat in categoria_inventario_preferidas_cliente)
+                {
+                    //Calcular cantidad de vehiculos en preventas perteneciente a la marca
+                    var cant_veh_preventa_categoria = 0;
+                    if (categoria_pref_cliente_preventa.Where(x => x.Key == item_cat.Key).Count() > 0)
+                    {
+                        cant_veh_preventa_categoria = categoria_pref_cliente_preventa.Where(x => x.Key == item_cat.Key).First().Count();
+                    }
+                    //Calcular cantidad de vehiculos en preventas perteneciente a la marca
+                    var cant_veh_venta_categoria = 0;
+                    if (categoria_pref_cliente_venta.Where(x => x.Key == item_cat.Key).Count() > 0)
+                    {
+                        cant_veh_venta_categoria = categoria_pref_cliente_venta.Where(x => x.Key == item_cat.Key).First().Count();
+                    }
+
+
+                    Venta_CategoriaViewModels i_cat = new Venta_CategoriaViewModels
+                    {
+                        Categoria = inventario.Where(x => x.modelo.modelo_clasificacion.id_clasificacion == item_cat.Key).First().modelo.modelo_clasificacion,
+                        Nro_Inventario = item_cat.Count(),
+                        Nivel_Preferencia = CalcularPreferenciaCliente_Ambos(cant_veh_preventa_categoria, cant_veh_preventa_total, cant_veh_venta_categoria, cant_veh_venta_total)
+                    };
+                    l_categoria.Add(i_cat);
+                }
+
+            }
+
+            var lista_ordenada_marcas = l_marcas.OrderByDescending(x => x.Nivel_Preferencia).ToList();
+            var lista_ordenada_categoria = l_categoria.OrderByDescending(x => x.Nivel_Preferencia).ToList();
+            modelo.Lista_Categoria = lista_ordenada_categoria;
+            modelo.Lista_Marcas = lista_ordenada_marcas;
+            modelo.id_cliente = id_cliente;
+            return View(modelo);
         }
 
         public ActionResult HistorialComision()
@@ -1200,6 +1292,45 @@ namespace AutoPro.Controllers
 
             var json = t_modelos;
             return Json(json, JsonRequestBehavior.AllowGet);
+        }
+
+        public string CalcularTiempoFecha(DateTime fecha)
+        {
+            var dias = DateTime.Now.Subtract(fecha).TotalDays;
+            var dias_for = DateTime.Now.Subtract(fecha).Days;
+            string dias_entre_fecha = "";
+            if (dias < 1)
+            {
+                var horas = DateTime.Now.Subtract(fecha).TotalHours;
+                var horas_for = DateTime.Now.Subtract(fecha).Hours;
+                if (horas < 1)
+                {
+                    var minutos = DateTime.Now.Subtract(fecha).TotalMinutes;
+                    var minutos_for = DateTime.Now.Subtract(fecha).Minutes;
+                    if (minutos < 1)
+                    {
+                        dias_entre_fecha = "Ahora";
+
+                    }
+                    else
+                    {
+                        dias_entre_fecha = "Hace " + minutos_for + " minutos.";
+
+                    }
+
+                }
+                else
+                {
+                    dias_entre_fecha = "Hace " + horas_for + " horas.";
+                }
+
+            }
+            else
+            {
+                dias_entre_fecha = "Hace " + dias_for + " dias.";
+            }
+
+            return dias_entre_fecha;
         }
 
     }

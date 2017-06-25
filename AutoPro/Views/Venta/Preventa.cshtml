@@ -1,5 +1,5 @@
 ﻿@using AutoPro.Models
-@model ComprarVehiculoViewModels
+@model PreventaViewModels
 @{
     ViewBag.Title = "Proceso de Preventa";
 
@@ -19,9 +19,9 @@
 
     <!-- Content Header (Page header) -->
 <section class="content-header">
-    <h1>Preventa # 24
+    <h1 id="titulo_preventa">Menu de Venta
      
-        <small>Auto Pro</small>
+        <small>@user.Concesionario</small>
     </h1>
     <ol class="breadcrumb">
         <li><a href="/Home/"><i class="fa fa-dashboard"></i> Inicio</a></li>
@@ -44,50 +44,100 @@
                     <div id="time_line_cliente" class="row margin">
                         <!-- linea de tiempo -->
                         <ul class="timeline">
-                            <!-- timeline time label -->
-                            <li class="time-label">
-                                <span class="bg-red">
-                                    06/06/2017 - 2:38 p.m.
-                                </span>
-                            </li>
-                            <!-- /.timeline-label -->
-                            <!-- timeline item -->
-                            <li>
-                                <i class="fa fa-envelope bg-blue"></i>
+                            @foreach (var item in Model.Lista_Transacciones)
+                            {
+                               <!-- timeline time label -->
+                                <li class="time-label">
+                                    <span class="bg-red">
+                                        @item.fecha.ToShortDateString() - @item.fecha.ToShortTimeString()
+                                    </span>
+                                </li>
+                                     <!-- timeline item -->
+                                 
+                                        var class_tran = "";
+                                        var titulo_op ="";
+                                        if(item.Tipo_Transaccion == 1)
+                                        {
+                                            class_tran = "fa fa-envelope bg-blue";
+                                            titulo_op = "Operación de Preventa # " + item.id;
+               
+                                        }else
+                                        {
 
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fa fa-clock-o"></i> Hace 4 dias.</span>
+                                            class_tran = "fa fa-envelope bg-green"; 
+                                            titulo_op = "Operación de Venta # " + item.id;
+                                        }
+                                       
+                                <li>
+                                    <i class="@class_tran"></i>
 
-                                    <h3 class="timeline-header"><a href="#">Operacion de Preventa # 32</a></h3>
+                                    <div class="timeline-item">
+                                        <span class="time"><i class="fa fa-clock-o"></i> @item.Cant_Tiempo_Transcurrido</span>
 
-                                    <div class="timeline-body">
-                                        El cliente estuvo interesando en <strong>3</strong> modelos, con rangos de precios [<strong>12.541<sup style="font-size: 8px">USD</sup> - 21.542 <sup style="font-size: 8px">USD</sup></strong>] y el agente encargado de la operacion fue <strong>Juan Valdez</strong>.
+                                        <h3 class="timeline-header"><a href="#">@titulo_op</a></h3>
+
+                                        <div class="timeline-body">
+                                            @if(item.Tipo_Transaccion == 1)
+                                            {
+                                                @:El cliente estuvo interesando en <strong>@item.Cant_Vehiculos</strong> modelos, con rangos de precios [<strong>@item.Menor_Monto.ToString("#,##0")<sup style="font-size: 8px">USD</sup> - @item.Mayor_Monto.ToString("#,##0") <sup style="font-size: 8px">USD</sup></strong>] y el agente encargado de la operacion fue <strong>@item.Nombre_Operador</strong>.
+                                                
+                                            }else{
+                                                @:El cliente compro <strong>@item.Cant_Vehiculos</strong> vehiculos, el monto total de la operación fue de <strong>@item.Monto_Total.ToString("#,##0")<sup style="font-size: 8px">USD</sup></strong> y el agente encargado de la operacion fue <strong>@item.Nombre_Operador</strong>.
+                                            }
+                                        </div>
+                                        <div class="timeline-footer">
+                                            <a onclick="MostrarDetalles(@item.id);" class="btn btn-primary btn-xs">Detalles</a>
+                                        </div>
                                     </div>
-                                    <div class="timeline-footer">
-                                        <a class="btn btn-primary btn-xs">Detalles</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <i class="fa fa-automobile bg-yellow"></i>
+                                </li>
+                                foreach (var auto in item.Lista_Vehiculo)
+                                {
+                                    <li>
+                                        <i class="fa fa-automobile bg-yellow"></i>
 
-                                <div class="timeline-item">
+                                        <div class="timeline-item">
 
-                                    <h3 class="timeline-header"><a href="#">Mustang GT Premium convertible 2D # 3</a> 2015</h3>
+                                            <h3 class="timeline-header"><a href="#">@auto.modelo.modelo1 @auto.modelo.nombre # @auto.id_vehiculo</a> @auto.modelo.año</h3>
 
-                                    <div class="timeline-body">
-                                        El modelo es de color <strong>Negro</strong> tiene <strong>2.354</strong> kilometros y el valor de compra del modelo fue de <strong>12.546</strong><sup style="font-size: 8px">USD</sup>.
-                                        <img style="height:100px; width:150px" src="/Images/Modelos/Mustang/2015/Mustang_GT_Premium_Convertible_2D.png" alt="..." class="margin">
-                                    </div>
-                                    <div class="timeline-footer">
-                                        <a class="btn btn-primary btn-xs">Ford</a>
-                                        <a class="btn btn-success btn-xs">Convertible</a>
-                                        <a class="btn btn-warning btn-flat btn-xs">Mustang</a>
-                                        <a class="btn btn-danger btn-xs">2015</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <!-- END timeline item -->
+                                            <div class="timeline-body">
+                                                @if(item.Tipo_Transaccion == 1)
+                                                {
+
+                                                    @:El modelo es de color <strong>@auto.color</strong> tiene <strong>@auto.kilometraje.ToString("#,##0")</strong> kilometros y esta valorado en <strong>@auto.valor_compra.ToString("#,##0")</strong><sup style="font-size: 8px">USD</sup>. 
+                                                }
+                                                else
+                                                {
+                                                   @:El modelo es de color <strong>@auto.color</strong> tiene <strong>@auto.kilometraje.ToString("#,##0")</strong> kilometros y el valor de venta del modelo fue de <strong>@auto.valor_venta.Value.ToString("#,##0")</strong><sup style="font-size: 8px">USD</sup>.      
+                                                }
+                                                @{
+                                                    var imagen = "";
+                                                    if((auto.imagen != null) && (auto.imagen != ""))
+                                                    {
+                                                        imagen = auto.imagen;
+                                                    }else
+                                                    {
+                                                        imagen = auto.modelo.imagen;
+                                                   
+                                                    }
+                                                }
+                                               
+                                                <img style="height:100px; width:150px" src="@imagen" alt="@auto.modelo.nombre" class="margin">
+                                            </div>
+                                            <div class="timeline-footer">
+                                                <a class="btn btn-primary btn-xs">@auto.modelo.marca.nombre</a>
+                                                <a class="btn btn-success btn-xs">@auto.modelo.modelo_clasificacion.descripcion</a>
+                                                <a class="btn btn-warning btn-flat btn-xs">@auto.modelo.modelo1</a>
+                                                <a class="btn btn-danger btn-xs">@auto.modelo.año</a>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                }
+
+
+
+                            }
+                           
 
                             <li>
                                 <i class="fa fa-clock-o bg-gray"></i>
@@ -111,19 +161,19 @@
                 <div class="box-body box-profile">
                     <img class="profile-user-img img-responsive img-circle" src="/Images/imagen_user_160.png" alt="User profile picture">
 
-                    <h3 class="profile-username text-center">Ana Fuentes</h3>
+                    <h3 class="profile-username text-center">@Model.Cliente.Nombre_Completo</h3>
 
                     <p class="text-muted text-center">Información del cliente</p>
 
                     <ul class="list-group list-group-unbordered">
                         <li class="list-group-item">
-                            <b>Telefono</b> <a class="pull-right">+58 (0414) - 123 4567</a>
+                            <b>Telefono</b> <a class="pull-right">@Model.Cliente.Nro_Telefono</a>
                         </li>
                         <li class="list-group-item">
-                            <b>Correo</b> <a class="pull-right">Ana_fuentes@gmail.com</a>
+                            <b>Correo</b> <a class="pull-right">@Model.Cliente.Email</a>
                         </li>
                         <li class="list-group-item">
-                            <b>Dirección</b> <a class="pull-right">701 Central Av., Kansas City, KS 66101</a>
+                            <b>Dirección</b> <a class="pull-right">@Model.Cliente.Direccion</a>
                         </li>
                     </ul>
 
@@ -137,7 +187,7 @@
         <!-- /.box -->
     </div>
     <!-- /.col -->
-    <div class="row margin">
+    <div class="row">
        <div class="col-lg-12 col-xs-12">
            <div class="box">
                <div class="box-header">
@@ -147,14 +197,14 @@
                        <div class="row">
 
 
-                           <div class="col-lg-3 col-xs-3">
+                           <div class="col-lg-3 col-md-3 col-xs-1">
 
                            </div>
                            <!-- ./col -->
-                           <div class="col-lg-6 col-xs-6">
+                           <div class="col-lg-6 col-md-6 col-xs-10">
                                <!-- small box -->
                                <!-- ESTA ES LA BARRA ARREGLADA NO SE SI LO QUE AGARRE PARA CONVERTIRLA EN INPUT ESTA BIEN REVISALO
-                        DE TODAS MANERAS CUANDO LO PEGUES A VER -->
+        DE TODAS MANERAS CUANDO LO PEGUES A VER -->
                                <div class="row">
                                    <div class="col-lg-12">
                                        <div style="width:100%" class="input-group">

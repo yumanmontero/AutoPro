@@ -52,7 +52,7 @@
         </div>
 
 
-        <div class="col-md-6">
+        <div class="col-md-6 col-lg-6 col-xs-12">
             <div class="box box-widget">
                 <div class="box-header with-border">
                     <h3 class="box-title">CATEGORIAS</h3>
@@ -60,7 +60,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <div id="cat_div" class="row margin">
+                    <div id="cat_div" class="row">
                         @foreach (var item in Model.Lista_Categoria)
                         {
                             <a data-url="/Venta/Menu_ListaVehiculos/@item.Categoria.id_clasificacion?tipo=2&id_cliente=@Model.id_cliente" href="javascript:{}">

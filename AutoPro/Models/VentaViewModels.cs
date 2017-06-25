@@ -134,11 +134,12 @@ namespace AutoPro.Models
 
         public string Direccion { get; set; }
 
+        public string Image { get; set; }
+
     }
 
     public class TransaccionesVentaViewModels
     {
-        public transaccion_venta Transaccion { get; set; }
 
         public int Tipo_Transaccion { get; set; }
 
@@ -155,6 +156,10 @@ namespace AutoPro.Models
         public decimal Mayor_Monto { get; set; }
 
         public string Cant_Tiempo_Transcurrido { get; set; }
+
+        public int id { get; set; }
+
+        public DateTime fecha { get; set; }
 
     }
 
