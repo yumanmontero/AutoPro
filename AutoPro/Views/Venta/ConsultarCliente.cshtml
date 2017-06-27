@@ -1,0 +1,681 @@
+﻿@using AutoPro.Models
+@model ConsultarClienteViewModels
+@{
+    ViewBag.Title = "Consultar Cliente";
+}
+
+
+@if (HttpContext.Current.Session["Mensaje"] != null)
+{
+
+    MensajeViewModels mensaje = HttpContext.Current.Session["Mensaje"] as MensajeViewModels;
+    {
+
+        HttpContext.Current.Session["Mensaje"] = null;
+    }
+
+        <!-- Modal -->
+    <div class="modal fade @mensaje.Tipo_Modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">@mensaje.Titulo</h4>
+                </div>
+                <div class="modal-body">
+                    @mensaje.Cuerpo
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@if (Model.Transaccion != null)
+{
+
+    foreach(var item in Model.Transaccion)
+    {
+        <div class="modal fade-" id="Modal_transaccion_@item.Transaccion.id_venta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Detalles de Transacción # @item.Transaccion.id_venta</h4>
+                    </div>
+                    <div class="modal-body table-responsive">
+                        <table id="tabla_transaccion" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vehiculo</th>
+                                    <th>Precio</th>
+                                    <th>Estado</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item_tr in item.Lista_Vehiculo)
+                            {
+                                    <tr>
+                                        <td>@item_tr.id_vehiculo</td>
+                                        <td>@item_tr.modelo.modelo1 @item_tr.modelo.nombre</td>
+                                        <td><span class="label label-success">@item_tr.valor_venta.Value.ToString("#,##0")</span></td>
+                                        <td>
+                                            @{
+                                var tipo_progress = "";
+                                if (item_tr.vehiculo_estado.factor == 10)
+                                {
+                                    tipo_progress = "progress-bar-danger";
+                                }
+                                else if (item_tr.vehiculo_estado.factor == 30)
+                                {
+                                    tipo_progress = "progress-bar-yellow";
+                                }
+                                else if (item_tr.vehiculo_estado.factor == 70)
+                                {
+
+                                    tipo_progress = "progress-bar-info";
+                                }
+                                else
+                                {
+
+                                    tipo_progress = "progress-bar-green";
+                                }
+                                            }
+                                            <div class="progress progress-xs">
+                                                <div class="progress-bar @tipo_progress" style="width:@item_tr.vehiculo_estado.factor%"></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button onclick="eliminar_vehiculo(@item_tr.id_vehiculo,@item.Transaccion.id_venta);" id="vehiculo_@item_tr.id_vehiculo" type="button" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i></button>
+                                        </td>
+                                    </tr>
+                            }
+
+                            </tbody>
+                        </table>
+                        <table id="tabla_transaccion" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Total</th>
+                                    <th> </th>
+                                    <th> </th>
+                                    <th></th>
+                                    <th>$ @item.Monto_Total.ToString("#,##0")</th>
+                                </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+
+                        <a href="/Venta/Preventa/?id_cliente=@item.Transaccion.fk_cliente" class="btn btn-success pull-left">Continuar</a>
+                        <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+        <!-- Modal -->
+    
+
+}
+
+
+<div class="modal fade " id="Registro_div" tabindex="-1" role="dialog" aria-labelledby="registrolabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="registrolabel">Registrar Usuario Nuevo</h4>
+            </div>
+            <div id="div_registre_form" class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+       
+      @ViewBag.Title
+      <small>AutoPro</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i>Inicio</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Small boxes (Stat box) -->
+    <div class="row" style="height:150px">
+        @using (Html.BeginForm("ConsultarCliente", "Venta", FormMethod.Post, new { role = "form", id = "busqueda_cliente", enctype = "multipart/form-data" }))
+        {
+
+        <!-- ./col -->
+            <div class="row">
+                <div class="col-lg-3 col-xs-2">
+
+                </div>
+                <div class="col-lg-6 col-xs-8">
+                    <!-- small box -->
+
+                    <div class="input-group">
+                        <select class="form-control select2" data-val="true" id="Busq_Cliente" name="Busq_Cliente" data-placeholder="Escriba el nombre de un Cliente">
+                            <option value="-1"></option>
+                        </select>
+                        <span class="input-group-btn">
+                            <button type="button" onclick="ConsultarCliente();" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        <!-- ./col -->
+            <div class="col-lg-3 col-xs-3">
+
+            </div>
+        <!-- ./col -->
+        }
+    </div>
+    <!-- /.row -->
+    <!-- Main row -->
+    <div class="row">
+        <div class="col-lg-1 col-xs-1">
+
+        </div>
+        @if (Model.Transaccion != null)
+        {
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- small box -->
+                                <div class="small-box bg-aqua">
+                                    <div class="inner">
+                                        <h3>@Model.Nro_Cliente</h3>
+                                        <p>Registrar Cliente</p>
+                                    </div>
+                                    <div class="icon">
+                                        <i class="ion ion-ios-personadd"></i>
+                                    </div>
+                                    <a href="javascript:{}" onclick="RegistrarVentana();" class="small-box-footer">Registra Nuevo Cliente <i class="fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                            <!-- ./col -->
+
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <!-- PRODUCT LIST -->
+                                <div class="box box-primary">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Transacciones en Curso</h3>
+
+                                    </div>
+                                    <!-- /.box-header -->
+                                    <div class="box-body">
+                                        <ul id="list_vehiculo" class="products-list product-list-in-box">
+                                            @{
+
+                                                    foreach (var item_trans in Model.Transaccion)
+                                                    {
+                                                        
+                                                        <li id="vel_@item_trans.Transaccion.id_venta" class="item">
+                                                            <div class="product-img">
+                                                                <img style="width:50px;height:50px" src="~/Images/imagen_user_160.png" alt="User Default">
+                                                            </div>
+                                                            <div class="product-info">
+                                                                <a href="javascript:void(0)" onclick="TransaccionDetalles(@item_trans.Transaccion.id_venta);" class="product-title">
+                                                                    @item_trans.Transaccion.cliente.nombre @item_trans.Transaccion.cliente.apellido
+                                                                    <span class="label label-success pull-right">$@item_trans.Monto_Total.ToString("#,##0")</span>
+                                                                </a>
+                                                                <span class="product-description">
+                                                                   Transacción Nro. @item_trans.Transaccion.id_venta
+                                                                </span>
+                                                            </div>
+                                                        </li>
+
+                                                    }
+
+
+
+                                            }
+
+                                        </ul>
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <div class="box-footer clearfix">
+                                        
+                                    </div>
+                                    <!-- /.box-footer -->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        }
+        else
+        {
+            <div class="col-md-10">
+                <!-- small box -->
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>@Model.Nro_Cliente</h3>
+                        <p>Registrar Cliente</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-ios-personadd"></i>
+                    </div>
+                    <a href="javascript:{}" onclick="RegistrarVentana();" class="small-box-footer">Registra Nuevo Cliente <i class="fa fa-plus"></i></a>
+                </div>
+            </div>
+
+
+        }
+
+
+
+
+
+
+
+
+        <div class="col-lg-1 col-xs-1">
+
+        </div>
+
+        <!-- ./col -->
+    </div>
+    <!-- /.row (main row) -->
+</section>
+<!-- /.content -->
+
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+
+<script>
+    jQuery(window).load(function () {
+
+        $('#myModal').modal('show');
+
+        var dataurl = "/Venta/RegistarFormulario";
+        $.ajax({
+            url: dataurl
+        }).done(function (data) {
+            // Al div con id todos le pone como
+            // contenido la partial view recibida (data)
+            $('#div_registre_form').html(data);
+            FuncionesMenuRegistro();
+
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + jqXHR);
+
+
+        });
+
+        function formatRepo(repo) {
+            if (repo.Image === undefined) return "Cargando...";
+
+            var markup = "<div class='select2-result-repository clearfix'>" +
+              "<div class='select2-result-repository__avatar'><img src='" + repo.Image + "' /></div>" +
+              "<div class='select2-result-repository__meta'>" +
+                "<div class='select2-result-repository__title'>" + repo.Nombre + "</div>";
+
+            if (repo.Descripcion) {
+                markup += "<div class='select2-result-repository__description'>" + repo.Descripcion + "</div>";
+            }
+
+            markup += "<div class='select2-result-repository__statistics'>" +
+              "<div class='select2-result-repository__forks'><i class='fa fa-dashboard'></i> " + repo.Nro_Preventas + " Preventa</div>" +
+              "<div class='select2-result-repository__stargazers'><i class='fa fa-money'></i> " + repo.Nro_Ventas + " Ventas</div>" +
+            "</div>" +
+            "</div></div>";
+
+            return markup;
+        }
+
+        function formatRepoSelection(repo) {
+            return repo.Nombre;
+        }
+
+
+
+        $("#Busq_Cliente").select2({
+            placeholder: "Consulte un Cliente",
+            ajax: {
+                url: "/Venta/BuscarCliente",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    // parse the results into the format expected by Select2
+                    // since we are using custom formatting functions we do not need to
+                    // alter the remote JSON data, except to indicate that infinite
+                    // scrolling can be used
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.Lista_Cliente,
+                        pagination: {
+                            more: (params.page * 30) < data.Total_Clientes
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) { return markup; },
+            minimumInputLength: 1,
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
+
+
+        });
+
+
+
+    });
+
+    function RegistrarVentana()
+    {
+        $("#Registro_div").modal('show');
+
+    }
+
+    function TransaccionDetalles(id)
+    {
+        $("#Modal_transaccion_" + id).modal('show');
+    }
+
+    function FuncionesMenuRegistro() {
+        $("#localidad").prop("disabled", true);
+        $("#DropEstado").prop("disabled", true);
+        $("#DropEstado").addClass('select2');
+        $("#localidad").addClass('select2');
+        $("#DropPais").addClass('select2');
+
+        $("#DropPais").css("width", "100%");
+        $("#localidad").css("width", "100%");
+        $("#DropEstado").css("width", "100%");
+
+        $("#DropPais").select2();
+        $("#localidad").select2();
+        $("#DropEstado").select2();
+
+
+
+
+        $('#Nombre').removeClass('single-line');
+        $('#Nombre').removeClass('text-box').addClass('form-control');
+
+        $('#Apellido').removeClass('single-line');
+        $('#Apellido').removeClass('text-box').addClass('form-control');
+
+        $('#NumeroTlf').removeClass('single-line');
+        $('#NumeroTlf').removeClass('text-box').addClass('form-control');
+
+        $('#Email').removeClass('single-line');
+        $('#Email').removeClass('text-box').addClass('form-control');
+
+        $('#ID_Cliente').removeClass('single-line');
+        $('#ID_Cliente').removeClass('text-box').addClass('form-control');
+
+        $('#DireccionDetallada').removeClass('single-line');
+        $('#DireccionDetallada').removeClass('text-box').addClass('form-control');
+
+        $('#Nombre').attr("placeholder", "Nombre");
+        $('#Apellido').attr("placeholder", "Apellido");
+        $('#NumeroTlf').attr("placeholder", "Numero Telefonico");
+        $('#Email').attr("placeholder", "Correo Electronico");
+        $('#DireccionDetallada').attr("placeholder", "Dirección Detallada");
+        $('#ID_Cliente').attr("placeholder", "Identifición");
+
+
+
+
+        var EstadoOptions = {};
+        EstadoOptions.url = "/Venta/RegisterEstados";
+        EstadoOptions.type = "POST";
+        EstadoOptions.data = JSON.stringify({ Pais: $("#DropPais").val() });
+        EstadoOptions.datatype = "json";
+        EstadoOptions.contentType = "application/json";
+        EstadoOptions.success = function (EstadosList) {
+            $("#DropEstado").html("")
+            $.each(EstadosList, function () {
+                $("#DropEstado").append($("<option></option>").attr("value", this.idEstado).text(this.Nombre))
+
+            });
+            $("#DropEstado").prop("disabled", false);
+            var LocalidadOptions = {};
+            LocalidadOptions.url = "/Venta/RegisterLocalidad";
+            LocalidadOptions.type = "POST";
+            LocalidadOptions.data = JSON.stringify({ Estado: $("#DropEstado").val() });
+            LocalidadOptions.datatype = "json";
+            LocalidadOptions.contentType = "application/json";
+            LocalidadOptions.success = function (LocalidadList) {
+                $("#localidad").html("");
+                $.each(LocalidadList, function () {
+                    $("#localidad").append($("<option></option>").attr("value", this.idLocalidad).text(this.Nombre))
+
+                });
+                $("#localidad").prop("disabled", false);
+            };
+            LocalidadOptions.error = function () { alert("Error Obteniendo Las Localidades"); };
+            $.ajax(LocalidadOptions);
+        };
+        EstadoOptions.error = function () { alert("Error Obteniendo los Estados"); };
+        $.ajax(EstadoOptions);
+
+        $("#DropPais").change(function () {
+            var EstadoOptions = {};
+            EstadoOptions.url = "/Venta/RegisterEstados";
+            EstadoOptions.type = "POST";
+            EstadoOptions.data = JSON.stringify({ Pais: $("#DropPais").val() });
+            EstadoOptions.datatype = "json";
+            EstadoOptions.contentType = "application/json";
+            EstadoOptions.success = function (EstadosList) {
+                $("#DropEstado").html("")
+                $.each(EstadosList, function () {
+                    $("#DropEstado").append($("<option></option>").attr("value", this.idEstado).text(this.Nombre))
+
+                });
+                $("#DropEstado").prop("disabled", false);
+                var LocalidadOptions = {};
+                LocalidadOptions.url = "/Venta/RegisterLocalidad";
+                LocalidadOptions.type = "POST";
+                LocalidadOptions.data = JSON.stringify({ Estado: $("#DropEstado").val() });
+                LocalidadOptions.datatype = "json";
+                LocalidadOptions.contentType = "application/json";
+                LocalidadOptions.success = function (LocalidadList) {
+                    $("#localidad").html("");
+                    $.each(LocalidadList, function () {
+                        $("#localidad").append($("<option></option>").attr("value", this.idLocalidad).text(this.Nombre))
+
+                    });
+                    $("#localidad").prop("disabled", false);
+
+                };
+                LocalidadOptions.error = function () { alert("Error Obteniendo Las Localidades"); };
+                $.ajax(LocalidadOptions);
+            };
+            EstadoOptions.error = function () { alert("Error Obteniendo los Estados"); };
+            $.ajax(EstadoOptions);
+
+        });
+
+        $("#DropEstado").change(function () {
+            var LocalidadOptions = {};
+            LocalidadOptions.url = "/Venta/RegisterLocalidad";
+            LocalidadOptions.type = "POST";
+            LocalidadOptions.data = JSON.stringify({ Estado: $("#DropEstado").val() });
+            LocalidadOptions.datatype = "json";
+            LocalidadOptions.contentType = "application/json";
+            LocalidadOptions.success = function (LocalidadList) {
+                $("#localidad").html("");
+                $.each(LocalidadList, function () {
+                    $("#localidad").append($("<option></option>").attr("value", this.idLocalidad).text(this.Nombre))
+
+                });
+                $("#localidad").prop("disabled", false);
+            };
+            LocalidadOptions.error = function () { alert("Error Obteniendo Las Localidades"); };
+            $.ajax(LocalidadOptions);
+
+        });
+
+
+
+    }
+
+    function ConsultarCliente() {
+        //$("#agregarvehiculo").valid();
+       
+        var id = $('#Busq_Cliente').val();
+        if (id == -1)
+        {
+            RegistrarVentana();
+        } else {
+            $.post("/Venta/ConsultarCliente_Venta", { id_cliente: id }, function (data) {
+                if (data.success == true) {
+                    window.location.replace("/Venta/Preventa/?id_cliente=" + id);
+
+                } else {
+                    RegistrarVentana();
+                }
+
+            });
+        }
+
+
+    }
+
+    function RegistrarCliente_Nuevo() {
+
+        $.post("/Venta/RegistroCliente", $("#registro_cliente_form").serialize(), function (data) {
+            if (data.success == true)
+            {
+                window.location.replace("/Venta/Preventa/?id_cliente=" + data.id_cliente);
+            } else {
+                if(data.tipo == "0")
+                {
+                    var errores = data.errors;
+                    displayValidationErrors(errores);
+
+                }else if(data.tipo == "1")
+                {
+                    alert("Error. Intente mas tarde");
+
+                }else if(data.tipo == "2")
+                {
+
+                    alert("Error. La identificación del cliente se encuentra registrada.");
+                }else if (data.tipo == "3")
+                {
+
+                    alert("Error. General intente mas tarde");
+                } else {
+
+                    alert("Error. Sistema no esta disponible");
+                }
+
+            }
+
+        });
+
+
+
+    }
+
+    function displayValidationErrors(errors) {
+        var $ul = $('div.validation-summary-valid.text-danger > ul');
+
+        $ul.empty();
+        $.each(errors, function (idx, errorMessage) {
+            $ul.append('<li>' + errorMessage + '</li>');
+        });
+    }
+
+    function eliminar_vehiculo(id_vehiculo,id_vent) {
+        var LocalidadOptions = {};
+        LocalidadOptions.url = "/Venta/EliminarVehiculoTransaccion";
+        LocalidadOptions.type = "POST";
+        LocalidadOptions.data = JSON.stringify({ id: id_vehiculo, id_venta : id_vent });
+        LocalidadOptions.datatype = "json";
+        LocalidadOptions.contentType = "application/json";
+        LocalidadOptions.success = function (data) {
+            if (data.tipo != undefined) {
+
+                if (data.tipo == "OK") {
+                    var elemento = "vehiculo_" + id_vehiculo;
+                    //var elemento2 = "vel_" + id_vehiculo;
+                    var element1 = document.getElementById(elemento).parentElement.parentElement;
+                    element1.parentElement.removeChild(element1);
+                    //var element = document.getElementById(elemento2);
+                    //element.parentElement.removeChild(element);
+                    alert("Vehículo # " + id_vehiculo + " Ha sido eliminado.")
+
+                } else if (data.tipo == "Mas Tarde") {
+                    alert("Error en la Operación. Intente más tarde");
+
+                } else if (data.tipo == "No Existe") {
+                    alert("Error en la Operación. el vehiculo no existe");
+
+                } else if (data.tipo == "OK Todos") {
+                    window.location.replace("/Venta/ConsultarCliente");
+
+                } else {
+
+                    alert("No se puede concretar la operación, intente mas tarde" + data.tipo)
+                }
+
+
+              
+            } else {
+                alert("Error al eliminar, Intente mas Tarde " + data)
+            }
+
+        };
+        LocalidadOptions.error = function () { alert("Error al eliminar vehiculo."); };
+        $.ajax(LocalidadOptions);
+
+    }
+
+
+
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+

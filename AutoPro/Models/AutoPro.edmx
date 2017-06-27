@@ -147,7 +147,7 @@
           <Key>
             <PropertyRef Name="id_comision" />
           </Key>
-          <Property Name="id_comision" Type="int" Nullable="false" />
+          <Property Name="id_comision" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="valor" Type="float" Nullable="false" />
           <Property Name="fecha" Type="datetime" Nullable="false" />
           <Property Name="fk_usuario" Type="int" Nullable="false" />
@@ -271,7 +271,7 @@
           <Key>
             <PropertyRef Name="id_venta" />
           </Key>
-          <Property Name="id_venta" Type="int" Nullable="false" />
+          <Property Name="id_venta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="fecha" Type="datetime" Nullable="false" />
           <Property Name="nota" Type="varchar" MaxLength="300" />
           <Property Name="fk_estado_transaccion" Type="tinyint" Nullable="false" />
@@ -1421,7 +1421,7 @@
           <Key>
             <PropertyRef Name="id_comision" />
           </Key>
-          <Property Name="id_comision" Type="Int32" Nullable="false" />
+          <Property Name="id_comision" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="valor" Type="Double" Nullable="false" />
           <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="fk_usuario" Type="Int32" Nullable="false" />
@@ -1566,7 +1566,7 @@
           <Key>
             <PropertyRef Name="id_venta" />
           </Key>
-          <Property Name="id_venta" Type="Int32" Nullable="false" />
+          <Property Name="id_venta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="fecha" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="nota" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="fk_estado_transaccion" Type="Byte" Nullable="false" />

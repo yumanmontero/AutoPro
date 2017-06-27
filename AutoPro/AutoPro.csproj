@@ -1326,6 +1326,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1390,6 +1392,12 @@
     <Content Include="Views\Venta\_Menu_Preferidos.cshtml" />
     <Content Include="Views\Venta\_Menu_ListaVehiculos.cshtml" />
     <Content Include="Views\Venta\_Menu_DetallesVehiculo.cshtml" />
+    <Content Include="Views\Venta\_Menu_Botones.cshtml" />
+    <Content Include="Views\Venta\_Menu_Prioritarios.cshtml" />
+    <Content Include="Views\Venta\_Menu_Inventario.cshtml" />
+    <Content Include="Views\Venta\ConsultarCliente.cshtml" />
+    <Content Include="Views\Venta\_RegistarFormulario.cshtml" />
+    <Content Include="Views\Venta\_HistorialComisionConsulta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -106,14 +106,8 @@ namespace AutoPro.Controllers
                     {
                         usuario.id_T_Compra = getuser.transaccion_compra.Where(x => x.estado_transaccion.id_estado_transaccion == 4).Last().id_compra;
                     }
-                    if (getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 2).Count() > 0)
-                    {
-                        usuario.id_T_Venta = getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 2).Last().id_venta;
-                    }
-                    if (getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 1).Count() > 0)
-                    {
-                        usuario.id_T_Preventa = getuser.transaccion_venta.Where(x => x.estado_transaccion.id_estado_transaccion == 4 && x.fk_tipo_venta == 1).Last().id_venta;
-                    }
+                    
+                    
 
                     this.Session["Concesionario"] = getuser.concesionario.id_concesionario;
                     this.Session["User"] = usuario;

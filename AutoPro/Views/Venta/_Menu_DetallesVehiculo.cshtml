@@ -31,11 +31,11 @@
                         <div class="col-lg-1 col-xs-1 text-center">
 
                         </div>
-                        @using (Html.BeginForm("AdquirirVehiculo", "Venta", FormMethod.Post, new { role = "form", id = "asignarid", enctype = "multipart/form-data" }))
+                        @using (Html.BeginForm("AgregarVehiculo_Transaccion", "Venta", FormMethod.Post, new { role = "form", id = "agregarvehiculo", enctype = "multipart/form-data" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary("", new { @class = "text-danger" })
-                            @Html.HiddenFor(x => x.Vehiculo)
+                            @Html.HiddenFor(x => x.Vehiculo.id_vehiculo)
                             @Html.HiddenFor(x => x.Monto_Maximo)
                             @Html.HiddenFor(x => x.ID_Cliente)
                             <div class="col-lg-5 col-xs-5">

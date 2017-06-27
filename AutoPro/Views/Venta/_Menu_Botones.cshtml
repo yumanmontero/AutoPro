@@ -1,0 +1,71 @@
+﻿@using AutoPro.Models
+@model MenuBotonViewModels
+@{
+
+    UsuarioViewModel user = new UsuarioViewModel();
+    if (HttpContext.Current.Session["User"] != null)
+    {
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+    }
+    else
+    {
+
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+
+    }
+}
+<div class="col-lg-2">
+
+</div>
+
+<div class="col-lg-8">
+
+    @if (Model.tipo != 4)
+    {
+        if (user.id_T_Venta != 0)
+        {
+            <a data-url2="/Venta/ConcretarVenta/?id_venta=@user.id_T_Venta" class="btn btn-app btn-success">
+                <i class="fa fa-legal"></i> Concretar
+            </a>
+            <a data-url2="/Venta/AnularVenta/?id_venta=@user.id_T_Venta" class="btn btn-app btn-danger">
+                <i class="fa fa-close"></i> Anular
+            </a>
+
+        }
+
+        if (Model.tipo != 1)
+        {
+            <a data-boton="1" data-url="/Venta/PreventaMenuInicial/?id_cliente=@Model.cliente" href="javascript:{}" class="btn btn-app">
+                <i class="fa fa-home"></i> Inicio
+            </a>
+
+        }
+        @*if (Model.tipo == 2)
+        {
+            <a class="btn btn-app">
+                <i class="fa fa-history"></i> Atras
+            </a>
+        }
+        else if (Model.tipo == 3)
+        {
+            <a class="btn btn-app">
+                <i class="fa fa-history"></i> Atras
+            </a>
+
+        }*@
+
+    }
+    else
+    {
+        <a href="javascript:{}" onclick="AgregarVehiculo();" class="btn btn-app">
+            <i class="fa fa-cart-plus"></i> Agregar
+        </a>
+        <a href="javascript:{}" onclick="ContinuarPreventa();" class="btn btn-app">
+            <i class="fa fa-home"></i> Inicio
+        </a>
+
+    }
+</div>
+<div class="col-lg-2">
+
+</div>

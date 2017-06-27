@@ -23,6 +23,7 @@ namespace AutoPro.Models
         public int Nro_Inventario { get; set; }
 
         [Display(Name = "Modelo")]
+        [Required]
         public int Busq_Modelo { get; set; }
 
         public O_Transaccion_CompraViewModels Transaccion { get; set; }
@@ -59,6 +60,7 @@ namespace AutoPro.Models
         public int Nro_Rezagados { get; set; }
 
     }
+
 
     public class BusquedaPorMarcaViewModels
     {

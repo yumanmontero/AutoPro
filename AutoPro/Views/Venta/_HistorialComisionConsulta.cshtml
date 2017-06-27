@@ -1,0 +1,85 @@
+﻿@model AutoPro.Models.HistorialComisionViewModels
+
+<div style=" position:relative" class="cargando"></div>
+
+<ul class="timeline">
+    <li>
+        <i class="fa fa-clock-o bg-aqua-active"></i>
+        <div class="timeline-body">
+            <br />
+        </div>
+    </li>
+    <li>
+        <i class="fa fa-money bg-green"></i>
+
+        <div class="timeline-item">
+            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+            <h3 class="timeline-header"><a href="#">Total Comision:</a> @Model.Monto_Total.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h3>
+
+            <div class="timeline-body">
+                Periodo a consultado: @Model.Fecha_Inicial.ToShortDateString() a @Model.Fecha_Final.ToShortDateString()
+            </div>
+        </div>
+    </li>
+    <li>
+        <i class="fa fa-line-chart bg-orange"></i>
+
+        <div class="timeline-item">
+            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+            <h3 class="timeline-header"><a href="#">Total de Ventas:</a> @Model.Total_Ventas</h3>
+
+            <div class="timeline-body">
+                Periodo a consultado: @Model.Fecha_Inicial.ToShortDateString() a @Model.Fecha_Final.ToShortDateString()
+            </div>
+        </div>
+    </li>
+    <!-- timeline time label -->
+    @{
+        var agrupacion_dia = Model.Lista_Transaccion.GroupBy(x => new { x.Fecha.Year, x.Fecha.Month, x.Fecha.Day });
+
+        foreach (var item_trans in agrupacion_dia)
+        {
+            <li class="time-label">
+                <span class="bg-red">
+                    @item_trans.First().Fecha.ToShortDateString()
+                </span>
+            </li>
+            foreach (var trans_i in item_trans)
+            {
+
+                <li>
+                    <i class="fa fa-cubes bg-yellow"></i>
+
+                    <div class="timeline-item">
+                        <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+
+                        <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> @trans_i.id</h3>
+
+                        <div class="timeline-body">
+                            @trans_i.Monto_Total.ToString("#,##0") <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                        </div>
+                        <div class="timeline-footer">
+                            <a href="javascript:{}" onclick="AbrirDetalles(@trans_i.id);" class="btn btn-primary btn-xs">Más información</a>
+                        </div>
+                    </div>
+                </li>
+            }
+
+        }
+
+
+    }
+
+
+
+    <!-- END timeline item -->
+    <li>
+        <i class="fa fa-clock-o bg-gray"></i>
+    </li>
+
+</ul>
+
+
+

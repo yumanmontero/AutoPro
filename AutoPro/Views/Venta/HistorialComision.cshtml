@@ -1,59 +1,58 @@
-﻿@{
+﻿@using AutoPro.Models
+@model HistorialComisionViewModels
+@{
     ViewBag.Title = "Historial de Comisión";
 }
 
+@if (Model.Lista_Transaccion != null)
+{
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Detalles de Trasansaccion de Venta</h4>
-            </div>
-            <div class="modal-body">
-                <div class="col-lg-12 col-xs-12">
-                    <div class="row margin">
-                        <ul class="products-list product-list-in-box">
-                            <li class="item">
-                                <div class="product-img">
-                                    <img src="/Images/Modelos/1Series/2012/1Series_128i_Coupe_2d.png" alt="Product Image">
-                                </div>
-                                <div class="product-info">
-                                    <a href="javascript:void(0)" class="product-title">
-                                        C-Class C63 AMG Sedan 4d
-                                        <span class="label label-success pull-right">231 USD</span>
-                                    </a>
-                                    <span class="product-description">
-                                        Mercedes-benz - 2014 - Cod. 32
-                                    </span>
-                                </div>
-                            </li>
-                            <!-- /.item -->
-                            <li class="item">
-                                <div class="product-img">
-                                    <img src="/Images/Modelos/Optima/2015/Optima_LX_Sedan_4d.png" alt="Product Image">
-                                </div>
-                                <div class="product-info">
-                                    <a href="javascript:void(0)" class="product-title">
-                                        Optima LX Sedan 4d
-                                        <span class="label label-success pull-right">198 USD</span>
-                                    </a>
-                                    <span class="product-description">
-                                        KIA - 2015 - Cod. 58
-                                    </span>
-                                </div>
-                            </li>
+    foreach (var trans in Model.Lista_Transaccion)
+    {
+        <div class="modal fade" id="Trans_Detalles_@trans.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Detalles de Trasansaccion # @trans.id</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-lg-12 col-xs-12">
+                            <div class="row margin">
+                                <ul class="products-list product-list-in-box list-vehiculo">
+                                    @foreach (var auto in trans.Lista_Vehiculos)
+                                    {
+                                        <li class="item">
+                                            <div class="product-img">
+                                                <img src="@auto.Imagen" alt="@auto.Nombre">
+                                            </div>
+                                            <div class="product-info">
+                                                <a href="javascript:void(0)" class="product-title">
+                                                    @auto.Nombre
+                                                    <span class="label label-success pull-right">@auto.Comision.ToString("#,##0") USD</span>
+                                                </a>
+                                                <span class="product-description">
+                                                    @auto.Marca - @auto.Año - Cod. @auto.id
+                                                </span>
+                                            </div>
+                                        </li>
+                                    <!-- /.item -->
 
-                        </ul>
+                                    }
+                                   
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-            </div>
         </div>
-    </div>
-</div>
+    }
+}
+
 
 
 <section class="content-header">
@@ -72,7 +71,7 @@
     <!-- row -->
     <div class="row">
 
-        <div class="col-lg-3 col-xs-4">
+        <div class="col-lg-4 col-xs-4">
             <!-- Date and time range -->
             <div class="form-group">
                 <label>Filtro por Periodos</label>
@@ -83,7 +82,7 @@
                         </span>
                         <i class="fa fa-caret-down"></i>
                     </button>
-                    <button href="javascript:{}" onclick="document.getElementById('busquedaid').submit();" class="btn btn-default">
+                    <button type="button" href="javascript:{}" id="boton_rango_fecha"  class="btn btn-default">
                         <i class="fa fa-search"></i>
                     </button>
                 </div>
@@ -96,7 +95,8 @@
             <div class="col-lg-6 col-md-6 col-xs-12">
 
                 <!-- The time line -->
-                <div id="time_comision" class="row margin">
+                <div id="time_comision" class="row margin carga">
+                    <div style=" position:relative" class="cargando"></div>
                     <ul class="timeline">
                         <li>
                             <i class="fa fa-clock-o bg-aqua-active"></i>
@@ -110,10 +110,10 @@
                             <div class="timeline-item">
                                 <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
 
-                                <h3 class="timeline-header"><a href="#">Total Comision:</a> 10.423 <sup style="font-size: 8px">USD</sup> </h3>
+                                <h3 class="timeline-header"><a href="#">Total Comision:</a> @Model.Monto_Total.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h3>
 
                                 <div class="timeline-body">
-                                    Periodo a consultado: 01/04/2017 a 30/06/2017
+                                    Periodo a consultado: @Model.Fecha_Inicial.ToShortDateString() a @Model.Fecha_Final.ToShortDateString()
                                 </div>
                             </div>
                         </li>
@@ -123,132 +123,56 @@
                             <div class="timeline-item">
                                 <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
 
-                                <h3 class="timeline-header"><a href="#">Total de Ventas:</a> 32</h3>
+                                <h3 class="timeline-header"><a href="#">Total de Ventas:</a> @Model.Total_Ventas</h3>
 
                                 <div class="timeline-body">
-                                    Periodo a consultado: 01/04/2017 a 30/06/2017
+                                    Periodo a consultado: @Model.Fecha_Inicial.ToShortDateString() a @Model.Fecha_Final.ToShortDateString()
                                 </div>
                             </div>
                         </li>
                         <!-- timeline time label -->
-                        <li class="time-label">
-                            <span class="bg-red">
-                                06/06/2017
-                            </span>
-                        </li>
-                        <!-- /.timeline-label -->
-                        <!-- timeline item -->
-                        <li>
-                            <i class="fa fa-cubes bg-yellow"></i>
+                        @{
+                            var agrupacion_dia = Model.Lista_Transaccion.GroupBy(x => new { x.Fecha.Year, x.Fecha.Month, x.Fecha.Day });
 
-                            <div class="timeline-item">
-                                <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+                            foreach (var item_trans in agrupacion_dia)
+                            {
+                                <li class="time-label">
+                                    <span class="bg-red">
+                                        @item_trans.First().Fecha.ToShortDateString()
+                                    </span>
+                                </li>
+                                foreach (var trans_i in item_trans)
+                                {
 
-                                <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 23</h3>
+                                    <li>
+                                        <i class="fa fa-cubes bg-yellow"></i>
 
-                                <div class="timeline-body">
-                                    429 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
-                                </div>
-                                <div class="timeline-footer">
-                                    <a id="det_1" href="javascript:{}" class="btn btn-primary btn-xs">Más información</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa fa-cubes bg-yellow"></i>
+                                        <div class="timeline-item">
+                                            <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
 
-                            <div class="timeline-item">
-                                <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
+                                            <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> @trans_i.id</h3>
 
-                                <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 31</h3>
+                                            <div class="timeline-body">
+                                                @trans_i.Monto_Total.ToString("#,##0") <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
+                                            </div>
+                                            <div class="timeline-footer">
+                                                <a href="javascript:{}" onclick="AbrirDetalles(@trans_i.id);" class="btn btn-primary btn-xs">Más información</a>
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
 
-                                <div class="timeline-body">
-                                    567 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
-                                </div>
-                                <div class="timeline-footer">
-                                    <a href="" class="btn btn-primary btn-xs">Más información</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="time-label">
-                            <span class="bg-red">
-                                03/06/2017
-                            </span>
-                        </li>
-                        <li>
-                            <i class="fa fa-cubes bg-yellow"></i>
+                            }
 
-                            <div class="timeline-item">
-                                <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
 
-                                <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 23</h3>
+}
 
-                                <div class="timeline-body">
-                                    367 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
-                                </div>
-                                <div class="timeline-footer">
-                                    <a href="" class="btn btn-primary btn-xs">Más información</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa fa-cubes bg-yellow"></i>
+                       
 
-                            <div class="timeline-item">
-                                <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
-
-                                <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 31</h3>
-
-                                <div class="timeline-body">
-                                    567 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
-                                </div>
-                                <div class="timeline-footer">
-                                    <a href="" class="btn btn-primary btn-xs">Más información</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa fa-cubes bg-yellow"></i>
-
-                            <div class="timeline-item">
-                                <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
-
-                                <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 23</h3>
-
-                                <div class="timeline-body">
-                                    367 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
-                                </div>
-                                <div class="timeline-footer">
-                                    <a href="" class="btn btn-primary btn-xs">Más información</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <i class="fa fa-cubes bg-yellow"></i>
-
-                            <div class="timeline-item">
-                                <!--<span class="time"><i class="fa fa-clock-o"></i> 12:05</span>-->
-
-                                <h3 class="timeline-header"><a href="#">Transaccion de Venta #</a> 31</h3>
-
-                                <div class="timeline-body">
-                                    567 <sup style="font-size: 8px">USD</sup>   <i class="fa  fa-money bg-green"></i>
-                                </div>
-                                <div class="timeline-footer">
-                                    <a href="" class="btn btn-primary btn-xs">Más información</a>
-                                </div>
-                            </div>
-                        </li>
                         <!-- END timeline item -->
-                        <!-- timeline item -->
-                        <!-- END timeline item -->
-                        <!-- timeline item -->
-                        <!-- END timeline item -->
-                        <!-- timeline time label -->
-                        <!-- /.timeline-label -->
-                        <!-- timeline item -->
-
-
+                        <li>
+                            <i class="fa fa-clock-o bg-gray"></i>
+                        </li>
 
                     </ul>
 
@@ -270,57 +194,90 @@
                             <div id="i-r-comision-chart" class="row margin">
                                 <div class="col-lg-12 col-xs-12">
                                     <!-- small box -->
-                                    <div class="small-box bg-aqua">
-                                        <div class="inner">
-                                            <h3>9 <sup style="font-size: 10px">%</sup></h3>
-                                            <p>Porcentaje</p>
+                                    @if (Model.Tipo_Comision == 1)
+                                    {
+                                        <div class="small-box bg-aqua">
+                                            <div class="inner">
+                                                <h3>@Model.Valor_Comision_Fijo <sup style="font-size: 10px">%</sup></h3>
+                                                <p>Porcentaje Fijo</p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="ion ion-stats-bars"></i>
+                                            </div>
                                         </div>
-                                        <div class="icon">
-                                            <i class="ion ion-stats-bars"></i>
+                                    }
+                                    else
+                                    {
+                                        <div class="small-box bg-aqua">
+                                            <div class="inner">
+                                                <h3>@Model.Valor_Comision_Fijo <sup style="font-size: 10px">USD</sup></h3>
+                                                <p>Monto Fijo</p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="ion ion-stats-bars"></i>
+                                            </div>
+                                        </div>
+
+                                    }
+                                    
+                                </div>
+                                @if (Model.Comision_30_dias != 0)
+                                {
+                                    <div class="col-lg-12 col-xs-12">
+                                        <!-- small box -->
+                                        <div class="small-box bg-green">
+                                            <div class="inner">
+                                                <h3>@Model.Comision_30_dias.ToString("#,##0") <sup style="font-size: 10px">USD</sup></h3>
+                                                <p>Ultimos 30 <sup style="font-size: 10px">Dias</sup></p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="ion ion-cash"></i>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+
+                                }
+                                
+                                @if (Model.Comision_3_Mes != 0)
+                                {
+                                    <div class="col-lg-12 col-xs-12">
+                                        <!-- small box -->
+                                        <div class="small-box bg-green">
+                                            <div class="inner">
+                                                <h3>@Model.Comision_3_Mes.ToString("#,##0") <sup style="font-size: 10px">USD</sup></h3>
+                                                <p>Ultimos 3 <sup style="font-size: 10px">Meses</sup></p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="ion ion-cash"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                                
+                                @if (Model.Comision_1_Año != 0)
+                                {
+                                    <div class="col-lg-12 col-xs-12">
+                                        <!-- small box -->
+                                        <div class="small-box bg-green">
+                                            <div class="inner">
+                                                <h3>@Model.Comision_1_Año.ToString("#,##0") <sup style="font-size: 10px">USD</sup></h3>
+                                                <p>Ultimo Año</p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="ion ion-cash"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                }
+                                
+                                
                                 <div class="col-lg-12 col-xs-12">
                                     <!-- small box -->
                                     <div class="small-box bg-green">
                                         <div class="inner">
-                                            <h3>3.254 <sup style="font-size: 10px">USD</sup></h3>
-                                            <p>Ultimos 30 <sup style="font-size: 10px">Dias</sup></p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-cash"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-xs-12">
-                                    <!-- small box -->
-                                    <div class="small-box bg-green">
-                                        <div class="inner">
-                                            <h3>10.423 <sup style="font-size: 10px">USD</sup></h3>
-                                            <p>Ultimos 3 <sup style="font-size: 10px">Meses</sup></p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-cash"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-xs-12">
-                                    <!-- small box -->
-                                    <div class="small-box bg-green">
-                                        <div class="inner">
-                                            <h3>69.011 <sup style="font-size: 10px">USD</sup></h3>
-                                            <p>Ultimo Año</p>
-                                        </div>
-                                        <div class="icon">
-                                            <i class="ion ion-cash"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12 col-xs-12">
-                                    <!-- small box -->
-                                    <div class="small-box bg-green">
-                                        <div class="inner">
-                                            <h3>397.798 <sup style="font-size: 10px">USD</sup></h3>
+                                            <h3>@Model.Comision_Total.ToString("#,##0") <sup style="font-size: 10px">USD</sup></h3>
                                             <p>Total</p>
                                         </div>
                                         <div class="icon">
@@ -350,6 +307,18 @@
 <script>
     jQuery(window).load(function () {
         "use strict";
+        
+        $(document).ajaxStart(function()
+        {
+            $('#time_comision').addClass("carga_proceso");
+        });
+
+
+        $(document).ajaxStop(function()
+        {
+            $('#time_comision').removeClass("carga_proceso");
+        });
+        
         $('#i-r-comision-chart').slimScroll({
             height: '400px'
         });
@@ -358,12 +327,8 @@
         $('#time_comision').slimScroll({
             height: '903px'
         });
-
-        $("#det_1").click(function () {
-
-            $('#myModal').modal('show');
-
-        });
+        var FechaInicio;
+        var FechaFin;
 
         $('#daterange-btn').daterangepicker(
         {
@@ -383,48 +348,84 @@
         },
         function (start, end) {
             $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            FechaInicio = start;
+            FechaFin = end;
         }
     );
 
-        $('#daterange-btn').on('apply.daterangepicker', function (ev, picker) {
-            //Eventos
-        });
+        //$('#daterange-btn').on('apply.daterangepicker', function (ev, picker) {
+        //    //Eventos
+        //    //alert("Start: "+ picker.startDate);
+        //    //alert("End:" + picker.endDate.format('YYYY-MM-DD'))
 
-        var line = new Morris.Line({
-            element: 'g-comision-chart',
-            resize: true,
-            data: [
-              { y: '2016-06', item1: 2666 },
-              { y: '2016-07', item1: 2778 },
-              { y: '2016-08', item1: 4912 },
-              { y: '2016-09', item1: 3767 },
-              { y: '2016-10', item1: 6810 },
-              { y: '2016-11', item1: 5670 },
-              { y: '2016-12', item1: 6793 },
-              { y: '2017-01', item1: 15073 },
-              { y: '2017-02', item1: 1687 },
-              { y: '2017-03', item1: 8432 },
-              { y: '2017-04', item1: 1527 },
-              { y: '2017-05', item1: 5642 },
-              { y: '2017-06', item1: 3254 }
-            ],
-            xkey: 'y',
-            ykeys: ['item1'],
-            labels: ['Comision'],
-            lineColors: ['#008bbf'],
-            hideHover: 'auto',
-            yLabelFormat: function (y) { return y.toString() + ' USD'; }
+        //});
+
+        $('#boton_rango_fecha').click(function(){
+            
+            //alert("Start: "+ FechaInicio);
+            //alert("End:" + FechaFin.format('YYYY-MM-DD'));
+            var f_inicio = FechaInicio.format('YYYY-MM-DD');
+            var f_fin = FechaFin.format('YYYY-MM-DD');
+
+            var dataurl = "/Venta/HistorialComisionConsulta/?fecha_inicio="+f_inicio+"&fecha_fin="+f_fin;
+            //alert("Link: " + dataurl);
+            $.ajax({
+                url: dataurl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#time_comision').html(data);
+                //Cargar ventana time line
+                $('#time_comision').slimScroll({
+                    height: '903px'
+                });
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+
+
+
         });
+        
+        @if(Model.Lista_Comision_Grafico != null)
+        {
+            @:var line = new Morris.Line({
+            @:element: 'g-comision-chart',
+            @:resize: true,
+            @:data: [
+            foreach(var item_graf in Model.Lista_Comision_Grafico)
+            {
+                @:{ y: '@item_graf.Fecha_F', item1: @item_graf.Monto_Acumulado },
+            }
+            @:],
+            @:xkey: 'y',
+            @:ykeys: ['item1'],
+            @:labels: ['Comision'],
+            @:lineColors: ['#008bbf'],
+            @:hideHover: 'auto',
+            @:yLabelFormat: function (y) { return y.toString() + ' USD'; }
+        @:});
 
         //Fix for charts under tabs
-        $('.box ul.nav a').on('shown.bs.tab', function () {
+        @:$('.box ul.nav a').on('shown.bs.tab', function () {
 
-            line.redraw();
-        });
+            @:line.redraw();
+        @:});
+        }
+
+       
 
 
 
     });
+
+    function AbrirDetalles(id)
+    {
+
+        $("#Trans_Detalles_" + id).modal('show');
+    }
 
 
 </script>

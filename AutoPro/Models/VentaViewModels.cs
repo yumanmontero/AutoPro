@@ -14,11 +14,91 @@ namespace AutoPro.Models
 
     }
 
+    public class MenuBotonViewModels
+    {
+        public int tipo { get; set; }
+
+        public string cliente { get; set; }
+
+    }
     public class PreventaViewModels
     {
         public List<TransaccionesVentaViewModels> Lista_Transacciones { get; set; }
 
         public ClienteViewModels Cliente { get; set; }
+
+        public O_Transaccion_VentaViewModels Transaccion { get; set; }
+
+    }
+
+    public class HistorialComisionViewModels
+    {
+        public decimal Monto_Total { get; set; }
+
+        public int Total_Ventas { get; set; }
+
+        public DateTime Fecha_Inicial { get; set; }
+
+        public DateTime Fecha_Final { get; set; }
+
+        public List<TrasaccionComisionViewModels> Lista_Transaccion { get; set; }
+
+        public List<ComisionGraficoViewModels> Lista_Comision_Grafico { get; set; }
+
+        public int Tipo_Comision { get; set; }
+
+        public int Valor_Comision_Fijo { get; set; }
+
+        public decimal Comision_30_dias { get; set; }
+
+        public decimal Comision_3_Mes { get; set; }
+
+        public decimal Comision_1_Año { get; set; }
+
+        public decimal Comision_Total { get; set; }
+
+
+
+
+
+
+    }
+
+    public class ComisionGraficoViewModels
+    {
+        public int Monto_Acumulado { get; set; }
+
+        public string Fecha_F { get; set; }
+
+    }
+
+    public class TrasaccionComisionViewModels
+    {
+        public decimal Monto_Total { get; set; }
+
+        public int id { get; set; }
+
+        public DateTime Fecha { get; set; }
+
+        public List<VehiculoComisionViewModels> Lista_Vehiculos { get; set; }
+
+
+
+    }
+
+    public class VehiculoComisionViewModels
+    {
+        public string Nombre { get; set; }
+
+        public string Marca { get; set; }
+
+        public int Año { get; set; }
+
+        public string Imagen { get; set; }
+
+        public decimal Comision { get; set; }
+
+        public int id { get; set; }
 
     }
 
@@ -114,6 +194,32 @@ namespace AutoPro.Models
 
     }
 
+    public class BoxClienteViewModels
+    {
+        public List<Cliente_ItemBoxViewModels> Lista_Cliente { get; set; }
+
+        public int Total_Clientes { set; get; }
+
+    }
+
+    public class Cliente_ItemBoxViewModels
+    {
+
+        public string id { set; get; }
+
+        public string Image { set; get; }
+
+        public string Nombre { set; get; }
+
+        public string Descripcion { get; set; }
+
+        public int Nro_Preventas { get; set; }
+
+        public int Nro_Ventas { get; set; }
+
+    }
+
+
     public class Venta_CategoriaViewModels
     {
         public modelo_clasificacion Categoria { get; set; }
@@ -135,6 +241,73 @@ namespace AutoPro.Models
         public string Direccion { get; set; }
 
         public string Image { get; set; }
+
+        public string id { get; set; }
+
+    }
+
+    public class ConsultarClienteViewModels
+    {
+
+        public int Nro_Cliente { set; get; }
+
+        [Display(Name = "Modelo")]
+        public int Busq_Cliente { get; set; }
+
+        public List<O_Transaccion_VentaViewModels> Transaccion { get; set; }
+
+        public RegistroClienteViewModel Modelo_Registro { get; set; }
+
+    }
+
+    public class RegistroClienteViewModel
+    {
+        [Required]
+        [RegularExpression(@"^\d+$", ErrorMessage = "El Formato del Numero no es correcto, No incluya () o [] o --")]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 8)]
+        [Display(Name = "Numero de Telf.")]
+        public string NumeroTlf { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 3)]
+        [Display(Name = "Nombre")]
+        public string Nombre { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 3)]
+        [Display(Name = "Identificación")]
+        public string ID_Cliente { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 3)]
+        [Display(Name = "Apellido")]
+        public string Apellido { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Correo electrónico")]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 8)]
+        [Display(Name = "Direccion Detallada")]
+        public string DireccionDetallada { get; set; }
+
+        public int localidad { get; set; }
+        //public List<System.Web.Mvc.SelectListItem> DropPais { get; set; }
+        //public List<System.Web.Mvc.SelectListItem> DropEstado { get; set; }
+        //public List<System.Web.Mvc.SelectListItem> DropLocalidad { get; set; }
+    }
+
+    public class O_Transaccion_VentaViewModels
+    {
+        public transaccion_venta Transaccion { get; set; }
+
+        public decimal Monto_Total { get; set; }
+
+        public int Cant_Vehiculo { get; set; }
+
+        public List<vehiculo> Lista_Vehiculo { get; set; }
 
     }
 
@@ -162,5 +335,25 @@ namespace AutoPro.Models
         public DateTime fecha { get; set; }
 
     }
+    public class RegistroPais
+    {
+        public int idPais { get; set; }
+        public string Nombre { get; set; }
+
+    }
+
+    public class RegitroEstado
+    {
+        public int idEstado { get; set; }
+        public string Nombre { get; set; }
+    }
+
+    public class RegistroLocalidad
+    {
+        public int idLocalidad { get; set; }
+        public string Nombre { get; set; }
+
+    }
+
 
 }

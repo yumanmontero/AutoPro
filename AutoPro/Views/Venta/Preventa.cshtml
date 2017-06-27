@@ -17,6 +17,290 @@
 }
 
 
+
+
+@foreach (var item in Model.Lista_Transacciones)
+{
+
+    <div class="modal fade" id="trans_@item.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalles de Transaccion # @item.id</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="col-lg-12 col-xs-12">
+                        <div class="row">
+                            <h3>
+                                Datos Totales
+                                <small>@user.Concesionario</small>
+                            </h3>
+                            <div class="row">
+                                @if (item.Tipo_Transaccion == 2)
+                                {
+                                    <div class="col-lg-4 col-md-4 col-xs-12">
+                                        <div class="small-box bg-green">
+                                            <div class="inner">
+                                                <h3>@item.Lista_Vehiculo.Sum(x => x.valor_venta.Value).ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                                                <p>Monto Total Venta</p>
+                                            </div>
+                                            <div class="icon">
+                                                <i class="ion ion-cash"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                } 
+                                <div class="col-lg-4 col-md-4 col-xs-5">
+                                    <div class="small-box bg-yellow">
+                                        <div class="inner">
+                                            <h3>@item.Lista_Vehiculo.Count()</h3>
+
+                                            <p>Cantidad de Vehiculos</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-android-car"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-xs-7">
+                                    <div class="small-box bg-red">
+                                        <div class="inner">
+                                            <h3>@item.Lista_Vehiculo.Sum(x => x.valor_compra).ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                                            <p>Costo Total</p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-android-car"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <h3>
+                                Lista de Vehiculos
+                            </h3>
+                            <div class="row">
+                                @foreach (var vehiculo in item.Lista_Vehiculo)
+                                {
+
+                                    <div class="col-md-6">
+                                        <!-- Widget: user widget style 1 -->
+                                        <div id="vehiculo_@vehiculo.id_vehiculo" class="box box-widget widget-user">
+                                            <!-- Add the bg color to the header using any of the bg-* classes -->
+                                            
+
+                                            <div class="widget-user-header bg-green-active">
+                                                <h3 style="font-size: 15px" class="widget-user-username"><strong> @vehiculo.modelo.modelo1 @vehiculo.modelo.nombre Cod. @vehiculo.id_vehiculo</strong></h3>
+                                                <h5 class="widget-user-desc">@vehiculo.modelo.marca.nombre - @vehiculo.modelo.año</h5>
+                                            </div>
+                                            @{
+                                    var imagen = "";
+                                    if ((vehiculo.imagen != null) && (vehiculo.imagen != ""))
+                                    {
+                                        imagen = vehiculo.imagen;
+                                    }
+                                    else
+                                    {
+                                        imagen = vehiculo.modelo.imagen;
+
+                                    }
+
+                                            }
+
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="@imagen" alt="@vehiculo.modelo.nombre">
+                                            </div>
+                                            <div class="box-footer">
+                                                <div class="row">
+                                                    <div class="col-sm-4 border-right">
+                                                        <div class="description-block">
+                                                            <h5 class="description-header">@vehiculo.valor_compra.ToString("#,##0") <sup style="font-size: 8px">USD</sup> </h5>
+                                                            <span class="description-text"><i class="fa fa-money"></i> </span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                    <div class="col-sm-4 border-right">
+                                                        <div class="description-block">
+                                                            <h5 class="description-header">@vehiculo.kilometraje.ToString("#,##0") <sup style='font-size: 8px'>KM</sup></h5>
+                                                            <span class="description-text"><i class="fa fa-tachometer"></i></span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    @{
+                                    var dias = "";
+                                    if (vehiculo.fecha_salida.HasValue == true)
+                                    {
+                                        dias = vehiculo.fecha_salida.Value.Subtract(vehiculo.fecha_ingreso).Days.ToString();
+                                    }
+                                    else
+                                    {
+                                        dias = DateTime.Now.Subtract(vehiculo.fecha_ingreso).Days.ToString();
+                                    }
+
+
+                                                    }
+                                                    <!-- /.col -->
+                                                    <div class="col-sm-4">
+                                                        <div class="description-block">
+                                                            <h5 class="description-header">@dias <sup style='font-size: 8px'>DIAS</sup></h5>
+                                                            <span class="description-text"><i class="fa fa-calendar"></i></span>
+                                                        </div>
+                                                        <!-- /.description-block -->
+                                                    </div>
+                                                    <!-- /.col -->
+                                                </div>
+                                                <!-- /.row -->
+                                            </div>
+                                        </div>
+                                        <!-- /.widget-user -->
+                                    </div>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Transaccion.Transaccion != null)
+{
+    <div class="modal fade-" id="Modal_transaccion_Detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalles de Transacción # @Model.Transaccion.Transaccion.id_venta</h4>
+                </div>
+                <div class="modal-body table-responsive">
+                    <table id="tabla_transaccion" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Vehiculo</th>
+                                <th>Precio</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item_tr in Model.Transaccion.Lista_Vehiculo)
+                            {
+                                <tr>
+                                    <td>@item_tr.id_vehiculo</td>
+                                    <td>@item_tr.modelo.modelo1 @item_tr.modelo.nombre</td>
+                                    <td><span class="label label-success">@item_tr.valor_venta.Value.ToString("#,##0")</span></td>
+                                    <td>
+                                        <button onclick="eliminar_vehiculo(@item_tr.id_vehiculo,@Model.Transaccion.Transaccion.id_venta);" id="vehiculo_@item_tr.id_vehiculo" type="button" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i></button>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    <table id="tabla_transaccion" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Total</th>
+                                <th> </th>
+                                <th></th>
+                                <th id="Monto_Total_Transaccion">$ @Model.Transaccion.Monto_Total.ToString("#,##0")</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="modal fade-" id="Modal_transaccion_Detalles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel_t_t">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel_t_t">Detalles de Transacción</h4>
+                </div>
+                <div class="modal-body table-responsive">
+                    <table id="tabla_transaccion" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Vehiculo</th>
+                                <th>Precio</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                    <table id="tabla_transaccion" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Total</th>
+                                <th> </th>
+                                <th></th>
+                                <th id="Monto_Total_Transaccion">$ 0</th>
+                            </tr>
+                        </thead>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@if (HttpContext.Current.Session["Mensaje"] != null)
+{
+
+    MensajeViewModels mensaje = HttpContext.Current.Session["Mensaje"] as MensajeViewModels;
+    {
+
+        HttpContext.Current.Session["Mensaje"] = null;
+    }
+
+        <!-- Modal -->
+    <div class="modal fade @mensaje.Tipo_Modal" id="myModal_alerta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">@mensaje.Titulo</h4>
+                </div>
+                <div class="modal-body">
+                    @mensaje.Cuerpo
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
     <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1 id="titulo_preventa">Menu de Venta
@@ -157,29 +441,93 @@
         </div>
         <!-- /.col -->
         <div class="col-md-4">
-            <div style="height:330px" class="box box-primary">
-                <div class="box-body box-profile">
-                    <img class="profile-user-img img-responsive img-circle" src="/Images/imagen_user_160.png" alt="User profile picture">
+            <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a href="#tab_1" data-toggle="tab">Cliente</a></li>
+                    <li><a href="#tab_2" data-toggle="tab">Transacción</a></li>
+                </ul>
+                <div style="height:330px" class="tab-content">
+                    <div class="tab-pane active" id="tab_1">
+                        <div class="box-body box-profile">
+                            <img class="profile-user-img img-responsive img-circle" src="/Images/imagen_user_160.png" alt="User profile picture">
 
-                    <h3 class="profile-username text-center">@Model.Cliente.Nombre_Completo</h3>
+                            <h3 class="profile-username text-center">@Model.Cliente.Nombre_Completo</h3>
 
-                    <p class="text-muted text-center">Información del cliente</p>
+                            <p class="text-muted text-center">Información del cliente</p>
 
-                    <ul class="list-group list-group-unbordered">
-                        <li class="list-group-item">
-                            <b>Telefono</b> <a class="pull-right">@Model.Cliente.Nro_Telefono</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Correo</b> <a class="pull-right">@Model.Cliente.Email</a>
-                        </li>
-                        <li class="list-group-item">
-                            <b>Dirección</b> <a class="pull-right">@Model.Cliente.Direccion</a>
-                        </li>
-                    </ul>
+                            <ul class="list-group list-group-unbordered">
+                                <li class="list-group-item">
+                                    <b>Telefono</b> <a class="pull-right">@Model.Cliente.Nro_Telefono</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Correo</b> <a class="pull-right">@Model.Cliente.Email</a>
+                                </li>
+                                <li class="list-group-item">
+                                    <b>Dirección</b> <a class="pull-right">@Model.Cliente.Direccion</a>
+                                </li>
+                            </ul>
 
+                        </div>
+
+
+                    </div>
+                    <!-- /.tab-pane -->
+                    <div class="tab-pane" id="tab_2">
+                        @if (Model.Transaccion.Transaccion != null)
+                        {
+                            <div class="box box-default">
+                                <div class="box-body">
+                                    <ul id="list_vehiculo" class="products-list product-list-in-box">
+
+
+                                        @foreach (var item_trans in Model.Transaccion.Lista_Vehiculo)
+                                        {
+
+                                            <li id="vel_@item_trans.id_vehiculo" class="item">
+                                                <div class="product-img">
+                                                    <img style="width:50px;height:50px" src="@item_trans.modelo.imagen" alt="User Default">
+                                                </div>
+                                                <div class="product-info">
+                                                    <a href="javascript:void(0)" onclick="TransaccionDetalles(@item_trans.id_vehiculo);" class="product-title">
+                                                        @item_trans.modelo.modelo1 @item_trans.modelo.nombre
+                                                        <span class="label label-success pull-right">$@item_trans.valor_venta.Value.ToString("#,##0")</span>
+                                                    </a>
+                                                    <span class="product-description">
+                                                        @item_trans.modelo.marca.nombre - @item_trans.modelo.año
+                                                    </span>
+                                                </div>
+                                            </li>
+
+                                        }
+
+
+
+
+
+                                    </ul>
+
+
+                                </div>
+                                <div class="box-footer clearfix">
+                                    <a href="javascript:void(0)" onclick="AbrirDetallesTransccion();" class="btn btn-sm btn-info btn-flat pull-left">Detalles</a>
+                                </div>
+
+                            </div>
+                            
+                        }
+                        else
+                        {
+                            <h2>No hay vehiculos en la lista de compra</h2>
+
+                        }
+                        
+                    </div>
+
+                    <!-- /.tab-pane -->
                 </div>
-                <!-- /.box-body -->
+                <!-- /.tab-content -->
             </div>
+
             <!-- /.box-body -->
 
             
@@ -212,7 +560,7 @@
                                                <option value="-1"></option>
                                            </select>
                                            <span class="input-group-btn">
-                                               <button href="javascript:{}" onclick="document.getElementById('busquedaid').submit();" class="btn btn-default"><i class="fa fa-search"></i></button>
+                                               <button href="javascript:{}" onclick="Busqueda_Bar()" class="btn btn-default"><i class="fa fa-search"></i></button>
                                            </span>
                                        </div><!-- /input-group -->
                                    </div><!-- /.col-lg-6 -->
@@ -236,23 +584,13 @@
                </div>
                <!-- /.box-header -->
                <div id="ventana_cambio" class="box-body no-padding carga" >
-                   <div style="height:500px" class="cargando"></div>
+                   <div style="height:500px; position:relative" class="cargando"></div>
 
                </div>
                <!-- /.box-body -->
                <div class="box-footer no-border">
-                   <div class="row">
-                       <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                           <button type="button" class="btn btn-success btn-lg"><i class="fa fa-cart-plus"></i></button>
-                       </div>
-                       <!-- ./col -->
-                       <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                           
-                       </div>
-                       <!-- ./col -->
-                       <div class="col-xs-4 text-center">
-                           <button type="button" class="btn btn-danger btn-lg"><i class="fa fa-rotate-left"></i></button>
-                       </div>
+                   <div id="Menu_Botones" class="row">
+                       
                        <!-- ./col -->
                    </div>
                    <!-- /.row -->
@@ -274,32 +612,53 @@
 
     jQuery(window).load(function () {
 
-        $(document).ajaxStart(function() 
-        { 
-            $('#ventana_cambio').addClass("carga_proceso"); 
+        $(document).ajaxStart(function()
+        {
+            $('#ventana_cambio').addClass("carga_proceso");
         });
 
-        $(document).ajaxStop(function() 
-        { 
-            $('#ventana_cambio').removeClass("carga_proceso"); 
+
+        $(document).ajaxStop(function()
+        {
+            $('#ventana_cambio').removeClass("carga_proceso");
         });
-        
+
+        $("#myModal_alerta").modal('show');
+
+        $('#list_vehiculo').slimScroll({
+            height: '230px'
+        });
+
+         $('#tabla_transaccion').DataTable({
+            "paging": false,
+            "ordering": false,
+            "searching": true,
+            "scrollY": "200px",
+            "language":{
+                "search": "Buscar:",
+                searchPlaceholder: "Ingrese el criterio...",
+                "info": "Mostrando un total de _TOTAL_ entradas"
+            }
+
+        });
+
         $('#time_line_cliente').slimScroll({
             height: '330px'
         });
-        var dataurl = '@Url.Content("~/Venta/PreventaMenuInicial/?id_cliente=1")';
+        var dataurl = "/Venta/PreventaMenuInicial/?id_cliente=@Model.Cliente.id";
         $.ajax({
-              url: dataurl
-          }).done(function (data) {
-              // Al div con id todos le pone como
-              // contenido la partial view recibida (data)
-              $('#ventana_cambio').html(data);
-              CargarFunciones_Pref_Cliente_Merc();
-          }).fail(function (jqXHR, textStatus, errorThrown) {
-              alert("Error: " + jqXHR);
+            url: dataurl
+        }).done(function (data) {
+            // Al div con id todos le pone como
+            // contenido la partial view recibida (data)
+            $('#ventana_cambio').html(data);
+            CargarFunciones_Pref_Cliente_Merc();
+            CargarBoton("@Model.Cliente.id",1);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + jqXHR);
 
 
-          });
+        });
 
 
         function formatRepo(repo) {
@@ -315,9 +674,9 @@
             }
 
             markup += "<div class='select2-result-repository__statistics'>" +
-              "<div class='select2-result-repository__forks'><i class='fa fa-folder-open-o'></i> " + repo.Nro_Inventario + " Inventario</div>" +
-              "<div class='select2-result-repository__stargazers'><i class='fa  fa-cart-plus'></i> " + repo.Nro_Vendidos + " Vendidos</div>" +
-              "<div class='select2-result-repository__watchers'><i class='fa fa-area-chart'></i> " + repo.Nro_Rezagados + " Rezagados</div>" +
+              "<div class='select2-result-repository__forks'><i class='fa fa-money'></i> " + parseFloat(repo.Nro_Inventario, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString().replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; }) + " Costo</div>" +
+              "<div class='select2-result-repository__stargazers'><i class='fa fa-dashboard'></i> " + parseFloat(repo.Nro_Rezagados, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString().replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; }) + " Kilometraje</div>" +
+              "<div class='select2-result-repository__watchers'><i class='fa fa-calendar'></i> " + repo.Nro_Vendidos + " Dias</div>" +
             "</div>" +
             "</div></div>";
 
@@ -328,8 +687,10 @@
             return repo.Nombre;
         }
 
+
+
         $("#Busq_Modelo").select2({
-            placeholder: "Consulte un modelo",
+            placeholder: "Consulte un Vehiculo",
             ajax: {
                 url: "/Venta/ObtenerModelos",
                 dataType: 'json',
@@ -379,6 +740,7 @@
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
                 CargarFunciones_Lista_Marc_Cat();
+                CargarBoton("@Model.Cliente.id",2);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -396,6 +758,7 @@
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
                 CargarFunciones_Lista_Marc_Cat();
+                CargarBoton("@Model.Cliente.id",2);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -412,7 +775,9 @@
                 // Al div con id todos le pone como
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
+                CargarFunciones_Lista_Vehiculos();
 
+                CargarBoton("@Model.Cliente.id",3);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -429,6 +794,8 @@
                 // Al div con id todos le pone como
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
+                CargarFunciones_Lista_Vehiculos();
+                CargarBoton("@Model.Cliente.id",3);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -438,8 +805,29 @@
 
     }
 
+    function CargarBoton(id_cliente,tipo) {
+
+        var dataurl = "/Venta/Menu_Botones/?tipo="+tipo+"&id_cliente="+id_cliente;
+        $.ajax({
+            url: dataurl
+        }).done(function (data) {
+            // Al div con id todos le pone como
+            // contenido la partial view recibida (data)
+            $('#Menu_Botones').html(data);
+            CargarFunciones_MenuBoton();
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + jqXHR);
+
+
+        });
+    }
+
     function goBack() {
         window.history.back();
+    }
+
+    function MostrarDetalles(id) {
+        $('#trans_'+id).modal('show');
     }
 
     function CargarFunciones_Lista_Marc_Cat() {
@@ -460,6 +848,7 @@
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
                 CargarFunciones_Lista_Vehiculos();
+                CargarBoton("@Model.Cliente.id",3);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -477,6 +866,7 @@
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
                 CargarFunciones_Lista_Vehiculos();
+                CargarBoton("@Model.Cliente.id",3);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -485,6 +875,77 @@
         });
 
     }
+
+    function Busqueda_Bar()
+    {
+        var id = $('#Busq_Modelo').val();
+        var dataUrl = "/Venta/Menu_DetallesVehiculo/"+id+"?id_cliente=@Model.Cliente.id";
+        $.ajax({
+            url: dataUrl
+        }).done(function (data) {
+            // Al div con id todos le pone como
+            // contenido la partial view recibida (data)
+            $('#ventana_cambio').html(data);
+            CargarFunciones_Vehiculos_Detalles();
+            CargarBoton("@Model.Cliente.id",4);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + errorThrown);
+
+
+        });
+
+    }
+
+    function CargarFunciones_MenuBoton(){
+
+        $('#Menu_Botones').on('click', 'a[data-url]', function () {
+
+            var dataUrl = $(this).data('url');
+            var type = $(this).data('boton');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                $('#ventana_cambio').html(data);
+                CargarBoton("@Model.Cliente.id",type);
+                CargarFuncionces_Todas();
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                alert("Error: " + errorThrown);
+
+
+            });
+        });
+
+        $('#Menu_Botones').on('click', 'a[data-url2]', function () {
+
+            var dataUrl = $(this).data('url2');
+            var type = $(this).data('boton');
+            $.ajax({
+                url: dataUrl
+            }).done(function (data) {
+                // Al div con id todos le pone como
+                // contenido la partial view recibida (data)
+                window.location.replace("/Home/")
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                
+
+
+            });
+        });
+
+    }
+
+    function CargarFuncionces_Todas() {
+
+        CargarFunciones_Lista_Vehiculos();
+        CargarFunciones_Vehiculos_Detalles();
+        CargarFunciones_Lista_Marc_Cat();
+        CargarFunciones_Pref_Cliente_Merc();
+
+
+    }
+
 
     function CargarFunciones_Lista_Vehiculos() {
 
@@ -502,6 +963,7 @@
                 // contenido la partial view recibida (data)
                 $('#ventana_cambio').html(data);
                 CargarFunciones_Vehiculos_Detalles();
+                CargarBoton("@Model.Cliente.id",4);
             }).fail(function (jqXHR, textStatus, errorThrown) {
                 alert("Error: " + errorThrown);
 
@@ -511,6 +973,14 @@
 
 
     }
+
+
+
+    function isNumber(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+
 
     function CargarFunciones_Vehiculos_Detalles() {
 
@@ -529,33 +999,153 @@
         $('#Comentario').removeClass('text-box').addClass('form-control');
 
         $("#Valor_Venta").on('input', function () {
-            var LocalidadOptions = {};
-            LocalidadOptions.url = "/Venta/CalcularComision";
-            LocalidadOptions.type = "POST";
-            LocalidadOptions.data = JSON.stringify({ monto: document.getElementById("Valor_Venta").value , id_usuario: @user.id_Usuario });
-            LocalidadOptions.datatype = "json";
-            LocalidadOptions.contentType = "application/json";
-            LocalidadOptions.success = function (data) {
-                if (data != undefined) {
+            var monto_valor = document.getElementById("Valor_Venta").value;
+            if(isNumber(monto_valor))
+            {
+                var LocalidadOptions = {};
+                LocalidadOptions.url = "/Venta/CalcularComision";
+                LocalidadOptions.type = "POST";
+                LocalidadOptions.data = JSON.stringify({ monto: document.getElementById("Valor_Venta").value , id_usuario: @user.id_Usuario });
+                LocalidadOptions.datatype = "json";
+                LocalidadOptions.contentType = "application/json";
+                LocalidadOptions.success = function (data) {
+                    if (data != undefined) {
 
-                    var minimo = parseFloat(data, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
-                    minimo = minimo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
-                    minimo += '<sup style="font-size: 20px">USD</sup>';
+                        var minimo = parseFloat(data, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString();
+                        minimo = minimo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
+                        minimo += '<sup style="font-size: 20px">USD</sup>';
 
-                    document.getElementById("comision_ganar").innerHTML = minimo;
+                        document.getElementById("comision_ganar").innerHTML = minimo;
 
-                } else {
-                    alert("Error al calcular el Monto, Intente mas Tarde " + data)
-                }
+                    } else {
+                        alert("Error al calcular el Monto, Intente mas Tarde " + data)
+                    }
 
-            };
-            LocalidadOptions.error = function () { alert("Error al calcular el Monto."); };
-            $.ajax(LocalidadOptions);
+                };
+                LocalidadOptions.error = function () { alert("Error al calcular el Monto."); };
+                $.ajax(LocalidadOptions);
+            }
+
 
 
 
         });
 
+
+    }
+
+
+    function AgregarVehiculo() {
+        //$("#agregarvehiculo").valid();
+
+        $.post("/Venta/AgregarVehiculo_Transaccion", $("#agregarvehiculo").serialize(), function (data) {
+            if(data.success == true)
+            {
+                
+                window.location.replace("/Venta/Preventa/?id_cliente=@Model.Cliente.id");
+                
+                //document.getElementById("mensaje_titulo").innerHTML = data.titulo;
+                //document.getElementById("mensaje_cuerpo").innerHTML = data.cuerpo;
+                //$("#mensaje_alerta").modal('show');
+                
+
+
+                @*var dataurl = "/Venta/PreventaMenuInicial/?id_cliente=@Model.Cliente.id";
+                $.ajax({
+                    url: dataurl
+                }).done(function (data) {
+                    // Al div con id todos le pone como
+                    // contenido la partial view recibida (data)
+                    $('#ventana_cambio').html(data);
+                    CargarFunciones_Pref_Cliente_Merc();
+                    CargarBoton("@Model.Cliente.id",1);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + jqXHR);
+
+                });*@
+            }
+
+        });
+
+    }
+
+    function ContinuarPreventa() {
+        //$("#agregarvehiculo").valid();
+
+        $.post("/Venta/AgregarVehiculo_Preventa", $("#agregarvehiculo").serialize(), function (data) {
+            if(data.success == true)
+            {
+
+                var dataurl = "/Venta/PreventaMenuInicial/?id_cliente=@Model.Cliente.id";
+                $.ajax({
+                    url: dataurl
+                }).done(function (data) {
+                    // Al div con id todos le pone como
+                    // contenido la partial view recibida (data)
+                    $('#ventana_cambio').html(data);
+                    CargarFunciones_Pref_Cliente_Merc();
+                    CargarBoton("@Model.Cliente.id",1);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + jqXHR);
+
+                });
+            }
+
+        });
+
+    }
+
+    function eliminar_vehiculo(id_vehiculo,id_vent) {
+        var LocalidadOptions = {};
+        LocalidadOptions.url = "/Venta/EliminarVehiculoTransaccion";
+        LocalidadOptions.type = "POST";
+        LocalidadOptions.data = JSON.stringify({ id: id_vehiculo, id_venta : id_vent });
+        LocalidadOptions.datatype = "json";
+        LocalidadOptions.contentType = "application/json";
+        LocalidadOptions.success = function (data) {
+            if (data.tipo != undefined) {
+
+                if (data.tipo == "OK") {
+                    var elemento = "vehiculo_" + id_vehiculo;
+                    var elemento2 = "vel_" + id_vehiculo;
+                    var element1 = document.getElementById(elemento).parentElement.parentElement;
+                    element1.parentElement.removeChild(element1);
+                    var element = document.getElementById(elemento2);
+                    element.parentElement.removeChild(element);
+                    var minimo = parseFloat(data.monto, 10).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,").toString(); 
+                    minimo = minimo.replace(/[,.]/g, function (m) {return m === ',' ? '.' : ','; });
+                    document.getElementById("Monto_Total_Transaccion").innerHTML = "$ "+ minimo;
+                    alert("Vehículo # " + id_vehiculo + " Ha sido eliminado.")
+
+                } else if (data.tipo == "Mas Tarde") {
+                    alert("Error en la Operación. Intente más tarde");
+
+                } else if (data.tipo == "No Existe") {
+                    alert("Error en la Operación. el vehiculo no existe");
+
+                } else if (data.tipo == "OK Todos") {
+                    window.location.replace("/Venta/Preventa/?id_cliente=@Model.Cliente.id");
+
+                } else {
+
+                    alert("No se puede concretar la operación, intente mas tarde" + data.tipo)
+                }
+
+
+              
+            } else {
+                alert("Error al eliminar, Intente mas Tarde " + data)
+            }
+
+        };
+        LocalidadOptions.error = function () { alert("Error al eliminar vehiculo."); };
+        $.ajax(LocalidadOptions);
+
+    }
+
+    function AbrirDetallesTransccion ()
+    {
+        $("#Modal_transaccion_Detalles").modal('show');
 
     }
 
