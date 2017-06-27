@@ -31,16 +31,19 @@
                         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                     </div>
                     <div class="form-group has-feedback">
-                        Dirección
+                        <label>Dirección</label>
                     </div>
                     <div class="form-group">
+                        <label>Pais</label>
                         @Html.DropDownList("DropPais", (SelectList)ViewBag.DropPaisValue)
                     </div>
                     <div class="form-group">
+                        <label>Estado</label>
                         @Html.DropDownList("DropEstado", new SelectList(new[] { "Seleccione Estado" }))
 
                     </div>
                     <div class="form-group">
+                        <label>Ciudad</label>
                         @Html.DropDownListFor(m => m.localidad, new SelectList(new[] { "Seleccione Ciudad" }))
 
                     </div>
