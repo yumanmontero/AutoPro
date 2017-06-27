@@ -43,13 +43,13 @@
                         @using (Html.BeginForm("BusquedaPorModelo", "Compra", FormMethod.Post, new { role = "form", id = "busquedaid", enctype = "multipart/form-data" }))
                         {
                             <div class="col-lg-6">
-                                <div class="input-group">
-                                    <select class="form-control select2" data-val="true" id="Busq_Modelo" name="Busq_Modelo" data-placeholder="Escriba un Modelo">
+                                <div class="input-group" >
+                                    <select class="form-control select2" data-val="true" id="Busq_Modelo" name="Busq_Modelo" data-placeholder="Escriba un Modelo" >
                                         <option value="-1"></option>
                                     </select>
-                                    <span class="input-group-btn">
+                                    <span class="input-group-btn" >
                                         <button href="javascript:{}" onclick="document.getElementById('busquedaid').submit();" class="btn btn-default"><i class="fa fa-search"></i></button>
-                                        <button href="/Compra/BusquedaPorModelo" class="btn btn-default"><i class="fa fa-reply"></i></button>
+                                        <button href="/Compra/BusquedaPorModelo" class="btn btn-default" onclick="goBack();"><i class="fa fa-reply"></i></button>
 
                                     </span>
                                 </div><!-- /input-group -->
