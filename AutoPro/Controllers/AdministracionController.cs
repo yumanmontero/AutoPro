@@ -652,7 +652,7 @@ namespace AutoPro.Controllers
             var usuarios_compra = from l_venta in autodb.transaccion_compra where l_venta.fk_concesionario == usuario.id_Concesionario && (l_venta.fecha >= fecha_ingresada_incio && l_venta.fecha <= fecha_ingresada_fin) select l_venta;
 
             var usuarios_financista = usuarios_comision.Where(x => x.usuario.fk_tipo_usuario == 5);
-            var usuarios_venta = usuarios_comision.Where(x => x.usuario.fk_tipo_usuario == 4);
+            var usuarios_venta = usuarios_comision.Where(x => x.usuario.fk_tipo_usuario != 5);
             if(usuarios_comision.Any())
             {
                 var group_venta = usuarios_venta.GroupBy(x => x.fk_usuario).OrderByDescending(y => y.Count()).Take(5);

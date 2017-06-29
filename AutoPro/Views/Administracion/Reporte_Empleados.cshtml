@@ -100,7 +100,7 @@
             <div class="col-lg-4 col-md-4 col-xs-4">
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>@Model.Vendedor_Comision_Total</h3>
+                        <h3>@Model.Vendedor_Comision_Total.ToString("#,##0.00") <sup style="font-size: 20px">USD</sup></h3>
 
                         <p>Comisiones</p>
                     </div>
@@ -120,230 +120,390 @@
 
         </div>
 
-        <div class="row">
-            <div class="col-lg-8 col-md-8 col-xs-4">
+        <div class="row margin">
+            <div class="col-lg-8 col-md-8 col-xs-8">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Top 5 vendedores</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Posición</th>
+                                <th>Vendedor</th>
+                                <th>Cantidad</th>
+                                <th>Comisión total</th>
+                            </tr>
+                            @for (int i = 0; i < Model.Lista_Top_Vendedores.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>@Model.Lista_Top_Vendedores[i].Nombre</td>
+                                    <td>@Model.Lista_Top_Vendedores[i].Cant_Ventas</td>
+                                    <td>@Model.Lista_Top_Vendedores[i].Monto_Total.ToString("#,##0.00") <sup style="font-size: 10px">USD</sup></td>
+                                </tr>
+                            }
+                            
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <!-- DONUT CHART -->
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Relación Top</h3>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="chart_venta" style="height: 250px; position: relative;">
 
+
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
             </div>
 
         </div>
         
-
-        <div class="col-md-3">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Vendedores</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body no-padding">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Ventas totales</td>
-                            <td>101</td>
-                        </tr>
-                        <tr>
-                            <td>Comisiones totales</td>
-                            <td>$21,400</td>
-                        </tr>
-                        <tr>
-                            <td>Ventas por el Manager</td>
-                            <td>2</td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-
-            <!-- DONUT CHART -->
-            <div class="box box-danger">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Donut Chart</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body chart-responsive">
-                    <div class="chart" id="sales-chart" style="height: 200px; position: relative;"></div>
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-
-        </div>
-        <!-- /.col (LEFT) -->
-        <div class="col-md-6">
-            <!-- LINE CHART -->
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Top 5 vendedores</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body no-padding">
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Posición</th>
-                            <th>Cantidad</th>
-                            <th>Vendedor</th>
-                            <th>Comisión total</th>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>14</td>
-                            <td>Nick</td>
-                            <td>$4,500</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>12</td>
-                            <td>Juan Moreno</td>
-                            <td>$3,750</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>11</td>
-                            <td>Francisco de Lucio</td>
-                            <td>$3,275</td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>11</td>
-                            <td>Barbaro Pedraja</td>
-                            <td>$3,300</td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>10</td>
-                            <td>Miyer Jimenez</td>
-                            <td>$3,300</td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <!-- /.col (RIGHT) -->
     </div>
-    <!-- /.row -->
+
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-lg-12 col-md-12 col-xs-12">
             <div class="box-body">
-                <div class="callout callout-info">
+                <div class="callout callout-warning">
                     <h4>Financistas</h4>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-3">
-            <div class="box">
-                <div class="box-header">
-                    <h3 class="box-title">Financistas</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body no-padding">
-                    <table class="table table-striped">
-                        <tr>
-                            <td>Deals totales</td>
-                            <td>101</td>
-                        </tr>
-                        <tr>
-                            <td>Comisiones totales</td>
-                            <td>$25,736.02</td>
-                        </tr>
-                        <tr>
-                            <td>Deals del Manager</td>
-                            <td>18</td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-
-            <!-- DONUT CHART -->
-            <div class="box box-danger">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Donut Chart</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body chart-responsive">
-                    <div class="chart" id="sales-chart2" style="height: 200px; position: relative;"></div>
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-
-        </div>
-        <!-- /.col (LEFT) -->
-        <div class="col-md-6">
-            <!-- LINE CHART -->
-            <div class="box">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Top Financistas</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body no-padding">
-                    <table class="table table-striped">
-                        <tr>
-                            <th>Posición</th>
-                            <th>Cantidad</th>
-                            <th>Vendedor</th>
-                            <th>Comisión total</th>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>32</td>
-                            <td>Pablo Rochelin</td>
-                            <td>$13,699.21</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>28</td>
-                            <td>Blanco</td>
-                            <td>$5,878.86</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>23</td>
-                            <td>Fabian</td>
-                            <td>$6,157.95</td>
-                        </tr>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <!-- /.col (RIGHT) -->
     </div>
-    <!-- /.row -->
+
+
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-2">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>@Model.Financista_Venta_Total</h3>
+
+                        <p>Tratos</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-briefcase"></i>
+                    </div>
+                    <a href="javascript:{}" class="small-box-footer">
+                        Totales <i class="fa fa-info"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>@Model.Financista_Comision_Total.ToString("#,##0.00") <sup style="font-size: 20px">USD</sup></h3>
+
+                        <p>Comisiones</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <a href="javascript:{}" class="small-box-footer">
+                        Totales <i class="fa fa-info"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-xs-2">
+
+            </div>
+
+
+        </div>
+
+        <div class="row margin">
+            <div class="col-lg-8 col-md-8 col-xs-8">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Top 5 financistas</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Posición</th>
+                                <th>Financista</th>
+                                <th>Cantidad</th>
+                                <th>Comisión total</th>
+                            </tr>
+                            @for (int i = 0; i < Model.Lista_Top_Financista.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@Model.Lista_Top_Financista[i].Nombre</td>
+                                    <td>@Model.Lista_Top_Financista[i].Cant_Ventas</td>
+                                    <td>@Model.Lista_Top_Financista[i].Monto_Total.ToString("#,##0.00") <sup style="font-size: 10px">USD</sup></td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <!-- DONUT CHART -->
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Relación Top</h3>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="chart_financista" style="height: 250px; position: relative;">
+
+
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-xs-12">
+            <div class="box-body">
+                <div class="callout callout-success">
+                    <h4>Compradores</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-2">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <div class="small-box bg-aqua">
+                    <div class="inner">
+                        <h3>@Model.Comprador_Compra_Total</h3>
+
+                        <p>Compras</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-shopping-cart"></i>
+                    </div>
+                    <a href="javascript:{}" class="small-box-footer">
+                        Totales <i class="fa fa-info"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <div class="small-box bg-green">
+                    <div class="inner">
+                        <h3>@Model.Monto_Total_Compra.ToString("#,##0.00") <sup style="font-size: 20px">USD</sup></h3>
+
+                        <p>Monto Global</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-money"></i>
+                    </div>
+                    <a href="javascript:{}" class="small-box-footer">
+                        Totales <i class="fa fa-info"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-xs-2">
+
+            </div>
+
+
+        </div>
+
+        <div class="row margin">
+            <div class="col-lg-8 col-md-8 col-xs-8">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Top 5 compradores</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Posición</th>
+                                <th>Comprador</th>
+                                <th>Cantidad</th>
+                                <th>Ganancias Generadas</th>
+                            </tr>
+                            @for (int i = 0; i < Model.Lista_Top_Compradores.Count(); i++)
+                            {
+                                <tr>
+                                    <td>@(i + 1)</td>
+                                    <td>@Model.Lista_Top_Compradores[i].Nombre</td>
+                                    <td>@Model.Lista_Top_Compradores[i].Cant_Ventas</td>
+                                    <td>@Model.Lista_Top_Compradores[i].Monto_Total.ToString("#,##0.00") <sup style="font-size: 10px">USD</sup></td>
+                                </tr>
+                            }
+
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-4">
+                <!-- DONUT CHART -->
+                <div class="box box-danger">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Relación Top</h3>
+                    </div>
+                    <div class="box-body chart-responsive">
+                        <div class="chart" id="chart_comprador" style="height: 250px; position: relative;">
+
+
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
+
+<!-- jQuery 2.2.3 -->
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script>
+
+    jQuery(window).load(function () {
+
+        var colores= [["#3c8dbc"],["#3c8dbc", "#f56954"],["#3c8dbc", "#f56954", "#00a65a"],["#3c8dbc", "#f56954", "#00a65a", "#FFFF00"],["#3c8dbc", "#f56954", "#00a65a", "#FFFF00", "#550077"]];
+
+        //DONUT CHART
+        var donut_venta = new Morris.Donut({
+            element: 'chart_venta',
+            resize: true,
+            colors: colores[@Model.Lista_Top_Vendedores.Count()],
+            data: [
+                @foreach(var item in Model.Lista_Top_Vendedores)
+                {
+                    @:{ label: "@item.Nombre", value: @item.Cant_Ventas },
+                }
+            ],
+            hideHover: 'auto'
+        });
+
+        //DONUT CHART
+        var donut_financista = new Morris.Donut({
+            element: 'chart_financista',
+            resize: true,
+            colors: colores[@Model.Lista_Top_Financista.Count()],
+            data: [
+                @foreach (var item in Model.Lista_Top_Financista)
+        {
+            @:{ label: "@item.Nombre", value: @item.Cant_Ventas },
+            }
+    ],
+        hideHover: 'auto'
+        });
+
+        //DONUT CHART
+        var donut_comprador = new Morris.Donut({
+            element: 'chart_comprador',
+            resize: true,
+            colors: colores[@Model.Lista_Top_Compradores.Count()],
+            data: [
+                @foreach (var item in Model.Lista_Top_Compradores)
+        {
+            @:{ label: "@item.Nombre", value: @item.Cant_Ventas },
+            }
+    ],
+        hideHover: 'auto'
+    });
+        
+        var FechaInicio;
+        var FechaFin;
+
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges: {
+                'Ayer': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Ultimos 7 dias': [moment().subtract(6, 'days'), moment()],
+                'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+                'Mes Actual': [moment().startOf('month'), moment().endOf('month')],
+                'Mes Pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Ultimos 3 Meses': [moment().subtract(3, 'month').startOf('month'), moment()],
+                'Ultimos 6 Meses': [moment().subtract(6, 'month').startOf('month'), moment()],
+                'Año Actual': [moment().startOf('year'), moment()],
+                'Año Pasado': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
+        },
+        function (start, end) {
+            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            FechaInicio = start;
+            FechaFin = end;
+        }
+    );
+
+        $('#boton_rango_fecha').click(function(){
+
+            //alert("Start: "+ FechaInicio);
+            //alert("End:" + FechaFin.format('YYYY-MM-DD'));
+            var f_inicio = FechaInicio.format('YYYY-MM-DD');
+            var f_fin = FechaFin.format('YYYY-MM-DD');
+
+            var dataurl = "/Administracion/Reporte_Empleados/?fecha_inicio="+f_inicio+"&fecha_fin="+f_fin;
+            window.location.replace(dataurl);
+
+        });
+
+
+
+
+
+
+
+    });
+
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+
+
+</script>
 
