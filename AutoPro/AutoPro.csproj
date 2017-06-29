@@ -170,6 +170,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AdministracionViewModels.cs" />
     <Compile Include="Models\AspNetRoles.cs">
       <DependentUpon>AutoPro.tt</DependentUpon>
     </Compile>
@@ -1398,6 +1399,11 @@
     <Content Include="Views\Venta\ConsultarCliente.cshtml" />
     <Content Include="Views\Venta\_RegistarFormulario.cshtml" />
     <Content Include="Views\Venta\_HistorialComisionConsulta.cshtml" />
+    <Content Include="Views\Administracion\Prueba_Reporte_Inventario.cshtml" />
+    <Content Include="Views\Administracion\Reporte_Inventario.cshtml" />
+    <Content Include="Views\Administracion\Reporte_Ganancia.cshtml" />
+    <Content Include="Views\Administracion\Reporte_Ganancia_Rango.cshtml" />
+    <Content Include="Views\Administracion\Reporte_Empleados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

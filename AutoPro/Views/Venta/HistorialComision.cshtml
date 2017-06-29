@@ -311,8 +311,8 @@
         $(document).ajaxStart(function()
         {
             $('#time_comision').addClass("carga_proceso");
+            Pace.restart();
         });
-
 
         $(document).ajaxStop(function()
         {

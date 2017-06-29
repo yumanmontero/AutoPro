@@ -1,0 +1,404 @@
+﻿@using AutoPro.Models
+@model ReporteVentasViewModels
+@{
+    ViewBag.Title = "Reporte - Ganancias";
+
+    UsuarioViewModel user = new UsuarioViewModel();
+    if (HttpContext.Current.Session["User"] != null)
+    {
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+    }
+    else
+    {
+
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+
+    }
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 id="titulo_preventa">
+        @ViewBag.Title
+
+        <small>@user.Concesionario</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+        <li><a href="/Administración/">Administración</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+
+    <div class="row">
+
+        <div class="col-lg-4 col-xs-4">
+            <!-- Date and time range -->
+            <div class="form-group">
+                <label>Filtro por Periodos</label>
+                <div class="input-group">
+                    <button type="button" class="btn btn-default" id="daterange-btn">
+                        <span>
+                            <i class="fa fa-calendar"></i> Rango de Fecha
+                        </span>
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <button type="button" href="javascript:{}" id="boton_rango_fecha" class="btn btn-default">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.form group -->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>@Model.Mes_Año</h3>
+
+                    <p>Mes</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-cubes"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Mes Consultado <i class="fa  fa-calendar"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>@Model.Cantida_Venta_Mes</h3>
+
+                    <p>Auto Vendidos</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-line-chart"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Cantidad en el mes <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>@Model.Ganancia_Neta_Total.ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                    <p>Total Ganancia Neta</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-money"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Toatl del mes <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>@Model.Ganancia_promedio_vehiculo.ToString("#,##0") <sup style="font-size: 20px">USD</sup></h3>
+
+                    <p>Promedio Ganancia Neta</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-cubes"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Por vehiculo al mes <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <!-- Bar chart -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <i class="fa fa-bar-chart-o"></i>
+
+                    <h3 class="box-title">Ventas por día</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <div class="box-header">
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Ventas por dia</th>
+                                    <th>Cant</th>
+                                    <th>%</th>
+                                </tr>
+                                @foreach (var item in Model.Lista_Venta_Por_Dia)
+                                {
+                                    <tr>
+                                        <td>@item.Nombre</td>
+                                        <td>@item.Cantidad_Ventas</td>
+                                        <td>@item.Porcentaje.ToString("#,##0.00")%</td>
+                                    </tr>
+
+                                }
+
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+
+                    <div id="bar-venta_dia"></div>
+                </div>
+                <!-- /.box-body-->
+            </div>
+            <!-- /.box -->
+        </div>
+
+
+
+        <!-- PONER CUADRO A LA DERECHA -->
+        <div class="col-md-4">
+            <!-- Bar chart -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <i class="fa fa-bar-chart-o"></i>
+
+                    <h3 class="box-title">Ganancia neta por venta</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <div class="box-header">
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Ganancia neta</th>
+                                    <th>Cant</th>
+                                    <th>%</th>
+                                </tr>
+                                @foreach (var item in Model.Lista_Ganancia_Neta_Venta)
+                                {
+                                    <tr>
+                                        <td>@item.Nombre</td>
+                                        <td>@item.Cantidad_Ventas</td>
+                                        <td>@item.Porcentaje.ToString("#,##0.00")%</td>
+                                    </tr>
+
+                                }
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <div id="bar-neta_venta"></div>
+                </div>
+                <!-- /.box-body-->
+            </div>
+            <!-- /.box -->
+        </div>
+
+
+        <!-- PONER CUADRO A LA DERECHA -->
+        <div class="col-md-4">
+            <!-- Bar chart -->
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <i class="fa fa-bar-chart-o"></i>
+
+                    <h3 class="box-title">Ganancia neta por dia</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="box">
+                        <div class="box-header">
+                        </div>
+                        <!-- /.box-header -->
+                        <div class="box-body no-padding">
+                            <table class="table table-striped">
+                                <tr>
+                                    <th>Ganancia neta</th>
+                                    <th>Mayo</th>
+                                    <th>%</th>
+                                </tr>
+                                @foreach (var item in Model.Lista_Ganancia_Neta_Dia)
+                                {
+                                    <tr>
+                                        <td>@item.Nombre</td>
+                                        <td>@item.Cantidad_Ventas</td>
+                                        <td>@item.Porcentaje.ToString("#,##0.00")%</td>
+                                    </tr>
+
+                                }
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <div id="bar-neta_dia"> </div>
+                </div>
+                <!-- /.box-body-->
+            </div>
+            <!-- /.box -->
+        </div>
+
+
+
+
+
+
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- jQuery 2.2.3 -->
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script>
+
+    jQuery(window).load(function () {
+
+
+        var grafico_venta_dia = Morris.Bar({
+            element: 'bar-venta_dia',
+            data: [
+             @foreach(var item in Model.Lista_Venta_Por_Dia)
+             {
+                 @:{ device: '@item.Nombre', inventario: @item.Cantidad_Ventas},
+             }
+            ],
+            xkey: 'device',
+            ykeys: ['inventario'],
+            barColors: ['#007ba7'],
+            labels: ['Cantidad'],
+            barRatio: 0.4,
+            xLabelAngle: 60,
+            resize: true,
+            hideHover: 'auto'
+        });
+        var grafico_neta_venta = Morris.Bar({
+            element: 'bar-neta_venta',
+            data: [
+             @foreach(var item in Model.Lista_Ganancia_Neta_Venta)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Ventas},
+            }
+    ],
+        xkey: 'device',
+        ykeys: ['inventario'],
+        barColors: ['#007ba7'],
+        labels: ['Cantidad'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+        });
+        var grafico_neta_dia = Morris.Bar({
+            element: 'bar-neta_dia',
+            data: [
+             @foreach(var item in Model.Lista_Ganancia_Neta_Dia)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Ventas},
+            }
+    ],
+        xkey: 'device',
+        ykeys: ['inventario'],
+        barColors: ['#007ba7'],
+        labels: ['Cantidad'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+    });
+
+
+
+
+        $('ul.nav a').on('shown.bs.tab', function (e) {
+            grafico_venta_dia.redraw();
+            grafico_neta_venta.redraw();
+            grafico_neta_dia.redraw();
+
+
+            $('svg').css({ width: '100%' });
+        });
+        var FechaInicio;
+        var FechaFin;
+
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges: {
+                'Mes Actual': [moment().startOf('month'), moment().endOf('month')],
+                'Mes Pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
+        },
+        function (start, end) {
+            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            FechaInicio = start;
+            FechaFin = end;
+        }
+    );
+
+        $('#boton_rango_fecha').click(function(){
+
+            //alert("Start: "+ FechaInicio);
+            //alert("End:" + FechaFin.format('YYYY-MM-DD'));
+            var f_inicio = FechaInicio.format('YYYY-MM-DD');
+            var f_fin = FechaFin.format('YYYY-MM-DD');
+
+            var dataurl = "/Administracion/Reporte_Ganancia_Rango/?fecha_inicio="+f_inicio+"&fecha_fin="+f_fin;
+            window.location.replace(dataurl);
+
+        });
+
+
+
+
+
+
+
+    });
+
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+
+
+</script>

@@ -1,0 +1,1198 @@
+﻿@using AutoPro.Models
+@model ReporteInventarioViewModels
+@{
+    ViewBag.Title = "Reporte - Inventario";
+    
+    UsuarioViewModel user = new UsuarioViewModel();
+    if (HttpContext.Current.Session["User"] != null)
+    {
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+    }
+    else
+    {
+
+        user = HttpContext.Current.Session["User"] as UsuarioViewModel;
+
+    }
+}
+
+    <!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1 id="titulo_preventa">
+        @ViewBag.Title
+
+        <small>@user.Concesionario</small>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="/Home/"><i class="fa fa-dashboard"></i> Inicio</a></li>
+        <li><a href="/Administración/">Venta</a></li>
+        <li class="active">@ViewBag.Title</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    
+    <div class="row">
+
+        <div class="col-lg-4 col-xs-4">
+            <!-- Date and time range -->
+            <div class="form-group">
+                <label>Filtro por Periodos</label>
+                <div class="input-group">
+                    <button type="button" class="btn btn-default" id="daterange-btn">
+                        <span>
+                            <i class="fa fa-calendar"></i> Rango de Fecha
+                        </span>
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <button type="button" href="javascript:{}" id="boton_rango_fecha" class="btn btn-default">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- /.form group -->
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-aqua">
+                <div class="inner">
+                    <h3>@Model.Cant_Total_Vehiculos</h3>
+
+                    <p>Total</p>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-cubes"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Vehiculos en Inventario <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-red">
+                <div class="inner">
+                    <h3>@Model.Cant_Vehiculos_Rezagados</h3>
+
+                    <p>Rezagados</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Vehiculos en Inventario <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-yellow">
+                <div class="inner">
+                    <h3>@Model.Cant_Vehiculos_Entraron</h3>
+
+                    <p>Total entrada</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-android-add-circle"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Vehiculos entraron en 30 dias <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+            <!-- small box -->
+            <div class="small-box bg-green">
+                <div class="inner">
+                    <h3>@Model.Cant_Vehiculos_Salienron</h3>
+
+                    <p>Total salida</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-model-s"></i>
+                </div>
+                <a href="javascript:{}" class="small-box-footer">
+                    Vehiculos salieron en 30 dias <i class="fa fa-info"></i>
+                </a>
+            </div>
+        </div>
+        <!-- ./col -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12" >
+            <div class="nav-tabs-custom">
+                <!-- Tabs within a box -->
+                <ul class="nav nav-tabs pull-right">
+                    <li class="active"><a href="#resume_general" data-toggle="tab">Resumen General</a></li>
+                    <li><a href="#resumen_marca" data-toggle="tab">Marca</a></li>
+                    <li><a href="#resumen_categoria" data-toggle="tab">Categoria</a></li>
+                    <li><a href="#resumen_modelo" data-toggle="tab">Modelo</a></li>
+                    <li><a href="#resumen_ano" data-toggle="tab">Año</a></li>
+                    <li><a href="#resumen_tiempo" data-toggle="tab">Tiempo en Inventario</a></li>
+                    <li><a href="#resumen_costo" data-toggle="tab">Costo</a></li>
+                    <li><a href="#resumen_color" data-toggle="tab">Color</a></li>   
+                </ul>
+                <div class="tab-content no-padding">
+                    <!-- Morris chart - Sales -->
+                    <div class="chart tab-pane active" id="resume_general" style="position: relative;">
+
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_resumen_1">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_1" href="#marcas_resumen_coll">
+                                                Resumen - Marcas Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="marcas_resumen_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Marca</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Marca_Inv_Rez.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-warning">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_1" href="#categoria_resumen_coll">
+                                                Resumen - Categoria Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="categoria_resumen_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Categoria</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Categoria.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_1" href="#modelo_resumen_coll">
+                                                Resumen - Modelo Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="modelo_resumen_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Modelo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Modelo.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_resumen_2">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_2" href="#año_resumen_coll">
+                                                Resumen - Año Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="año_resumen_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Año</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Año.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-warning">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_2" href="#tiempo_resumen_coll">
+                                                Resumen - Tiempo en Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="tiempo_resumen_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Tiempo en Inventario</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Cant_Tiempo)
+                                                {
+
+                                                    <tr>
+                                                        <td>@item.Nombre</td>
+                                                        <td>@item.Cantidad</td>
+                                                    </tr>
+
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_2" href="#color_resumen_coll">
+                                                Resumen - Color Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="color_resumen_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Color</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Color.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_resumen_3">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_resumen_3" href="#costo_resumen_coll">
+                                                Resumen - Conto Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="costo_resumen_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Costo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Costo)
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="chart tab-pane" id="resumen_marca" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_marcas">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_marcas" href="#marcas_inventario_coll">
+                                                Resumen - Marcas Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="marcas_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+                                            
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Marca</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Marca_Inv_Rez.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_marcas" href="#marcas_rez_coll">
+                                                Resumen - Marcas Rezagadas
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="marcas_rez_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+                                            
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Marca</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Marca_Inv_Rez.OrderByDescending(x => x.Cantidad_Rez))
+                                                {
+                                                    if (item.Cantidad_Rez > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Rez</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        <div id="grafico_marcas_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+                            
+
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="resumen_categoria" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_categoria">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_categoria" href="#categoria_inventario_coll">
+                                                Resumen - Categorias Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="categoria_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Categoria</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Categoria.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_categoria" href="#categoria_rez_coll">
+                                                Resumen - Categorias Rezagadas
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="categoria_rez_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Categoria</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Categoria.OrderByDescending(x => x.Cantidad_Rez))
+                                                {
+                                                    if (item.Cantidad_Rez > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Rez</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div id="grafico_categoria_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+
+
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="resumen_modelo" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_modelo">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_modelo" href="#modelo_inventario_coll">
+                                                Resumen - Modelos Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="modelo_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Modelo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Modelo.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_modelo" href="#modelo_rez_coll">
+                                                Resumen - Modelo Rezagados
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="modelo_rez_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Modelo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Modelo.OrderByDescending(x => x.Cantidad_Rez))
+                                                {
+                                                    if (item.Cantidad_Rez > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Rez</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div id="grafico_modelo_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+
+
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="resumen_ano" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_ano">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_ano" href="#ano_inventario_coll">
+                                                Resumen - Año Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="ano_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Año</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Año.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_ano" href="#ano_rez_coll">
+                                                Resumen - Año Rezagados
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="ano_rez_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Año</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Año.OrderByDescending(x => x.Cantidad_Rez))
+                                                {
+                                                    if (item.Cantidad_Rez > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Rez</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div id="grafico_ano_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+
+
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="resumen_tiempo" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_año">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_tiempo" href="#tiempo_inventario_coll">
+                                                Resumen - Tiempo en Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="tiempo_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Tiempo en Inventario</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Cant_Tiempo)
+                                                {
+
+                                                    
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad</td>
+                                                        </tr>
+                                                    
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+                            </div>
+
+                        </div>
+                        <div id="grafico_tiempo_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+
+
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="resumen_costo" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_costo">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_costo" href="#costo_inventario_coll">
+                                                Resumen - Costo Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="costo_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Costo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Costo)
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_costo" href="#costo_rez_coll">
+                                                Resumen - Costo Rezagados
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="costo_rez_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Costo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Costo)
+                                                {
+                                                    if (item.Cantidad_Rez > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Rez</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div id="grafico_costo_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+
+
+                        </div>
+                    </div>
+
+                    <div class="chart tab-pane" id="resumen_color" style="position: relative; height: 500px;">
+                        <div class="col-lg-4 col-md-4 col-xs-4">
+                            <div class="box-group" id="accordion_color">
+                                <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                <div class="panel box box-primary">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_color" href="#color_inventario_coll">
+                                                Resumen - Color Inventario
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="color_inventario_coll" class="panel-collapse collapse in">
+                                        <div class="box-body no-padding">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Costo</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Color.OrderByDescending(x => x.Cantidad_Inv))
+                                                {
+
+                                                    if (item.Cantidad_Inv > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Inv</td>
+                                                        </tr>
+                                                    }
+
+                                                }
+
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel box box-danger">
+                                    <div class="box-header with-border">
+                                        <h4 class="box-title">
+                                            <a data-toggle="collapse" data-parent="#accordion_color" href="#color_rez_coll">
+                                                Resumen - Color Rezagados
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="color_rez_coll" class="panel-collapse collapse">
+                                        <div class="box-body">
+
+                                            <table class="table table-striped">
+                                                <tr>
+
+                                                    <th>Color</th>
+                                                    <th>Cantidad</th>
+                                                </tr>
+                                                @foreach (var item in Model.Lista_Color.OrderByDescending(x => x.Cantidad_Rez))
+                                                {
+                                                    if (item.Cantidad_Rez > 0)
+                                                    {
+                                                        <tr>
+                                                            <td>@item.Nombre</td>
+                                                            <td>@item.Cantidad_Rez</td>
+                                                        </tr>
+
+                                                    }
+
+                                                }
+
+                                            </table>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div id="grafico_color_inv" class="col-lg-8 col-md-8 col-xs-8" style="position: relative; height:auto">
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+    </div>
+    
+    <!-- /.col -->
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+<!-- jQuery 2.2.3 -->
+<script src="~/Content/Template/plugins/jQuery/jquery-2.2.3.min.js"></script>
+<script>
+
+    jQuery(window).load(function () {
+
+
+        var grafico_marcas = Morris.Bar({
+            element: 'grafico_marcas_inv',
+            data: [
+             @foreach(var item in Model.Lista_Marca_Inv_Rez)
+             {
+                 @:{ device: '@item.Nombre', inventario: @item.Cantidad_Inv, rezagado: @item.Cantidad_Rez },
+             }   
+            ],
+            xkey: 'device',
+            ykeys: ['inventario','rezagado'],
+            barColors: ['#007ba7','#e33232'],
+            labels: ['Cantidad Inventario','Cantidad Rezagado'],
+            barRatio: 0.4,
+            xLabelAngle: 60,
+            resize: true,
+            hideHover: 'auto'
+        });
+
+
+        var grafico_modelo = Morris.Bar({
+            element: 'grafico_modelo_inv',
+            data: [
+             @foreach(var item in Model.Lista_Modelo)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Inv, rezagado: @item.Cantidad_Rez },
+            }   
+    ],
+        xkey: 'device',
+        ykeys: ['inventario','rezagado'],
+        barColors: ['#007ba7','#e33232'],
+        labels: ['Cantidad Inventario','Cantidad Rezagado'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+        });
+
+        var grafico_categoria = Morris.Bar({
+            element: 'grafico_categoria_inv',
+            data: [
+             @foreach(var item in Model.Lista_Categoria)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Inv, rezagado: @item.Cantidad_Rez },
+            }   
+    ],
+        xkey: 'device',
+        ykeys: ['inventario','rezagado'],
+        barColors: ['#007ba7','#e33232'],
+        labels: ['Cantidad Inventario','Cantidad Rezagado'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+        });
+
+        var grafico_ano = Morris.Bar({
+            element: 'grafico_ano_inv',
+            data: [
+             @foreach(var item in Model.Lista_Año)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Inv, rezagado: @item.Cantidad_Rez },
+            }   
+    ],
+        xkey: 'device',
+        ykeys: ['inventario','rezagado'],
+        barColors: ['#007ba7','#e33232'],
+        labels: ['Cantidad Inventario','Cantidad Rezagado'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+        });
+
+        var grafico_tiempo = Morris.Bar({
+            element: 'grafico_tiempo_inv',
+            data: [
+             @foreach(var item in Model.Lista_Cant_Tiempo)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad},
+            }   
+    ],
+        xkey: 'device',
+        ykeys: ['inventario'],
+        barColors: ['#007ba7'],
+        labels: ['Cantidad Inventario'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+        });
+
+        var grafico_costo = Morris.Bar({
+            element: 'grafico_costo_inv',
+            data: [
+             @foreach(var item in Model.Lista_Costo)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Inv, rezagado: @item.Cantidad_Rez },
+            }   
+    ],
+        xkey: 'device',
+        ykeys: ['inventario','rezagado'],
+        barColors: ['#007ba7','#e33232'],
+        labels: ['Cantidad Inventario','Cantidad Rezagado'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+        });
+
+        var grafico_color = Morris.Bar({
+            element: 'grafico_color_inv',
+            data: [
+             @foreach(var item in Model.Lista_Color)
+        {
+            @:{ device: '@item.Nombre', inventario: @item.Cantidad_Inv, rezagado: @item.Cantidad_Rez },
+            }   
+    ],
+        xkey: 'device',
+        ykeys: ['inventario','rezagado'],
+        barColors: ['#007ba7','#e33232'],
+        labels: ['Cantidad Inventario','Cantidad Rezagado'],
+        barRatio: 0.4,
+        xLabelAngle: 60,
+        resize: true,
+        hideHover: 'auto'
+    });
+
+        $('ul.nav a').on('shown.bs.tab', function (e) {
+            grafico_marcas.redraw();
+            grafico_modelo.redraw();
+            grafico_categoria.redraw();
+            grafico_ano.redraw();
+            grafico_tiempo.redraw();
+            grafico_costo.redraw();
+            grafico_color.redraw();
+
+            $('svg').css({ width: '100%' });
+        });
+
+        var FechaInicio;
+        var FechaFin;
+
+        $('#daterange-btn').daterangepicker(
+        {
+            ranges: {
+                'Mes Actual': [moment().startOf('month'), moment().endOf('month')],
+                'Mes Pasado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+                'Ultimos 30 dias': [moment().subtract(29, 'days'), moment()],
+            },
+            startDate: moment().subtract(29, 'days'),
+            endDate: moment()
+        },
+        function (start, end) {
+            $('#daterange-btn span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            FechaInicio = start;
+            FechaFin = end;
+        }
+    );
+
+        $('#boton_rango_fecha').click(function(){
+            
+            //alert("Start: "+ FechaInicio);
+            //alert("End:" + FechaFin.format('YYYY-MM-DD'));
+            var f_inicio = FechaInicio.format('YYYY-MM-DD');
+            var f_fin = FechaFin.format('YYYY-MM-DD');
+
+            var dataurl = "/Administracion/Reporte_Ganancia/?fecha_inicio="+f_inicio+"&fecha_fin="+f_fin;
+            window.location.replace(dataurl);
+
+        });
+
+
+
+
+
+
+
+
+    });
+
+
+    function goBack() {
+        window.history.back();
+    }
+
+
+
+
+
+</script>

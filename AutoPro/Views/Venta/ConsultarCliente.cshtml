@@ -127,7 +127,7 @@
 }
 
 
-<div class="modal fade " id="Registro_div" tabindex="-1" role="dialog" aria-labelledby="registrolabel">
+<div class="modal fade " id="Registro_div" role="dialog" aria-labelledby="registrolabel" style="overflow:hidden;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -399,6 +399,18 @@
 
     });
 
+    function ConfigurarBarras()
+    {
+        $("#DropPais").css("width", "100%");
+        $("#localidad").css("width", "100%");
+        $("#DropEstado").css("width", "100%");
+
+        $("#DropPais").select2();
+        $("#localidad").select2();
+        $("#DropEstado").select2();
+
+    }
+
     function RegistrarVentana()
     {
         $("#Registro_div").modal('show');
@@ -482,6 +494,7 @@
 
                 });
                 $("#localidad").prop("disabled", false);
+                ConfigurarBarras();
             };
             LocalidadOptions.error = function () { alert("Error Obteniendo Las Localidades"); };
             $.ajax(LocalidadOptions);
@@ -497,7 +510,7 @@
             EstadoOptions.datatype = "json";
             EstadoOptions.contentType = "application/json";
             EstadoOptions.success = function (EstadosList) {
-                $("#DropEstado").html("")
+                $("#DropEstado").html("");
                 $.each(EstadosList, function () {
                     $("#DropEstado").append($("<option></option>").attr("value", this.idEstado).text(this.Nombre))
 
@@ -516,6 +529,7 @@
 
                     });
                     $("#localidad").prop("disabled", false);
+                    ConfigurarBarras();
 
                 };
                 LocalidadOptions.error = function () { alert("Error Obteniendo Las Localidades"); };
@@ -540,6 +554,7 @@
 
                 });
                 $("#localidad").prop("disabled", false);
+                ConfigurarBarras();
             };
             LocalidadOptions.error = function () { alert("Error Obteniendo Las Localidades"); };
             $.ajax(LocalidadOptions);
